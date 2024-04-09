@@ -1,0 +1,21 @@
+{
+  "search-palceholder": "Search Keyword...", 
+  "result-not-found": "Not Found",
+  "not-found-key": "No results found for &nbsp;<strong>&quot;{{search}}&quot;</strong>.",
+  "please-check-again": "Please check again for typographical errors.",
+  "admin-list": "Admin List",
+  "admin-create": "Admin Create",
+  "role-list": "Role List",
+  "role-create": "Role Create",
+  "information-list": "Information List",
+  "information-create": "Information Create",
+  "information-category-list": "Information Category List",
+  "information-category-create": "Information Category Create",
+  "contact-list": "Contact List",
+  "contact-category-list": "Contact Category List",
+  "contact-category-create": "Contact Category Create",
+  "main-client-list": "Main Client List",
+  "main-client-create": "Main Client Create",
+  "company-history-list": "Company History List",
+  "company-history-create": "Company History Create"
+}

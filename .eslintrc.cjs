@@ -15,4 +15,18 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
+  "overrides": [
+    {
+      "files": ["src/components/Icon/**/*.tsx"], // Or *.test.js
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "off"
+      }
+    },
+    {
+      "files": ["src/router/routes.tsx"],
+      "rules": {
+        "react-refresh/only-export-components": "off"
+      }
+    }
+  ],
 }

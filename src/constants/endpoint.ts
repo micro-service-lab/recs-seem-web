@@ -1,0 +1,11 @@
+import {
+  AUTH_ENDPOINTS,
+  ADMINS_ENDPOINTS,
+  ROLES_ENDPOINTS,
+} from './endpoints';
+
+export const ENDPOINTS = {
+  ...AUTH_ENDPOINTS,
+  ...ADMINS_ENDPOINTS,
+  ...ROLES_ENDPOINTS,
+};

@@ -1,0 +1,21 @@
+{
+  "search-palceholder": "キーワードを入力してください...", 
+  "result-not-found": "ページが見つかりません",
+  "not-found-key": "<strong>&quot;{{search}}&quot;</strong>&nbsp;の結果が見つかりませんでした。",
+  "please-check-again": "誤字脱字がないか再度確認してください。",
+  "admin-list": "管理者リスト",
+  "admin-create": "管理者新規作成",
+  "role-list": "ロールリスト",
+  "role-create": "ロール新規作成",
+  "information-list": "インフォメーションリスト",
+  "information-create": "インフォメーション新規作成",
+  "information-category-list": "インフォメーションカテゴリーリスト",
+  "information-category-create": "インフォメーションカテゴリー新規作成",
+  "contact-list": "お問い合わせリスト",
+  "contact-category-list": "お問い合わせカテゴリーリスト",
+  "contact-category-create": "お問い合わせカテゴリー新規作成",
+  "main-client-list": "主要取引先リスト",
+  "main-client-create": "主要取引先新規作成",
+  "company-history-list": "沿革リスト",
+  "company-history-create": "沿革新規作成"
+}

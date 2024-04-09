@@ -1,0 +1,16 @@
+{
+  "admin": "管理者",
+  "role": "ロール",
+  "information": "インフォメーション",
+  "contact": "お問い合わせ",
+  "company": "会社情報",
+  "setting": "設定",
+  "list": "リスト",
+  "create": "新規作成",
+  "category": "カテゴリー",
+  "main-client": "主要取引先",
+  "company-history": "沿革",
+  "system": "システム",
+  "others": "その他",
+  "external-link": "外部リンク"
+}
