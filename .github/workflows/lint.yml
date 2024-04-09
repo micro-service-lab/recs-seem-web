@@ -1,0 +1,56 @@
+name: "lint ReCS/SEEM files"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  lint-code:
+    name: Lint typescript files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm install
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm install
+      - name: Run lint
+        run: npm run lint
+  lint-docker:
+    name: Lint dockerfiles
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup aqua
+        uses: aquaproj/aqua-installer@v3.0.0
+        with:
+          aqua_version: v2.25.1
+      - name: Lint app dockerfile
+        run: hadolint Dockerfile
+  lint-workflows:
+    name: Lint github workflows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup aqua
+        uses: aquaproj/aqua-installer@v3.0.0
+        with:
+          aqua_version: v2.25.1
+      - name: Ensure that shellcheck is installed
+        run: shellcheck --version
+      - name: Lint github workflows
+        run: actionlint
