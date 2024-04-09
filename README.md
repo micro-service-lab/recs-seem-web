@@ -13,6 +13,14 @@ volta install node # LTS版をインストール
 node -v
 ```
 
+- aquaセットアップ
+
+[`aqua`](#how-to-install-aqua)をインストール後、いかのコマンドを実行する
+
+``` sh
+aqua i -l
+```
+
 - hostsの設定変更
 
 `/etc/hosts`を以下の項目を追加する
