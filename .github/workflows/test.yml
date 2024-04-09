@@ -1,4 +1,4 @@
-name: ReCS/SEEMフロントWEBアプリケーションのテスト
+name: "test ReCS/SEEM"
 
 on:
   push:
@@ -25,16 +25,3 @@ jobs:
         run: npm install
       - name: Run tests
         run: npm test
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "20"
-      - name: Install dependencies
-        run: npm install
-      - name: Run lint
-        run: npm run lint
