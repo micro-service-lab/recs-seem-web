@@ -1,0 +1,47 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+        "label": "コンテナ起動",
+        "group": "none",
+        "type": "shell",
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "command": "make up",
+        "presentation": {
+          "reveal": "always",
+          "panel": "shared",
+          "revealProblems": "onProblem"
+        }
+    },
+    {
+        "label": "コンテナ停止",
+        "group": "none",
+        "type": "shell",
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "command": "make d",
+        "presentation": {
+          "reveal": "always",
+          "panel": "shared",
+          "revealProblems": "onProblem"
+        }
+    },
+    {
+        "label": "コンテナクリーンアップ",
+        "group": "none",
+        "type": "shell",
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "command": "make clean",
+        "presentation": {
+          "reveal": "always",
+          "panel": "shared",
+          "revealProblems": "onProblem"
+        }
+    }
+  ]
+}
