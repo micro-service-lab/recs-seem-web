@@ -17,6 +17,7 @@ export function useLocalStorage(key: string, initialState: any) {
   }, [key]);
 
   const updateState = useCallback(
+    /* eslint @typescript-eslint/no-explicit-any: 0 */
     (updateValue: any) => {
       setState((prevValue: any) => {
         setStorage(key, {

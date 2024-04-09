@@ -1,0 +1,16 @@
+{
+  "admin": "Administrator",
+  "role": "Role",
+  "information": "Information",
+  "contact": "Contact",
+  "company": "Company Profile",
+  "setting": "Setting",
+  "list": "List",
+  "create": "Create",
+  "category": "Category",
+  "main-client": "Main Client",
+  "company-history": "Company History",
+  "system": "System",
+  "others": "Others",
+  "external-link": "External Link"
+}
