@@ -2,7 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "@/store";
 import { useEffect, useState } from "react";
-import { setPageTitle, toggleRTL } from "@/store/themeConfigSlice";
+import { setPageTitle } from "@/store/themeConfigSlice";
 import Dropdown from "@/components/Dropdown";
 import i18next from "i18next";
 import IconCaretDown from "@/components/Icon/IconCaretDown";
@@ -34,18 +34,9 @@ const Login = () => {
   const showAlert = useBoolean();
 
   const navigate = useNavigate();
-  const isRtl =
-    useSelector((state: IRootState) => state.themeConfig.rtlClass) === "rtl"
-      ? true
-      : false;
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
   const setLocale = (flag: string) => {
     setFlag(flag);
-    if (flag.toLowerCase() === "ae") {
-      dispatch(toggleRTL("rtl"));
-    } else {
-      dispatch(toggleRTL("ltr"));
-    }
   };
   const [flag, setFlag] = useState(themeConfig.locale);
 
@@ -134,7 +125,7 @@ const Login = () => {
               <div className="dropdown">
                 <Dropdown
                   offset={[0, 8]}
-                  placement={`${isRtl ? "bottom-start" : "bottom-end"}`}
+                  placement="bottom-end"
                   btnClassName="flex items-center gap-2.5 rounded-lg border border-white-dark/30 bg-white px-2 py-1.5 text-white-dark hover:border-primary hover:text-primary dark:bg-black"
                   button={
                     <>
