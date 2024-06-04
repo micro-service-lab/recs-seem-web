@@ -6,8 +6,10 @@ import { AuthContext } from './auth-context';
 import { ActionMapType, AuthStateType, AuthUserType } from '../types';
 import { AUTH_ENDPOINTS } from '@/constants/endpoints/auth-endpoint';
 import { AxiosResponse } from 'axios';
-import { AuthUserResponse } from '@/types/response/auth/auth-user-response';
-import { EmptySuccessResponse } from '@/types/response/empty-success-reponse';
+import { EmptySuccessResponse } from '@/types/response/empty-success-response';
+import { ApplicationResponse } from '@/types/response/application-response';
+import { AuthMember } from '@/types/entity/member';
+import { AuthJwt } from '@/types/entity/auth-jwt';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +36,8 @@ type Payload = {
   };
   [Types.LOGOUT]: undefined;
 };
+
+type AuthUserResponse = ApplicationResponse<AuthMember>;
 
 type ActionsType = ActionMapType<Payload>[keyof ActionMapType<Payload>];
 
@@ -156,7 +160,7 @@ export function AuthProvider({ children }: Props) {
       };
 
       return await axios
-        .post(AUTH_ENDPOINTS.auth.login, data)
+        .post<ApplicationResponse<AuthJwt>>(AUTH_ENDPOINTS.auth.login, data)
         .then(async () => {
           return await initialize();
         })

@@ -3,6 +3,6 @@ export const AUTH_ENDPOINTS = {
     login: "/auth/login",
     me: "/auth/me",
     logout: "/auth/logout",
-    refresh: "/auth/refresh",
+    refresh: "/auth/refresh_token",
   },
 };

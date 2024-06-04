@@ -35,7 +35,7 @@ export const API_RESPONSE_HANDLING: MessageType = {
   },
   [API_RESPONSE_TYPES.Unauthorized]: {
     message: 'unauthorized-error-response',
-    level: RESPONSE_LEVEL.RequestRefreshToken,
+    level: RESPONSE_LEVEL.None,
   },
   [API_RESPONSE_TYPES.NotFound]: {
     message: 'not-found-error-response',
@@ -43,7 +43,7 @@ export const API_RESPONSE_HANDLING: MessageType = {
   },
   [API_RESPONSE_TYPES.Unauthenticated]: {
     message: 'unauthenticated-error-response',
-    level: RESPONSE_LEVEL.RequestRefreshToken,
+    level: RESPONSE_LEVEL.None,
   },
   [API_RESPONSE_TYPES.PostTooLarge]: {
     message: 'post-too-large-error-response',
@@ -107,7 +107,7 @@ export const API_RESPONSE_HANDLING: MessageType = {
   },
   [API_RESPONSE_TYPES.AlreadyLogout]: {
     message: 'already-logout-error-response',
-    level: RESPONSE_LEVEL.RequestRefreshToken,
+    level: RESPONSE_LEVEL.None,
   },
   [API_RESPONSE_TYPES.SQLQueryError]: {
     message: 'sql-query-error-response',

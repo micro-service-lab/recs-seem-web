@@ -12,6 +12,4 @@ type ApiResponseType =
   (typeof API_RESPONSE_TYPES)[keyof typeof API_RESPONSE_TYPES];
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-type ApplicationErrorAttributes = {
-  [key: string]: any;
-};
+type ApplicationErrorAttributes = any;
