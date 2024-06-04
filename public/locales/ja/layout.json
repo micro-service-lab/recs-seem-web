@@ -1,5 +1,5 @@
 {
-  "search-palceholder": "キーワードを入力してください...", 
+  "search-palceholder": "キーワードを入力してください...",
   "result-not-found": "ページが見つかりません",
   "not-found-key": "<strong>&quot;{{search}}&quot;</strong>&nbsp;の結果が見つかりませんでした。",
   "please-check-again": "誤字脱字がないか再度確認してください。",
@@ -17,5 +17,20 @@
   "main-client-list": "主要取引先リスト",
   "main-client-create": "主要取引先新規作成",
   "company-history-list": "沿革リスト",
-  "company-history-create": "沿革新規作成"
+  "company-history-create": "沿革新規作成",
+  "member-list": "メンバー一覧",
+  "member-create": "メンバー作成",
+  "absence-form": "欠席届け",
+  "chat-room-list": "チャットルームリスト",
+  "chat-room-create": "チャットルーム新規作成",
+  "event-create": "イベント作成",
+  "calender-view": "カレンダー表示",
+  "location-information-history": "位置情報履歴",
+  "organization-list": "オーガナイゼーションリスト",
+  "organization-create": "オーガナイゼーション新規作成",
+  "permission-list": "権限リスト",
+  "permission-create": "権限新規作成",
+  "minutes-create": "議事録新規作成",
+  "minutes-view": "議事録表示",
+  "setting": "設定"
 }

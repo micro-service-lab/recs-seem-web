@@ -1,12 +1,18 @@
-import { FC } from 'react';
+import { FC } from "react";
 
-interface IconNavInformationProps {
+interface IconNavAttendanceProps {
   className?: string;
 }
 
-const IconNavInformation: FC<IconNavInformationProps> = ({ className }) => {
+const IconNavAttendance: FC<IconNavAttendanceProps> = ({ className }) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" className={className}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      className={className}
+    >
       <path
         fill="currentColor"
         fillRule="evenodd"
@@ -17,4 +23,4 @@ const IconNavInformation: FC<IconNavInformationProps> = ({ className }) => {
   );
 };
 
-export default IconNavInformation;
+export default IconNavAttendance;

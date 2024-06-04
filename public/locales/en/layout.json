@@ -1,5 +1,5 @@
 {
-  "search-palceholder": "Search Keyword...", 
+  "search-palceholder": "Search Keyword...",
   "result-not-found": "Not Found",
   "not-found-key": "No results found for &nbsp;<strong>&quot;{{search}}&quot;</strong>.",
   "please-check-again": "Please check again for typographical errors.",
@@ -17,5 +17,20 @@
   "main-client-list": "Main Client List",
   "main-client-create": "Main Client Create",
   "company-history-list": "Company History List",
-  "company-history-create": "Company History Create"
+  "company-history-create": "Company History Create",
+  "member-list": "Member List",
+  "member-create": "Member Create",
+  "absence-form": "Absence Form",
+  "chat-room-list": "Chat Room List",
+  "chat-room-create": "Chat Room Create",
+  "event-create": "Event Create",
+  "calender-view": "Calender View",
+  "location-information-history": "Position Information History",
+  "organization-list": "Organization List",
+  "organization-create": "Organization Create",
+  "permission-list": "Permission List",
+  "permission-create": "Permission Create",
+  "minutes-create": "Minutes Create",
+  "minutes-view": "Minutes View",
+  "setting": "Setting"
 }

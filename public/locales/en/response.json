@@ -1,4 +1,5 @@
 {
+  "unexpected-error": "An unexpected error occurred",
   "success-response": "OK",
   "system-error-response": "There was a problem on the system",
   "validation-error-response": "There is an error in the input information",

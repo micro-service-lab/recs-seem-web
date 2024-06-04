@@ -2,6 +2,7 @@ import { lazy } from 'react';
 const Index = lazy(() => import('../pages/Index'));
 const Login = lazy(() => import('../pages/Login'));
 const Error404 = lazy(() => import('../pages/Error404'));
+const MemberList = lazy(() => import('../pages/member/MemberList'));
 
 type Route = {
   path: string;
@@ -14,7 +15,14 @@ const routes: Route[] = [
   {
     path: '/',
     element: <Index />,
-    layout: 'auth',
+    layout: 'guest',
+  },
+  // general
+  // member
+  {
+    path: '/member',
+    element: <MemberList />,
+    layout: 'guest',
   },
   {
     path: '/login',

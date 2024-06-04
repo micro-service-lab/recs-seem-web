@@ -1,4 +1,5 @@
 {
+  "unexpected-error": "予期しないエラーが発生しました",
   "success-response": "OK",
   "system-error-response": "システム上の不具合がありました",
   "validation-error-response": "入力内容に誤りがあります",

@@ -93,7 +93,7 @@ export const ErrorHandleProvider = ({ children }: Props) => {
       async (error: AxiosError<any>) => {
         if (!isApplicationErrorResponse(error)) {
           const message = {
-            message: "An unexpected error has occurred",
+            message: t("unexpected-error"),
             messageParam: {},
           };
           displayErrorToast(message);

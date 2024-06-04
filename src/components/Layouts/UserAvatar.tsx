@@ -61,7 +61,7 @@ export const UserAvatar = () => {
             </Link>
           </li>
           <li>
-            <Link to={`/settings`} className="dark:hover:text-white">
+            <Link to={`/setting`} className="dark:hover:text-white">
               <IconSettings className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
               Setting
             </Link>
