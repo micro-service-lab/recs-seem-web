@@ -27,7 +27,6 @@ const Sidebar = () => {
   const [currentMenu, setCurrentMenu] = useState<string>('');
   const [subMenu, setSubMenu] = useState(defaultSubOpen);
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
-  const semidark = useSelector((state: IRootState) => state.themeConfig.semidark);
   const location = useLocation();
   const dispatch = useDispatch();
   const { t } = useTranslation('page');
@@ -62,8 +61,8 @@ const Sidebar = () => {
   }, [location]);
 
   return (
-    <div className={semidark ? 'dark' : ''}>
-      <nav className={`sidebar fixed min-h-screen h-full top-0 bottom-0 w-[260px] shadow-[5px_0_25px_0_rgba(94,92,154,0.1)] z-50 transition-all duration-300 ${semidark ? 'text-white-dark' : ''}`}>
+    <div>
+      <nav className="sidebar fixed min-h-screen h-full top-0 bottom-0 w-[260px] shadow-[5px_0_25px_0_rgba(94,92,154,0.1)] z-50 transition-all duration-300">
         <div className="bg-white dark:bg-black h-full">
           <div className="flex justify-between items-center px-4 py-3">
             <NavLink to="/" className="main-logo flex items-center shrink-0">

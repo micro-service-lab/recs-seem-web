@@ -5,7 +5,6 @@ import { IRootState } from '../../store';
 import { toggleSidebar } from '../../store/themeConfigSlice';
 import Footer from './Footer';
 import Header from './Header';
-import Setting from './Setting';
 import Sidebar from './Sidebar';
 import Portals from '../../components/Portals';
 
@@ -53,11 +52,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     )}
                 </div>
 
-                {/* BEGIN APP SETTING LAUNCHER */}
-                <Setting />
-                {/* END APP SETTING LAUNCHER */}
-
-                <div className={`${themeConfig.navbar} main-container text-black dark:text-white-dark min-h-screen`}>
+                <div className="navbar-sticky main-container text-black dark:text-white-dark min-h-screen">
                     {/* BEGIN SIDEBAR */}
                     <Sidebar />
                     {/* END SIDEBAR */}
@@ -70,7 +65,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
 
                         {/* BEGIN CONTENT AREA */}
                         <Suspense>
-                            <div className={`${themeConfig.animation} p-6 animate__animated`}>{children}</div>
+                            <div className="p-6">{children}</div>
                         </Suspense>
                         {/* END CONTENT AREA */}
 

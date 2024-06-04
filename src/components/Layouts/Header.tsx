@@ -1,59 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { IRootState } from '../../store';
-import { toggleRTL, toggleTheme, toggleSidebar } from '../../store/themeConfigSlice';
+import { toggleTheme, toggleSidebar } from '../../store/themeConfigSlice';
 import i18next from 'i18next';
 import Dropdown from '../Dropdown';
 import IconMenu from '../Icon/IconMenu';
 import IconSun from '../Icon/IconSun';
 import IconMoon from '../Icon/IconMoon';
 import IconLaptop from '../Icon/IconLaptop';
-import { HorizonNaviMenu } from './HorizonNaviMenu';
-import { SearchBox } from './SeacrhBox';
+import { SearchBox } from './SearchBox';
 import { UserAvatar } from './UserAvatar';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Header = () => {
-  const location = useLocation();
-  useEffect(() => {
-    const selector = document.querySelector('ul.horizontal-menu a[href="' + window.location.pathname + '"]');
-    if (selector) {
-      selector.classList.add('active');
-      const all: any = document.querySelectorAll('ul.horizontal-menu .nav-link.active');
-      for (let i = 0; i < all.length; i++) {
-        all[0]?.classList.remove('active');
-      }
-      const ul: any = selector.closest('ul.sub-menu');
-      if (ul) {
-        let ele: any = ul.closest('li.menu').querySelectorAll('.nav-link');
-        if (ele) {
-          ele = ele[0];
-          setTimeout(() => {
-            ele?.classList.add('active');
-          });
-        }
-      }
-    }
-  }, [location]);
-
-  const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
   const dispatch = useDispatch();
 
   const setLocale = (flag: string) => {
     setFlag(flag);
-    if (flag.toLowerCase() === 'ae') {
-      dispatch(toggleRTL('rtl'));
-    } else {
-      dispatch(toggleRTL('ltr'));
-    }
   };
   const [flag, setFlag] = useState(themeConfig.locale);
 
   return (
-    <header className={`z-40 ${themeConfig.semidark && themeConfig.menu === 'horizontal' ? 'dark' : ''}`}>
+    <header className="z-40">
       <div className="shadow-sm">
         <div className="relative bg-white flex w-full items-center px-5 py-2.5 dark:bg-black">
           <div className="horizontal-logo flex lg:hidden justify-between items-center ltr:mr-2 rtl:ml-2">
@@ -117,7 +87,7 @@ const Header = () => {
             <div className="dropdown shrink-0">
               <Dropdown
                 offset={[0, 8]}
-                placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
+                placement="bottom-end"
                 btnClassName="block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
                 button={<img className="w-5 h-5 object-cover rounded-full" src={`/assets/images/flags/${flag.toUpperCase()}.svg`} alt="flag" />}
               >
@@ -146,7 +116,6 @@ const Header = () => {
             <UserAvatar />
           </div>
         </div>
-        <HorizonNaviMenu />
       </div>
     </header>
   );
