@@ -100,6 +100,20 @@ export interface MemberWithPersonalOrganization {
     roleId: string|null;
 }
 
+export interface MemberWithCrewAndProfileImageAndAttendStatus {
+    memberId: string;
+    email: string;
+    name: string;
+    firstName: string|null;
+    lastName: string|null;
+    attendStatus: AttendStatus;
+    profileImage: ImageWithAttachableItem|null;
+    grade: GradeWithOrganization;
+    group: GroupWithOrganization;
+    personalOrganizationId: string;
+    roleId: string|null;
+}
+
 export interface MemberCard {
     memberId: string;
     name: string;

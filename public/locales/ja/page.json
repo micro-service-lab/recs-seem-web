@@ -1,6 +1,6 @@
 {
   "admin": "管理者",
-  "role": "ロール",
+  "role": "ロール管理",
   "information": "インフォメーション",
   "contact": "お問い合わせ",
   "company": "会社情報",
@@ -10,7 +10,22 @@
   "category": "カテゴリー",
   "main-client": "主要取引先",
   "company-history": "沿革",
-  "system": "システム",
+  "system": "組織関連",
   "others": "その他",
-  "external-link": "外部リンク"
+  "external-link": "外部リンク",
+  "member": "メンバー",
+  "organization": "オーガナイゼーション",
+  "general": "一般",
+  "attendance": "出席管理",
+  "absence-from": "欠席届け",
+  "event" : "イベント",
+  "calender" : "カレンダー",
+  "view" : "表示",
+  "chat": "チャット",
+  "room-create": "ルーム作成",
+  "room-list": "ルーム一覧",
+  "permission": "権限管理",
+  "minutes": "議事録",
+  "location-information" : "位置情報",
+  "history" : "履歴"
 }
