@@ -8,6 +8,7 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import { useToast } from "@/hooks/use-toast";
+import { convertKeysToCamelCase } from "@/utils/change-case";
 
 type Props = {
   children: ReactNode;
@@ -98,6 +99,9 @@ export const ErrorHandleProvider = ({ children }: Props) => {
           displayErrorToast(message);
           return Promise.reject(error);
         }
+        if (error.response != undefined) {
+          error.response.data = convertKeysToCamelCase(error.response.data);
+        }
         // エラーハンドリング
         const message = await handleError(error.response?.data, {
           logoutForcibly,
@@ -128,7 +132,7 @@ export const ErrorHandleProvider = ({ children }: Props) => {
   ]);
 
   useEffect(() => {
-    axios.defaults.headers.common["X-Sr-Language"] = i18next.language;
+    axios.defaults.headers.common["Accept-Language"] = i18next.language;
   }, [i18next.language, user]);
 
   if (isLoadingInitially) return null;

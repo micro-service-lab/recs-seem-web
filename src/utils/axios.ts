@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 // config
 import { HOST_API } from '@/config-global';
+import { convertKeysToSnakeCase } from './change-case';
 
 // ----------------------------------------------------------------------
 
@@ -27,18 +28,28 @@ const headers: Headers = {
 };
 
 const axiosInstance = axios.create({
-  baseURL: `${HOST_API}`,
+  baseURL: HOST_API,
   withCredentials: true,
   headers,
 });
 
 export default axiosInstance;
 
+axiosInstance.interceptors.request.use(request => {
+  request.data = convertKeysToSnakeCase(request.data)
+  return request
+})
+
 export const rawAxiosInstance = axios.create({
-  baseURL: `${HOST_API}`,
+  baseURL: HOST_API,
   withCredentials: true,
   headers,
 });
+
+rawAxiosInstance.interceptors.request.use(request => {
+  request.data = convertKeysToSnakeCase(request.data)
+  return request
+})
 
 // ----------------------------------------------------------------------
 

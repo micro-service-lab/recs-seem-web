@@ -8,5 +8,5 @@ export type ErrorResponse = ApplicationResponse<null>;
 export const isApplicationErrorResponse = (obj: any): obj is AxiosError<ErrorResponse> => {
   return obj.hasOwnProperty('response') 
   && obj.response.data.hasOwnProperty('success')
-  && obj.response.data.hasOwnProperty('errorAttributes')
+  && obj.response.data.hasOwnProperty('error_attributes')
 };

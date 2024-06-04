@@ -85,7 +85,7 @@ export function AuthProvider({ children }: Props) {
     AxiosResponse<AuthUserResponse>
   > => {
     try {
-      const res = await axios.post<AuthUserResponse>(
+      const res = await axios.get<AuthUserResponse>(
         AUTH_ENDPOINTS.auth.me
       );
 
@@ -114,7 +114,7 @@ export function AuthProvider({ children }: Props) {
     AxiosResponse<AuthUserResponse>
   > => {
     try {
-      const res = await axiosRaw.post<AuthUserResponse>(
+      const res = await axiosRaw.get<AuthUserResponse>(
         AUTH_ENDPOINTS.auth.me
       );
 
