@@ -2,13 +2,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "@/store";
 import { setPageTitle } from "@/store/themeConfigSlice";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Dropdown from "@/components/Dropdown";
 import i18next from "i18next";
 import IconCaretDown from "@/components/Icon/IconCaretDown";
-import IconUser from "@/components/Icon/IconUser";
-import IconMail from "@/components/Icon/IconMail";
-import IconLockDots from "@/components/Icon/IconLockDots";
 import { useTranslation } from "react-i18next";
 import FormProvider from "@/components/HookForm/form-provider";
 import { useAuthContext } from "@/auth/hooks";
@@ -24,6 +21,9 @@ import RHFTextField from "@/components/HookForm/rhf-text-field";
 import IconInfoHexagon from "@/components/Icon/IconInfoHexagon";
 import IconX from "@/components/Icon/IconX";
 import IconLoginId from "@/components/Icon/IconLoginId";
+import { useRegisterQuery } from "@/api/auth/RegisterQuery";
+import GradeRadio from "@/sections/Form/GradeRadio";
+import GroupRadio from "@/sections/Form/GroupRadio";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const RegisterBoxed = () => {
@@ -31,6 +31,7 @@ const RegisterBoxed = () => {
   useEffect(() => {
     dispatch(setPageTitle("sign-up"));
   });
+  const { isPending, mutate } = useRegisterQuery();
   const { t } = useTranslation("auth");
   const { t: tT } = useTranslation();
   const { t: rT } = useTranslation("response");
@@ -40,23 +41,40 @@ const RegisterBoxed = () => {
   const setLocale = (flag: string) => {
     setFlag(flag);
   };
-  const { login } = useAuthContext();
   const toast = useToast();
   const [errorMsg, setErrorMsg] = useState("");
   const [flag, setFlag] = useState(themeConfig.locale);
 
-  const LoginSchema = Yup.object().shape({
+  const RegisterSchema = Yup.object().shape({
     loginId: Yup.string().required(tT("Login ID is required")),
     password: Yup.string().required(tT("Password is required")),
+    passwordConfirmation: Yup.string()
+      .required(tT("Password Confirm is required"))
+      .oneOf([Yup.ref("password")], tT("Must match 'password' field value")),
+    name: Yup.string().required(tT("Name is required")),
+    email: Yup.string()
+      .required(tT("Email is required"))
+      .email(tT("Invalid email")),
+    firstName: Yup.string(),
+    lastName: Yup.string(),
+    grade: Yup.string().required(tT("Grade is required")),
+    group: Yup.string().required(tT("Group is required")),
   });
 
   const defaultValues = {
     loginId: "",
     password: "",
+    passwordConfirmation: "",
+    email: "",
+    name: "",
+    firstName: "",
+    lastName: "",
+    grade: "",
+    group: "",
   };
 
   const methods = useForm({
-    resolver: yupResolver(LoginSchema),
+    resolver: yupResolver(RegisterSchema),
     defaultValues,
   });
 
@@ -68,25 +86,27 @@ const RegisterBoxed = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     showAlert.onTrue();
-    await login?.(data.loginId, data.password)
-      .then(() => {
-        toast.fire({
-          icon: "success",
-          title: tT("Login successfully"),
-          padding: "10px 20px",
-        });
-        navigate("/login");
-      })
-      .catch((error: AxiosError<ErrorResponse>) => {
-        setValue("password", "");
-        const msg = rT(
-          error.response?.errorMessage || "",
-          error.response?.errorMessageParam
-        );
-        typeof msg === "string"
-          ? setErrorMsg(msg)
-          : setErrorMsg(rT("Unknown error"));
-      });
+    console.log(data);
+    // mutate(data);
+    // await login?.(data.loginId, data.password)
+    //   .then(() => {
+    //     toast.fire({
+    //       icon: "success",
+    //       title: tT("Login successfully"),
+    //       padding: "10px 20px",
+    //     });
+    //     navigate("/login");
+    //   })
+    //   .catch((error: AxiosError<ErrorResponse>) => {
+    //     setValue("password", "");
+    //     const msg = rT(
+    //       error.response?.errorMessage || "",
+    //       error.response?.errorMessageParam
+    //     );
+    //     typeof msg === "string"
+    //       ? setErrorMsg(rT("input-error"))
+    //       : setErrorMsg(rT("Unknown error"));
+    //   });
   });
 
   return (
@@ -188,57 +208,7 @@ const RegisterBoxed = () => {
                   {t("sign-up-description")}
                 </p>
               </div>
-              {/* <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
-                <div>
-                  <label htmlFor="Name">Name</label>
-                  <div className="relative text-white-dark">
-                    <input
-                      id="Name"
-                      type="text"
-                      placeholder="Enter Name"
-                      className="form-input ps-10 placeholder:text-white-dark"
-                    />
-                    <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                      <IconUser fill={true} />
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="Email">Email</label>
-                  <div className="relative text-white-dark">
-                    <input
-                      id="Email"
-                      type="email"
-                      placeholder="Enter Email"
-                      className="form-input ps-10 placeholder:text-white-dark"
-                    />
-                    <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                      <IconMail fill={true} />
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="Password">Password</label>
-                  <div className="relative text-white-dark">
-                    <input
-                      id="Password"
-                      type="password"
-                      placeholder="Enter Password"
-                      className="form-input ps-10 placeholder:text-white-dark"
-                    />
-                    <span className="absolute start-4 top-1/2 -translate-y-1/2">
-                      <IconLockDots fill={true} />
-                    </span>
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]"
-                >
-                  {t("sign-up")}
-                </button>
-              </form> */}
-               <FormProvider
+              <FormProvider
                 methods={methods}
                 onSubmit={onSubmit}
                 className="space-y-5 dark:text-white"
@@ -261,43 +231,131 @@ const RegisterBoxed = () => {
                   </div>
                 )}
                 <div>
-                  <label htmlFor="LoginId">{t("login-id")}</label>
+                  <label htmlFor="LoginId">
+                    {t("login-id")}
+                    <span className="text-danger">*</span>
+                  </label>
                   <RHFTextField
                     name="loginId"
                     id="LoginId"
                     type="text"
-                    placeholder={t("enter-login-id")}
-                    className="form-input ps-10 placeholder:text-white-dark"
-                    startProps={
-                      <span className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                        <IconLoginId fill={true} />
-                      </span>
-                    }
+                    className="form-input ps-4 placeholder:text-white-dark"
                   />
                 </div>
                 <div>
-                  <label htmlFor="Password">{t("password")}</label>
+                  <label htmlFor="Password">
+                    {t("password")}
+                    <span className="text-danger">*</span>
+                  </label>
                   <RHFTextField
                     name="password"
                     id="Password"
                     type="password"
-                    placeholder={t("enter-password")}
-                    className="form-input ps-10 placeholder:text-white-dark"
-                    startProps={
-                      <span className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                        <IconLockDots fill={true} />
-                      </span>
-                    }
+                    className="form-input ps-4 placeholder:text-white-dark"
                   />
                 </div>
 
+                <div>
+                  <label htmlFor="PasswordConfirmation">
+                    {t("password-confirmation")}
+                    <span className="text-danger">*</span>
+                  </label>
+                  <RHFTextField
+                    name="passwordConfirmation"
+                    id="PasswordConfirmation"
+                    type="password"
+                    className="form-input ps-4 placeholder:text-white-dark"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email">
+                    {t("email")}
+                    <span className="text-danger">*</span>
+                  </label>
+                  <RHFTextField
+                    name="email"
+                    id="email"
+                    type="text"
+                    className="form-input ps-4 placeholder:text-white-dark"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="name">
+                    {t("name")}
+                    <span className="text-danger">*</span>
+                  </label>
+                  <RHFTextField
+                    name="name"
+                    id="name"
+                    type="text"
+                    className="form-input ps-4 placeholder:text-white-dark"
+                  />
+                </div>
+
+                <div
+                  className={`flex gap-2 ${
+                    themeConfig.locale === "ja"
+                      ? "flex-row-reverse"
+                      : "flex-row"
+                  }`}
+                >
+                  <div className="w-1/2">
+                    <label htmlFor="firstName">{t("first-name")}</label>
+                    <RHFTextField
+                      name="firstName"
+                      id="firstName"
+                      type="text"
+                      className="form-input ps-4 placeholder:text-white-dark"
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <label htmlFor="lastName">{t("last-name")}</label>
+                    <RHFTextField
+                      name="lastName"
+                      id="lastName"
+                      type="text"
+                      className="form-input ps-4 placeholder:text-white-dark"
+                    />
+                  </div>
+                </div>
+
+                <Suspense
+                  fallback={
+                    <div>
+                      <div role="status" className="animate-pulse">
+                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
+                        <div className="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px]"></div>
+                        <div className="flex items-center justify-center mt-4">
+                          <svg
+                            className="w-8 h-8 text-gray-200 dark:text-gray-700 me-4"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
+                          </svg>
+                          <div className="w-20 h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 me-3"></div>
+                          <div className="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                        </div>
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    </div>
+                  }
+                >
+                  <GradeRadio name="grade" label={t("grade")} />
+                  <GroupRadio name="group" label={t("group")} />
+                </Suspense>
+
                 <LoadingButton
-                  loading={isSubmitting}
+                  loading={isSubmitting || isPending}
                   type="submit"
                   className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]"
-                  loadingChildren={<>{t("sign-in-loading")}</>}
+                  loadingChildren={<>{t("sign-up-loading")}</>}
                 >
-                  {t("sign-in")}
+                  {t("sign-up")}
                 </LoadingButton>
               </FormProvider>
               <div className="text-center dark:text-white my-8 md:mb-9">

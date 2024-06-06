@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 // config
 import { HOST_API } from '@/config-global';
-import { convertKeysToSnakeCase } from './change-case';
+import { convertKeysToCamelCase, convertKeysToSnakeCase } from './change-case';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +40,11 @@ axiosInstance.interceptors.request.use(request => {
   return request
 })
 
+axiosInstance.interceptors.response.use(response => {
+  response.data = convertKeysToCamelCase(response.data)
+  return response
+})
+
 export const rawAxiosInstance = axios.create({
   baseURL: HOST_API,
   withCredentials: true,
@@ -49,6 +54,11 @@ export const rawAxiosInstance = axios.create({
 rawAxiosInstance.interceptors.request.use(request => {
   request.data = convertKeysToSnakeCase(request.data)
   return request
+})
+
+rawAxiosInstance.interceptors.response.use(response => {
+  response.data = convertKeysToCamelCase(response.data)
+  return response
 })
 
 // ----------------------------------------------------------------------

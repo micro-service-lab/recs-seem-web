@@ -3,7 +3,7 @@ const Index = lazy(() => import('../pages/Index'));
 const Login = lazy(() => import('../pages/Login'));
 const Register = lazy(() => import('../pages/Register'));
 const Error404 = lazy(() => import('../pages/Error404'));
-const MemberList = lazy(() => import('../pages/member/MemberList'));
+const MemberList = lazy(() => import('../pages/Member/MemberList'));
 const ChatRoomList = lazy(() => import('../pages/ChatRoom/ChatRoomList'));
 const CalenderView = lazy(() => import('../pages/Calender/CalenderView'));
 const MinutesView = lazy(() => import('../pages/Minutes/MinutesView'));

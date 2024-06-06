@@ -446,5 +446,6 @@
     "Infrastructure Configuration": "Infrastructure Configuration",
     "Create Room": "Create Room",
     "This information will be made available to all users": "This information will be made available to all users",
-    "Must match 'password' field value": "Must match 'password' field value"
+    "Must match 'password' field value": "Must match 'password' field value",
+    "input-error": "There is an error in the input information"
 }
