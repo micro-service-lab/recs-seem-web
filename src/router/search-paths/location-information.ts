@@ -21,9 +21,9 @@ const LOCATION_INFORMATION_KEYWORDS = [
 
 export const locationInformationPath: Path[] = [
   {
-    title: "location-information-history",
-    href: "/location-information/history",
-    link: "/location-information/history",
+    title: "location-information",
+    href: "/location-information",
+    link: "/location-information",
     keyword: [...LOCATION_INFORMATION_KEYWORDS, ...COMMON_KEYWORDS.history],
   },
 ];

@@ -1,50 +1,49 @@
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "@/store";
-import { useEffect, useState } from "react";
 import { setPageTitle } from "@/store/themeConfigSlice";
+import { useEffect, useState } from "react";
 import Dropdown from "@/components/Dropdown";
 import i18next from "i18next";
 import IconCaretDown from "@/components/Icon/IconCaretDown";
+import IconUser from "@/components/Icon/IconUser";
+import IconMail from "@/components/Icon/IconMail";
 import IconLockDots from "@/components/Icon/IconLockDots";
-import IconLoginId from "@/components/Icon/IconLoginId";
 import { useTranslation } from "react-i18next";
+import FormProvider from "@/components/HookForm/form-provider";
 import { useAuthContext } from "@/auth/hooks";
 import { useToast } from "@/hooks/use-toast";
-import { useBoolean } from "@/hooks/use-boolean";
-import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 import { AxiosError } from "axios";
 import { ErrorResponse } from "@/types/response/error-response";
-import RHFTextField from "@/components/HookForm/rhf-text-field";
-import FormProvider from "@/components/HookForm/form-provider";
+import { useBoolean } from "@/hooks/use-boolean";
 import { LoadingButton } from "@/components/Button/LoadingButton";
-import IconX from "@/components/Icon/IconX";
+import RHFTextField from "@/components/HookForm/rhf-text-field";
 import IconInfoHexagon from "@/components/Icon/IconInfoHexagon";
+import IconX from "@/components/Icon/IconX";
+import IconLoginId from "@/components/Icon/IconLoginId";
 
-const Login = () => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const RegisterBoxed = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setPageTitle(t("sign-in")));
+    dispatch(setPageTitle("sign-up"));
   });
   const { t } = useTranslation("auth");
   const { t: tT } = useTranslation();
   const { t: rT } = useTranslation("response");
   const showAlert = useBoolean();
-
   const navigate = useNavigate();
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
   const setLocale = (flag: string) => {
     setFlag(flag);
   };
-  const [flag, setFlag] = useState(themeConfig.locale);
-
   const { login } = useAuthContext();
   const toast = useToast();
   const [errorMsg, setErrorMsg] = useState("");
-  const [searchParams] = useSearchParams();
-  const returnTo = searchParams.get("returnTo");
+  const [flag, setFlag] = useState(themeConfig.locale);
 
   const LoginSchema = Yup.object().shape({
     loginId: Yup.string().required(tT("Login ID is required")),
@@ -76,7 +75,7 @@ const Login = () => {
           title: tT("Login successfully"),
           padding: "10px 20px",
         });
-        navigate(returnTo || "/");
+        navigate("/login");
       })
       .catch((error: AxiosError<ErrorResponse>) => {
         setValue("password", "");
@@ -148,51 +147,98 @@ const Login = () => {
                   }
                 >
                   <ul className="!px-2 text-dark dark:text-white-dark grid grid-cols-2 gap-2 font-semibold dark:text-white-light/90 w-[280px]">
-                    {
-                      /* eslint-disable @typescript-eslint/no-explicit-any */
-                      themeConfig.languageList.map((item: any) => {
-                        return (
-                          <li key={item.code}>
-                            <button
-                              type="button"
-                              className={`flex w-full hover:text-primary rounded-lg ${
-                                flag === item.code
-                                  ? "bg-primary/10 text-primary"
-                                  : ""
-                              }`}
-                              onClick={() => {
-                                i18next.changeLanguage(item.code);
-                                // setFlag(item.code);
-                                setLocale(item.code);
-                              }}
-                            >
-                              <img
-                                src={`/assets/images/flags/${item.code.toUpperCase()}.svg`}
-                                alt="flag"
-                                className="w-5 h-5 object-cover rounded-full"
-                              />
-                              <span className="ltr:ml-3 rtl:mr-3">
-                                {item.name}
-                              </span>
-                            </button>
-                          </li>
-                        );
-                      })
-                    }
+                    {themeConfig.languageList.map((item: any) => {
+                      return (
+                        <li key={item.code}>
+                          <button
+                            type="button"
+                            className={`flex w-full hover:text-primary rounded-lg ${
+                              flag === item.code
+                                ? "bg-primary/10 text-primary"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              i18next.changeLanguage(item.code);
+                              // setFlag(item.code);
+                              setLocale(item.code);
+                            }}
+                          >
+                            <img
+                              src={`/assets/images/flags/${item.code.toUpperCase()}.svg`}
+                              alt="flag"
+                              className="w-5 h-5 object-cover rounded-full"
+                            />
+                            <span className="ltr:ml-3 rtl:mr-3">
+                              {item.name}
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </Dropdown>
               </div>
             </div>
             <div className="mx-auto w-full max-w-[440px]">
-              <div className="mb-16">
+              <div className="mb-10">
                 <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">
-                  {t("sign-in")}
+                  {t("sign-up")}
                 </h1>
                 <p className="text-base font-bold leading-normal text-white-dark">
-                  {t("sign-in-description")}
+                  {t("sign-up-description")}
                 </p>
               </div>
-              <FormProvider
+              {/* <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
+                <div>
+                  <label htmlFor="Name">Name</label>
+                  <div className="relative text-white-dark">
+                    <input
+                      id="Name"
+                      type="text"
+                      placeholder="Enter Name"
+                      className="form-input ps-10 placeholder:text-white-dark"
+                    />
+                    <span className="absolute start-4 top-1/2 -translate-y-1/2">
+                      <IconUser fill={true} />
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="Email">Email</label>
+                  <div className="relative text-white-dark">
+                    <input
+                      id="Email"
+                      type="email"
+                      placeholder="Enter Email"
+                      className="form-input ps-10 placeholder:text-white-dark"
+                    />
+                    <span className="absolute start-4 top-1/2 -translate-y-1/2">
+                      <IconMail fill={true} />
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="Password">Password</label>
+                  <div className="relative text-white-dark">
+                    <input
+                      id="Password"
+                      type="password"
+                      placeholder="Enter Password"
+                      className="form-input ps-10 placeholder:text-white-dark"
+                    />
+                    <span className="absolute start-4 top-1/2 -translate-y-1/2">
+                      <IconLockDots fill={true} />
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]"
+                >
+                  {t("sign-up")}
+                </button>
+              </form> */}
+               <FormProvider
                 methods={methods}
                 onSubmit={onSubmit}
                 className="space-y-5 dark:text-white"
@@ -254,13 +300,13 @@ const Login = () => {
                   {t("sign-in")}
                 </LoadingButton>
               </FormProvider>
-              <div className="text-center dark:text-white my-7 md:mb-9">
-                {t("dont-have-an-account")}&nbsp;
+              <div className="text-center dark:text-white my-8 md:mb-9">
+                {t("already-have-an-account")}&nbsp;
                 <Link
-                  to="/register"
+                  to="/login"
                   className="uppercase text-primary underline transition hover:text-black dark:hover:text-white"
                 >
-                  {t("sign-up")}
+                  {t("sign-in")}
                 </Link>
               </div>
             </div>
@@ -271,4 +317,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default RegisterBoxed;

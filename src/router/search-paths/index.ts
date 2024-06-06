@@ -1,6 +1,5 @@
 export * from './member';
 export * from './chat-room';
-export * from './event';
 export * from './calender';
 export * from './attendance';
 export * from './role';

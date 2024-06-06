@@ -18,15 +18,9 @@ const CHAT_ROOM_KEYWORDS = [
 
 export const chatRoomPath: Path[] = [
   {
-    title: 'chat-room-list',
+    title: 'chat-room',
     href: '/chat-room',
     link: '/chat-room',
     keyword: [...CHAT_ROOM_KEYWORDS, ...COMMON_KEYWORDS.list],
-  },
-  {
-    title: 'chat-room-create',
-    href: '/chat-room/create',
-    link: '/chat-room/create',
-    keyword: [...CHAT_ROOM_KEYWORDS, ...COMMON_KEYWORDS.create],
   },
 ];

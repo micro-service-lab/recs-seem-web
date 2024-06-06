@@ -1,7 +1,6 @@
 import {
   memberPath,
   chatRoomPath,
-  eventPath,
   attendancePath,
   rolePath,
   calenderPath,
@@ -24,7 +23,6 @@ export const paths: Path[] = [
   ...rolePath,
   ...attendancePath,
   ...chatRoomPath,
-  ...eventPath,
   ...calenderPath,
   ...locationInformationPath,
   ...organizationPath,

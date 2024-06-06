@@ -2,18 +2,21 @@ import { Path } from '../paths';
 import { COMMON_KEYWORDS } from './_common';
 
 const ORGANIZATION_KEYWORDS = [
-  'chat',
-  'チャット',
-  'ちゃっと',
-  'ルーム',
-  'るーむ',
-  'room',
-  'メッセージ',
-  'めっせーじ',
-  'message',
-  'messe-zi',
-  'tyatto',
-  'ru-mu',
+  'organization',
+  '組織',
+  '団体',
+  'org',
+  'そしき',
+  'だんたい',
+  'おーがにざえーしょん',
+  'おがにざえーしょん',
+  'ソシキ',
+  'ダンタイ',
+  'オーガニゼーション',
+  'オガニゼーション',
+  'おーがないぜーしょん',
+  'おがないぜーしょん',
+  'オーガナイゼーション',
 ];
 
 export const organizationPath: Path[] = [

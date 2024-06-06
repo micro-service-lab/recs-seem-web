@@ -13,7 +13,6 @@ import IconNavMember from "../Icon/Nav/IconNavMember";
 import IconNavRole from "../Icon/Nav/IconNavRole";
 import IconNavAttendance from "../Icon/Nav/IconNavAttendance";
 import IconNavChat from "../Icon/Nav/IconNavChat";
-import IconNavEvent from "../Icon/Nav/IconNavEvent";
 import IconNavCalender from "../Icon/Nav/IconNavCalender";
 import IconNavLocation from "../Icon/Nav/IconNavLocation";
 import IconNavOrganization from "../Icon/Nav/IconNavOrganization";
@@ -213,158 +212,34 @@ const Sidebar = () => {
                 </AnimateHeight>
               </li>
               <li className="menu nav-item">
-                <button
-                  type="button"
-                  className={`${
-                    currentMenu === "chat" ? "active" : ""
-                  } nav-link group w-full`}
-                  onClick={() => toggleMenu("chat")}
-                >
+                <NavLink to="/chat-room" className="nav-link group">
                   <div className="flex items-center">
                     <IconNavChat className="group-hover:!text-primary shrink-0" />
                     <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
                       {t("chat")}
                     </span>
                   </div>
-
-                  <div
-                    className={
-                      currentMenu !== "chat" ? "rtl:rotate-90 -rotate-90" : ""
-                    }
-                  >
-                    <IconCaretDown />
-                  </div>
-                </button>
-
-                <AnimateHeight
-                  duration={300}
-                  height={currentMenu === "chat" ? "auto" : 0}
-                >
-                  <ul className="sub-menu text-gray-500">
-                    <li>
-                      <NavLink to="/chat-room">{t("room-list")}</NavLink>
-                    </li>
-                  </ul>
-                  <ul className="sub-menu text-gray-500">
-                    <li>
-                      <NavLink to="/chat-room/create">
-                        {t("room-create")}
-                      </NavLink>
-                    </li>
-                  </ul>
-                </AnimateHeight>
+                </NavLink>
               </li>
               <li className="menu nav-item">
-                <button
-                  type="button"
-                  className={`${
-                    currentMenu === "event" ? "active" : ""
-                  } nav-link group w-full`}
-                  onClick={() => toggleMenu("event")}
-                >
-                  <div className="flex items-center">
-                    <IconNavEvent className="group-hover:!text-primary shrink-0" />
-                    <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                      {t("event")}
-                    </span>
-                  </div>
-
-                  <div
-                    className={
-                      currentMenu !== "event" ? "rtl:rotate-90 -rotate-90" : ""
-                    }
-                  >
-                    <IconCaretDown />
-                  </div>
-                </button>
-
-                <AnimateHeight
-                  duration={300}
-                  height={currentMenu === "event" ? "auto" : 0}
-                >
-                  <ul className="sub-menu text-gray-500">
-                    <li>
-                      <NavLink to="/event/create">{t("create")}</NavLink>
-                    </li>
-                  </ul>
-                </AnimateHeight>
-              </li>
-              <li className="menu nav-item">
-                <button
-                  type="button"
-                  className={`${
-                    currentMenu === "calender" ? "active" : ""
-                  } nav-link group w-full`}
-                  onClick={() => toggleMenu("calender")}
-                >
+                <NavLink to="/calender" className="nav-link group">
                   <div className="flex items-center">
                     <IconNavCalender className="group-hover:!text-primary shrink-0" />
                     <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
                       {t("calender")}
                     </span>
                   </div>
-
-                  <div
-                    className={
-                      currentMenu !== "calender"
-                        ? "rtl:rotate-90 -rotate-90"
-                        : ""
-                    }
-                  >
-                    <IconCaretDown />
-                  </div>
-                </button>
-
-                <AnimateHeight
-                  duration={300}
-                  height={currentMenu === "calender" ? "auto" : 0}
-                >
-                  <ul className="sub-menu text-gray-500">
-                    <li>
-                      <NavLink to="/calender/view">{t("view")}</NavLink>
-                    </li>
-                  </ul>
-                </AnimateHeight>
+                </NavLink>
               </li>
-
               <li className="menu nav-item">
-                <button
-                  type="button"
-                  className={`${
-                    currentMenu === "location-information" ? "active" : ""
-                  } nav-link group w-full`}
-                  onClick={() => toggleMenu("location-information")}
-                >
+                <NavLink to="/location-information" className="nav-link group">
                   <div className="flex items-center">
                     <IconNavLocation className="group-hover:!text-primary shrink-0" />
                     <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
                       {t("location-information")}
                     </span>
                   </div>
-
-                  <div
-                    className={
-                      currentMenu !== "location-information"
-                        ? "rtl:rotate-90 -rotate-90"
-                        : ""
-                    }
-                  >
-                    <IconCaretDown />
-                  </div>
-                </button>
-
-                <AnimateHeight
-                  duration={300}
-                  height={currentMenu === "location-information" ? "auto" : 0}
-                >
-                  <ul className="sub-menu text-gray-500">
-                    <li>
-                      <NavLink to="/location-information/history">
-                        {t("history")}
-                      </NavLink>
-                    </li>
-                  </ul>
-                </AnimateHeight>
+                </NavLink>
               </li>
 
               <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">

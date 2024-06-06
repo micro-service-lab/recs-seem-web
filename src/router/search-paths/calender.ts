@@ -14,11 +14,19 @@ const CALENDER_KEYWORDS = [
   'スケジュール',
   'すけじゅーる',
   'sukeju-ru',
+  'event',
+  'イベント',
+  '行事',
+  'いべんと',
+  'ぎょうじ',
+  'gyouji',
+  'ギョウジ',
+  'ibento',
 ];
 
 export const calenderPath: Path[] = [
   {
-    title: 'calender-view',
+    title: 'calender',
     href: '/calender',
     link: '/calender',
     keyword: [...CALENDER_KEYWORDS, ...COMMON_KEYWORDS.view],

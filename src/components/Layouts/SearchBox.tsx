@@ -17,13 +17,45 @@ export const SearchBox = () => {
   const [filteredItems, setFilteredItems] = useState<Path[]>(paths);
   const navigate = useNavigate();
 
+  const [focusIndex, setFocusIndex] = useState<number>(0);
+
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "k" && event.altKey) {
       setModal(true);
     }
+    if (event.key === "ArrowDown") {
+      if (modal && focusIndex !== filteredItems.length - 1) {
+        setFocusIndex((prev) => (prev + 1));
+      }
+    } else if (event.key === "ArrowUp") {
+      if (modal && focusIndex !== 0) {
+        setFocusIndex((prev) => (prev - 1));
+      }
+    } else if (event.key === "Enter") {
+      if (modal && filteredItems.length) {
+        handlerNavPush(filteredItems[focusIndex].link);
+      }
+    }
   };
 
   useEventListener("keydown", handleKeyDown);
+
+  const handlerNavPush = (link :string) => {
+    setModal(false);
+    setSearch("");
+    navigate(link);
+  }
+
+  // formでのsubmitを防ぐ
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  };
+
+  const handleModalClose = () => {
+    setSearch("");
+    setFocusIndex(0);
+    setModal(false);
+  }
 
   useEffect(() => {
     setFilteredItems(() => {
@@ -39,6 +71,7 @@ export const SearchBox = () => {
         });
       });
     });
+    setFocusIndex(0);
   }, [search]);
 
   return (
@@ -62,7 +95,7 @@ export const SearchBox = () => {
         </div>
       </div>
       <Transition appear show={modal} as={Fragment}>
-        <Dialog as="div" open={modal} onClose={() => setModal(false)}>
+        <Dialog as="div" open={modal} onClose={handleModalClose}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -90,7 +123,7 @@ export const SearchBox = () => {
                   className="panel border-0 p-0 rounded-lg overflow-hidden my-8 w-full max-w-3xl text-black dark:text-white-dark"
                 >
                   <div className="flex flex-col-reverse sm:flex-row w-full justify-between sm:px-3 pt-1 sm:pt-0 items-end sm:items-center sm:my-4">
-                    <form className="mb-2 w-full sm:w-5/6 pt-2">
+                    <form className="mb-2 w-full sm:w-5/6 pt-2" onSubmit={handleFormSubmit}>
                       <div className="relative w-11/12 mx-auto">
                         <input
                           type="text"
@@ -120,7 +153,7 @@ export const SearchBox = () => {
                   </div>
 
                   <div className="p-4 border border-white-dark/20 rounded-lg space-y-4 overflow-x-auto w-full block">
-                    <PerfectScrollbar className="relative max-h-[50vh] overflow-x-hidden">
+                    <PerfectScrollbar className="relative max-h-[50vh] overflow-x-hidden" id="search-box">
                       <div className="min-h-[45vh] px-4 space-y-4 my-4">
                         {!filteredItems.length ? (
                           <div className="flex justify-center items-center h-full w-full min-h-[40vh] flex-col">
@@ -131,16 +164,17 @@ export const SearchBox = () => {
                             </div>
                           </div>
                         ) : (
-                          filteredItems.map((item: Path) => {
+                          filteredItems.map((item: Path, i: number) => {
                             return (
                               <PerfectScrollbar
-                                className="overflow-y-hidden bg-white dark:bg-[#1b2e4b] rounded-xl shadow-[0_0_4px_2px_rgb(31_45_61_/_10%)] px-4 flex items-center justify-between
-                            text-gray-500 font-semibold hover:text-primary transition-all duration-150 hover:border border-dashed border-success cursor-pointer py-4"
+                                className={`overflow-y-hidden bg-white dark:bg-[#1b2e4b] rounded-xl shadow-[0_0_4px_2px_rgb(31_45_61_/_10%)] px-4 flex items-center justify-between
+                            text-gray-500 font-semibold hover:text-primary transition-all duration-150 hover:border border-dashed border-success cursor-pointer py-4
+                            ${focusIndex === i ? "ring-2 ring-offset-2 ring-indigo-300" : ""}`}
                                 key={item.title}
                               >
                                 <div
-                                  className="min-w-[625px]"
-                                  onClick={() => navigate(item.link)}
+                                  className="min-w-[625px] h-[3.5rem]"
+                                  onClick={() => handlerNavPush(item.link)}
                                 >
                                   <div>{t(item.title)}</div>
                                   <div
