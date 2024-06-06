@@ -27,5 +27,7 @@
   "permission": "権限管理",
   "minutes": "議事録",
   "location-information" : "位置情報",
-  "history" : "履歴"
+  "history" : "履歴",
+  "page-title-index": "ReCS/SEEM",
+  "page-title-chat-room-list": "チャットルーム"
 }

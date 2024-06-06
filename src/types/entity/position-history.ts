@@ -3,5 +3,5 @@ export interface PositionHistory {
     memberId: string;
     xPos: number;
     yPos: number;
-    sentAt: Date;
+    sentAt: string;
 }

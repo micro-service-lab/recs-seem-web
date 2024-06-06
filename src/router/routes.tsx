@@ -31,38 +31,38 @@ const routes: Route[] = [
   {
     path: '/',
     element: <Index />,
-    layout: 'guest',
+    layout: 'auth',
   },
   // general
   // member
   {
     path: '/member',
     element: <MemberList />,
-    layout: 'guest',
+    layout: 'auth',
   },
   // chat room
   {
     path: '/chat-room',
     element: <ChatRoomList />,
-    layout: 'guest',
+    layout: 'auth',
   },
   // calender
   {
     path: '/calender',
     element: <CalenderView />,
-    layout: 'guest',
+    layout: 'auth',
   },
   // minutes
   {
     path: '/minutes',
     element: <MinutesView />,
-    layout: 'guest',
+    layout: 'auth',
   },
   // setting
   {
     path: '/setting',
     element: <Setting />,
-    layout: 'guest',
+    layout: 'auth',
   },
   {
     path: '*',

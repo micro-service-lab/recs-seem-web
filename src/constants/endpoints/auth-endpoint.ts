@@ -6,4 +6,7 @@ export const AUTH_ENDPOINTS = {
     logout: "/auth/logout",
     refresh: "/auth/refresh_token",
   },
+  confidential: {
+    chatRooms: "/confidential/chat_rooms",
+  }
 };

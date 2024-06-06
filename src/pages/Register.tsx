@@ -8,33 +8,35 @@ import i18next from "i18next";
 import IconCaretDown from "@/components/Icon/IconCaretDown";
 import { useTranslation } from "react-i18next";
 import FormProvider from "@/components/HookForm/form-provider";
-import { useAuthContext } from "@/auth/hooks";
 import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { AxiosError } from "axios";
-import { ErrorResponse } from "@/types/response/error-response";
+import {
+  ErrorResponse,
+  isApplicationErrorResponse,
+} from "@/types/response/error-response";
 import { useBoolean } from "@/hooks/use-boolean";
 import { LoadingButton } from "@/components/Button/LoadingButton";
 import RHFTextField from "@/components/HookForm/rhf-text-field";
 import IconInfoHexagon from "@/components/Icon/IconInfoHexagon";
 import IconX from "@/components/Icon/IconX";
-import IconLoginId from "@/components/Icon/IconLoginId";
 import { useRegisterQuery } from "@/api/auth/RegisterQuery";
 import GradeRadio from "@/sections/Form/GradeRadio";
 import GroupRadio from "@/sections/Form/GroupRadio";
+import { formErrorHandle } from "@/utils/errorHandle/formErrorHandle";
+import { API_RESPONSE_TYPES } from "@/constants/backend-response";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const RegisterBoxed = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setPageTitle("sign-up"));
+    dispatch(setPageTitle(t("sign-up")));
   });
   const { isPending, mutate } = useRegisterQuery();
   const { t } = useTranslation("auth");
   const { t: tT } = useTranslation();
-  const { t: rT } = useTranslation("response");
   const showAlert = useBoolean();
   const navigate = useNavigate();
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
@@ -57,8 +59,8 @@ const RegisterBoxed = () => {
       .email(tT("Invalid email")),
     firstName: Yup.string(),
     lastName: Yup.string(),
-    grade: Yup.string().required(tT("Grade is required")),
-    group: Yup.string().required(tT("Group is required")),
+    gradeId: Yup.string().required(tT("Grade is required")),
+    groupId: Yup.string().required(tT("Group is required")),
   });
 
   const defaultValues = {
@@ -69,8 +71,8 @@ const RegisterBoxed = () => {
     name: "",
     firstName: "",
     lastName: "",
-    grade: "",
-    group: "",
+    gradeId: "",
+    groupId: "",
   };
 
   const methods = useForm({
@@ -81,32 +83,43 @@ const RegisterBoxed = () => {
   const {
     handleSubmit,
     setValue,
+    setError,
     formState: { isSubmitting },
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     showAlert.onTrue();
-    console.log(data);
-    // mutate(data);
-    // await login?.(data.loginId, data.password)
-    //   .then(() => {
-    //     toast.fire({
-    //       icon: "success",
-    //       title: tT("Login successfully"),
-    //       padding: "10px 20px",
-    //     });
-    //     navigate("/login");
-    //   })
-    //   .catch((error: AxiosError<ErrorResponse>) => {
-    //     setValue("password", "");
-    //     const msg = rT(
-    //       error.response?.errorMessage || "",
-    //       error.response?.errorMessageParam
-    //     );
-    //     typeof msg === "string"
-    //       ? setErrorMsg(rT("input-error"))
-    //       : setErrorMsg(rT("Unknown error"));
-    //   });
+    mutate(data, {
+      onSuccess: () => {
+        toast.fire({
+          icon: "success",
+          title: tT("Register successfully"),
+          padding: "10px 20px",
+        });
+        navigate("/login");
+      },
+      onError(error) {
+        setValue("password", "");
+        setValue("passwordConfirmation", "");
+        let msg = tT("unknown-error");
+        if (error instanceof AxiosError) {
+          error.response?.data &&
+            formErrorHandle(error.response.data as ErrorResponse, setError);
+          toast.fire({
+            icon: "error",
+            title: tT("Register failed"),
+            padding: "10px 20px",
+          });
+          if (
+            isApplicationErrorResponse(error.response?.data) &&
+            error.response?.data.code === API_RESPONSE_TYPES.Validation
+          ) {
+            msg = tT("input-error");
+          }
+        }
+        setErrorMsg(msg);
+      },
+    });
   });
 
   return (
@@ -345,8 +358,8 @@ const RegisterBoxed = () => {
                     </div>
                   }
                 >
-                  <GradeRadio name="grade" label={t("grade")} />
-                  <GroupRadio name="group" label={t("group")} />
+                  <GradeRadio name="gradeId" label={tT("grade")} required />
+                  <GroupRadio name="groupId" label={tT("group")} required />
                 </Suspense>
 
                 <LoadingButton

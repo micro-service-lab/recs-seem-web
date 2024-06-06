@@ -57,3 +57,20 @@ export function fToNow(
       })
     : '';
 }
+
+export function formatDate(date: string): string {
+  const dateObj = new Date(date);
+  const now = new Date();
+
+  const isToday = dateObj.getDate() === now.getDate() &&
+                  dateObj.getMonth() === now.getMonth() &&
+                  dateObj.getFullYear() === now.getFullYear();
+
+  if (isToday) {
+    return dateObj.getHours().toString().padStart(2, '0') + ':' +
+           dateObj.getMinutes().toString().padStart(2, '0');
+  } else {
+    return (dateObj.getMonth() + 1).toString().padStart(2, '0') + '/' +
+           dateObj.getDate().toString().padStart(2, '0');
+  }
+}

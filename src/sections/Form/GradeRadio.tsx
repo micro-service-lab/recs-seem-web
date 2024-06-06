@@ -5,10 +5,11 @@ import { useEffect, useState } from "react";
 
 type Props = {
   name: string;
+  required?: boolean;
   label?: string;
 };
 
-const GradeRadio = (props: Props) => {
+const GradeRadio = ({ name, required, label }: Props) => {
   const [grades, setGrades] = useState<OrganizationWithDetail[]>([]);
   const { data } = useGetGradesQuery({
     searchName: "",
@@ -31,8 +32,9 @@ const GradeRadio = (props: Props) => {
     <>
       {!!grades.length && (
         <RHFRadioGroup
-          name={props.name}
-          label={props.label || "Grade"}
+          name={name}
+          required={required}
+          label={label || "Grade"}
           parentClassName="grid grid-cols-2 gap-2 md:grid-cols-3"
           options={grades.map((grade) => ({
             label: grade.name,

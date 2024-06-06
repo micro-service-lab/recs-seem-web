@@ -27,5 +27,7 @@
   "permission": "Permission",
   "minutes": "Minutes",
   "location-information": "Location Information",
-  "history": "History"
+  "history": "History",
+  "page-title-index": "ReCS/SEEM",
+  "page-title-chat-room-list": "Chat Room"
 }

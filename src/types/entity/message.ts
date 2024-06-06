@@ -8,14 +8,14 @@ export interface Message {
     chatRoomActionId: string;
     senderId: string|null;
     body: string;
-    postedAt: Date;
-    lastEditedAt: Date;
+    postedAt: string;
+    lastEditedAt: string;
 }
 
 export interface MessageCard {
     messageId: string;
     body: string;
-    postedAt: Date;
+    postedAt: string;
 }
 
 export interface MessageWithChatRoomAction {
@@ -23,8 +23,8 @@ export interface MessageWithChatRoomAction {
     chatRoomAction: ChatRoomAction;
     senderId: string|null;
     body: string;
-    postedAt: Date;
-    lastEditedAt: Date;
+    postedAt: string;
+    lastEditedAt: string;
 }
 
 export interface MessageWithSender {
@@ -32,8 +32,8 @@ export interface MessageWithSender {
     chatRoomActionId: string;
     sender: MemberCard|null;
     body: string;
-    postedAt: Date;
-    lastEditedAt: Date;
+    postedAt: string;
+    lastEditedAt: string;
 }
 
 export interface MessageWithSenderAndReadReceiptCountAndAttachments {
@@ -41,8 +41,8 @@ export interface MessageWithSenderAndReadReceiptCountAndAttachments {
     chatRoomActionId: string;
     sender: MemberCard|null;
     body: string;
-    postedAt: Date;
-    lastEditedAt: Date;
+    postedAt: string;
+    lastEditedAt: string;
     readReceiptCount: number;
     attachments: AttachedItemOnMessage[];
 }
@@ -52,6 +52,6 @@ export interface MessageWithChatRoom {
     chatRoom: ChatRoomWithCoverImage;
     senderId: string|null;
     body: string;
-    postedAt: Date;
-    lastEditedAt: Date;
+    postedAt: string;
+    lastEditedAt: string;
 }

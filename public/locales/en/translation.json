@@ -447,5 +447,15 @@
     "Create Room": "Create Room",
     "This information will be made available to all users": "This information will be made available to all users",
     "Must match 'password' field value": "Must match 'password' field value",
-    "input-error": "There is an error in the input information"
+    "input-error": "There is an error in the input information",
+    "Name is required": "Name is required",
+    "Email is required": "Email is required",
+    "Invalid email": "Incorrect email format",
+    "Grade is required": "Grade is required",
+    "Group is required": "Group is required",
+    "unknown-error": "An unknown error has occurred",
+    "Register failed": "Register failed",
+    "grade": "Grade",
+    "group": "Group",
+    "New Chat Room": "New Chat Room"
 }

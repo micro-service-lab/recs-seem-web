@@ -1,263 +1,14 @@
-import Dropdown from "@/components/Dropdown";
 import { IRootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect } from "react";
-import PerfectScrollbar from "react-perfect-scrollbar";
+import { useState, useEffect, Suspense } from "react";
 import { setPageTitle } from "@/store/themeConfigSlice";
-import IconHorizontalDots from "@/components/Icon/IconHorizontalDots";
-import IconSettings from "@/components/Icon/IconSettings";
-import IconSearch from "@/components/Icon/IconSearch";
 import IconChatPlus from "@/components/Icon/IconChatPlus";
 import IconMenu from "@/components/Icon/IconMenu";
 import IconMessage from "@/components/Icon/IconMessage";
-import IconPhoneCall from "@/components/Icon/IconPhoneCall";
-import IconVideo from "@/components/Icon/IconVideo";
-import IconCopy from "@/components/Icon/IconCopy";
-import IconTrashLines from "@/components/Icon/IconTrashLines";
-import IconShare from "@/components/Icon/IconShare";
-import IconMoodSmile from "@/components/Icon/IconMoodSmile";
-import IconSend from "@/components/Icon/IconSend";
-import IconMicrophoneOff from "@/components/Icon/IconMicrophoneOff";
-import IconDownload from "@/components/Icon/IconDownload";
-import IconCamera from "@/components/Icon/IconCamera";
 import { useTranslation } from "react-i18next";
-
-const contactList = [
-  {
-    userId: 1,
-    name: "Nia Hillyer",
-    path: "profile-16.jpeg",
-    time: "2:09 PM",
-    preview: "How do you do?",
-    messages: [
-      {
-        fromUserId: 0,
-        toUserId: 1,
-        text: "Hi, I am back from vacation",
-      },
-      {
-        fromUserId: 0,
-        toUserId: 1,
-        text: "How are you?",
-      },
-      {
-        fromUserId: 1,
-        toUserId: 0,
-        text: "Welcom Back",
-      },
-      {
-        fromUserId: 1,
-        toUserId: 0,
-        text: "I am all well",
-      },
-      {
-        fromUserId: 0,
-        toUserId: 1,
-        text: "Coffee?",
-      },
-    ],
-    active: true,
-  },
-  {
-    userId: 2,
-    name: "Sean Freeman",
-    path: "profile-1.jpeg",
-    time: "12:09 PM",
-    preview: "I was wondering...",
-    messages: [
-      {
-        fromUserId: 0,
-        toUserId: 2,
-        text: "Hello",
-      },
-      {
-        fromUserId: 0,
-        toUserId: 2,
-        text: "It's me",
-      },
-      {
-        fromUserId: 0,
-        toUserId: 2,
-        text: "I have a question regarding project.",
-      },
-    ],
-    active: false,
-  },
-  {
-    userId: 3,
-    name: "Alma Clarke",
-    path: "profile-2.jpeg",
-    time: "1:44 PM",
-    preview: "I’ve forgotten how it felt before",
-    messages: [
-      {
-        fromUserId: 0,
-        toUserId: 3,
-        text: "Hey Buddy.",
-      },
-      {
-        fromUserId: 0,
-        toUserId: 3,
-        text: "What's up",
-      },
-      {
-        fromUserId: 3,
-        toUserId: 0,
-        text: "I am sick",
-      },
-      {
-        fromUserId: 0,
-        toUserId: 3,
-        text: "Not comming to office today.",
-      },
-    ],
-    active: true,
-  },
-  {
-    userId: 4,
-    name: "Alan Green",
-    path: "profile-3.jpeg",
-    time: "2:06 PM",
-    preview: "But we’re probably gonna need a new carpet.",
-    messages: [
-      {
-        fromUserId: 0,
-        toUserId: 4,
-        text: "Hi, collect your check",
-      },
-      {
-        fromUserId: 4,
-        toUserId: 0,
-        text: "Ok, I will be there in 10 mins",
-      },
-    ],
-    active: true,
-  },
-  {
-    userId: 5,
-    name: "Shaun Park",
-    path: "profile-4.jpeg",
-    time: "2:05 PM",
-    preview: "It’s not that bad...",
-    messages: [
-      {
-        fromUserId: 0,
-        toUserId: 3,
-        text: "Hi, I am back from vacation",
-      },
-      {
-        fromUserId: 0,
-        toUserId: 3,
-        text: "How are you?",
-      },
-      {
-        fromUserId: 0,
-        toUserId: 5,
-        text: "Welcom Back",
-      },
-      {
-        fromUserId: 0,
-        toUserId: 5,
-        text: "I am all well",
-      },
-      {
-        fromUserId: 5,
-        toUserId: 0,
-        text: "Coffee?",
-      },
-    ],
-    active: false,
-  },
-  {
-    userId: 6,
-    name: "Roxanne",
-    path: "profile-5.jpeg",
-    time: "2:00 PM",
-    preview: "Wasup for the third time like is you bling bitch",
-    messages: [
-      {
-        fromUserId: 0,
-        toUserId: 6,
-        text: "Hi",
-      },
-      {
-        fromUserId: 0,
-        toUserId: 6,
-        text: "Uploaded files to server.",
-      },
-    ],
-    active: false,
-  },
-  {
-    userId: 7,
-    name: "Ernest Reeves",
-    path: "profile-6.jpeg",
-    time: "2:09 PM",
-    preview: "Wasup for the third time like is you bling bitch",
-    messages: [],
-    active: true,
-  },
-  {
-    userId: 8,
-    name: "Laurie Fox",
-    path: "profile-7.jpeg",
-    time: "12:09 PM",
-    preview: "Wasup for the third time like is you bling bitch",
-    messages: [],
-    active: true,
-  },
-  {
-    userId: 9,
-    name: "Xavier",
-    path: "profile-8.jpeg",
-    time: "4:09 PM",
-    preview: "Wasup for the third time like is you bling bitch",
-    messages: [],
-    active: false,
-  },
-  {
-    userId: 10,
-    name: "Susan Phillips",
-    path: "profile-9.jpeg",
-    time: "9:00 PM",
-    preview: "Wasup for the third time like is you bling bitch",
-    messages: [],
-    active: true,
-  },
-  {
-    userId: 11,
-    name: "Dale Butler",
-    path: "profile-10.jpeg",
-    time: "5:09 PM",
-    preview: "Wasup for the third time like is you bling bitch",
-    messages: [],
-    active: false,
-  },
-  {
-    userId: 12,
-    name: "Grace Roberts",
-    path: "user-profile.jpeg",
-    time: "8:01 PM",
-    preview: "Wasup for the third time like is you bling bitch",
-    messages: [],
-    active: true,
-  },
-  {
-    userId: 13,
-    name: "Grace Roberts",
-    path: "user-profile.jpeg",
-    time: "8:01 PM",
-    preview: "Wasup for the third time like is you bling bitch",
-    messages: [],
-    active: true,
-  },
-];
-const loginUser = {
-  id: 0,
-  name: "Alon Smith",
-  path: "profile-34.jpeg",
-  designation: "Software Developer",
-};
+import ChatRoomScrollList from "@/sections/Chat/ChatRoomScrollList";
+import { PracticalChatRoomOnMember } from "@/types/entity/chat-room-belonging";
+import ChatScrollList from "@/sections/Chat/ChatScrollList";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Chat = () => {
@@ -274,22 +25,12 @@ const Chat = () => {
   const { t: tT } = useTranslation("page");
 
   const [isShowChatMenu, setIsShowChatMenu] = useState(false);
-  const [searchWord, setSearchWord] = useState("");
-  const [isShowUserChat, setIsShowUserChat] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [textMessage, setTextMessage] = useState("");
-  const [filteredItems, setFilteredItems] = useState<any>(contactList);
-
-  useEffect(() => {
-    setFilteredItems(() => {
-      return contactList.filter((d) => {
-        return d.name.toLowerCase().includes(searchWord.toLowerCase());
-      });
-    });
-  }, [searchWord]);
+  const [isShowChat, setIsShowChat] = useState(false);
+  const [selectChatRoom, setSelectChatRoom] =
+    useState<PracticalChatRoomOnMember | null>(null);
 
   const scrollToBottom = () => {
-    if (isShowUserChat) {
+    if (isShowChat) {
       setTimeout(() => {
         const element: any = document.querySelector(".chat-conversation-box");
         element.behavior = "smooth";
@@ -297,31 +38,11 @@ const Chat = () => {
       });
     }
   };
-  const selectUser = (user: any) => {
-    setSelectedUser(user);
-    setIsShowUserChat(true);
+  const handleSelectChatRoom = (chatRoom: PracticalChatRoomOnMember) => {
+    setSelectChatRoom(chatRoom);
+    setIsShowChat(true);
     scrollToBottom();
     setIsShowChatMenu(false);
-  };
-  const sendMessage = () => {
-    if (textMessage.trim()) {
-      const list = contactList;
-      const user: any = list.find((d) => d.userId === selectedUser.userId);
-      user.messages.push({
-        fromUserId: selectedUser.userId,
-        toUserId: 0,
-        text: textMessage,
-        time: "Just now",
-      });
-      setFilteredItems(list);
-      setTextMessage("");
-      scrollToBottom();
-    }
-  };
-  const sendMessageHandle = (event: any) => {
-    if (event.key === "Enter") {
-      sendMessage();
-    }
   };
   return (
     <div>
@@ -345,64 +66,31 @@ const Chat = () => {
               <IconChatPlus width={24} height={24} />
             </div>
           </div>
-          <div className="relative">
-            <input
-              type="text"
-              className="form-input peer ltr:pr-9 rtl:pl-9"
-              placeholder="Searching..."
-              value={searchWord}
-              onChange={(e) => setSearchWord(e.target.value)}
-            />
-            <div className="absolute ltr:right-2 rtl:left-2 top-1/2 -translate-y-1/2 peer-focus:text-primary">
-              <IconSearch />
-            </div>
-          </div>
-          <div className="mt-6">
-            <PerfectScrollbar className="chat-users relative h-full min-h-[100px] sm:h-[calc(100vh_-_357px)] space-y-0.5 ltr:pr-3.5 rtl:pl-3.5 ltr:-mr-3.5 rtl:-ml-3.5">
-              {filteredItems.map((person: any) => {
-                return (
-                  <div key={person.userId}>
-                    <button
-                      type="button"
-                      className={`w-full flex justify-between items-center p-2 hover:bg-gray-100 dark:hover:bg-[#050b14] rounded-md dark:hover:text-primary hover:text-primary ${
-                        selectedUser && selectedUser.userId === person.userId
-                          ? "bg-gray-100 dark:bg-[#050b14] dark:text-primary text-primary"
-                          : ""
-                      }`}
-                      onClick={() => selectUser(person)}
-                    >
-                      <div className="flex-1">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 relative">
-                            <img
-                              src={`/assets/images/${person.path}`}
-                              className="rounded-full h-12 w-12 object-cover"
-                              alt=""
-                            />
-                            {person.active && (
-                              <div>
-                                <div className="absolute bottom-0 ltr:right-0 rtl:left-0">
-                                  <div className="w-4 h-4 bg-success rounded-full"></div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="mx-3 ltr:text-left rtl:text-right">
-                            <p className="mb-1 font-semibold">{person.name}</p>
-                            <p className="text-xs text-white-dark truncate max-w-[185px]">
-                              {person.preview}
-                            </p>
-                          </div>
-                        </div>
+          <div className="mt-6 h-full min-h-[100px] sm:h-[calc(100vh_-_292px)]">
+            <Suspense
+              fallback={
+                <div
+                  role="status"
+                  className="max-w-md p-4 space-y-12 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700"
+                >
+                  {Array.from({ length: 10 }).map((_, i) => (
+                    <div key={i} className="flex items-center justify-between">
+                      <div>
+                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                        <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
                       </div>
-                      <div className="font-semibold whitespace-nowrap text-xs">
-                        <p>{person.time}</p>
-                      </div>
-                    </button>
-                  </div>
-                );
-              })}
-            </PerfectScrollbar>
+                      <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <ChatRoomScrollList
+                searchName=""
+                selectChatRoom={selectChatRoom}
+                onSelectChatRoom={handleSelectChatRoom}
+              />
+            </Suspense>
           </div>
         </div>
         <div
@@ -412,7 +100,7 @@ const Chat = () => {
           onClick={() => setIsShowChatMenu(!isShowChatMenu)}
         ></div>
         <div className="panel p-0 flex-1">
-          {!isShowUserChat && (
+          {!isShowChat && (
             <div className="flex items-center justify-center h-full relative p-4">
               <button
                 type="button"
@@ -589,231 +277,13 @@ const Chat = () => {
               </div>
             </div>
           )}
-          {isShowUserChat && selectedUser ? (
-            <div className="relative h-full">
-              <div className="flex justify-between items-center p-4">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                  <button
-                    type="button"
-                    className="xl:hidden hover:text-primary"
-                    onClick={() => setIsShowChatMenu(!isShowChatMenu)}
-                  >
-                    <IconMenu />
-                  </button>
-                  <div className="relative flex-none">
-                    <img
-                      src={`/assets/images/${selectedUser.path}`}
-                      className="rounded-full w-10 h-10 sm:h-12 sm:w-12 object-cover"
-                      alt=""
-                    />
-                    <div className="absolute bottom-0 ltr:right-0 rtl:left-0">
-                      <div className="w-4 h-4 bg-success rounded-full"></div>
-                    </div>
-                  </div>
-                  <div className="mx-3">
-                    <p className="font-semibold">{selectedUser.name}</p>
-                    <p className="text-white-dark text-xs">
-                      {selectedUser.active
-                        ? "Active now"
-                        : "Last seen at " + selectedUser.time}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex sm:gap-5 gap-3">
-                  <button type="button">
-                    <IconPhoneCall className="hover:text-primary" />
-                  </button>
-
-                  <button type="button">
-                    <IconVideo className="w-5 h-5 hover:text-primary" />
-                  </button>
-                  <div className="dropdown">
-                    <Dropdown
-                      placement="bottom-end"
-                      btnClassName="bg-[#f4f4f4] dark:bg-[#1b2e4b] hover:bg-primary-light w-8 h-8 rounded-full !flex justify-center items-center"
-                      button={
-                        <IconHorizontalDots className="hover:text-primary rotate-90 opacity-70" />
-                      }
-                    >
-                      <ul className="text-black dark:text-white-dark">
-                        <li>
-                          <button type="button">
-                            <IconSearch className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Search
-                          </button>
-                        </li>
-                        <li>
-                          <button type="button">
-                            <IconCopy className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Copy
-                          </button>
-                        </li>
-                        <li>
-                          <button type="button">
-                            <IconTrashLines className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Delete
-                          </button>
-                        </li>
-                        <li>
-                          <button type="button">
-                            <IconShare className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Share
-                          </button>
-                        </li>
-                        <li>
-                          <button type="button">
-                            <IconSettings className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Settings
-                          </button>
-                        </li>
-                      </ul>
-                    </Dropdown>
-                  </div>
-                </div>
-              </div>
-              <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
-
-              <PerfectScrollbar className="relative h-full sm:h-[calc(100vh_-_300px)] chat-conversation-box">
-                <div className="space-y-5 p-4 sm:pb-0 pb-[68px] sm:min-h-[300px] min-h-[400px]">
-                  <div className="block m-6 mt-0">
-                    <h4 className="text-xs text-center border-b border-[#f4f4f4] dark:border-gray-800 relative">
-                      <span className="relative top-2 px-3 bg-white dark:bg-black">
-                        {"Today, " + selectedUser.time}
-                      </span>
-                    </h4>
-                  </div>
-                  {selectedUser.messages && selectedUser.messages.length ? (
-                    <>
-                      {selectedUser.messages.map((message: any, index: any) => {
-                        return (
-                          <div key={index}>
-                            <div
-                              className={`flex items-start gap-3 ${
-                                selectedUser.userId === message.fromUserId
-                                  ? "justify-end"
-                                  : ""
-                              }`}
-                            >
-                              <div
-                                className={`flex-none ${
-                                  selectedUser.userId === message.fromUserId
-                                    ? "order-2"
-                                    : ""
-                                }`}
-                              >
-                                {selectedUser.userId === message.fromUserId ? (
-                                  <img
-                                    src={`/assets/images/${loginUser.path}`}
-                                    className="rounded-full h-10 w-10 object-cover"
-                                    alt=""
-                                  />
-                                ) : (
-                                  ""
-                                )}
-                                {selectedUser.userId !== message.fromUserId ? (
-                                  <img
-                                    src={`/assets/images/${selectedUser.path}`}
-                                    className="rounded-full h-10 w-10 object-cover"
-                                    alt=""
-                                  />
-                                ) : (
-                                  ""
-                                )}
-                              </div>
-                              <div className="space-y-2">
-                                <div className="flex items-center gap-3">
-                                  <div
-                                    className={`dark:bg-gray-800 p-4 py-2 rounded-md bg-black/10 ${
-                                      message.fromUserId === selectedUser.userId
-                                        ? "ltr:rounded-br-none rtl:rounded-bl-none !bg-primary text-white"
-                                        : "ltr:rounded-bl-none rtl:rounded-br-none"
-                                    }`}
-                                  >
-                                    {message.text}
-                                  </div>
-                                  <div
-                                    className={`${
-                                      selectedUser.userId === message.fromUserId
-                                        ? "hidden"
-                                        : ""
-                                    }`}
-                                  >
-                                    <IconMoodSmile className="hover:text-primary" />
-                                  </div>
-                                </div>
-                                <div
-                                  className={`text-xs text-white-dark ${
-                                    selectedUser.userId === message.fromUserId
-                                      ? "ltr:text-right rtl:text-left"
-                                      : ""
-                                  }`}
-                                >
-                                  {message.time ? message.time : "5h ago"}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </PerfectScrollbar>
-              <div className="p-4 absolute bottom-0 left-0 w-full">
-                <div className="sm:flex w-full space-x-3 rtl:space-x-reverse items-center">
-                  <div className="relative flex-1">
-                    <input
-                      className="form-input rounded-full border-0 bg-[#f4f4f4] px-12 focus:outline-none py-2"
-                      placeholder="Type a message"
-                      value={textMessage}
-                      onChange={(e: any) => setTextMessage(e.target.value)}
-                      onKeyUp={sendMessageHandle}
-                    />
-                    <button
-                      type="button"
-                      className="absolute ltr:left-4 rtl:right-4 top-1/2 -translate-y-1/2 hover:text-primary"
-                    >
-                      <IconMoodSmile />
-                    </button>
-                    <button
-                      type="button"
-                      className="absolute ltr:right-4 rtl:left-4 top-1/2 -translate-y-1/2 hover:text-primary"
-                      onClick={() => sendMessage()}
-                    >
-                      <IconSend />
-                    </button>
-                  </div>
-                  <div className="items-center space-x-3 rtl:space-x-reverse sm:py-0 py-3 hidden sm:block">
-                    <button
-                      type="button"
-                      className="bg-[#f4f4f4] dark:bg-[#1b2e4b] hover:bg-primary-light rounded-md p-2 hover:text-primary"
-                    >
-                      <IconMicrophoneOff />
-                    </button>
-                    <button
-                      type="button"
-                      className="bg-[#f4f4f4] dark:bg-[#1b2e4b] hover:bg-primary-light rounded-md p-2 hover:text-primary"
-                    >
-                      <IconDownload />
-                    </button>
-                    <button
-                      type="button"
-                      className="bg-[#f4f4f4] dark:bg-[#1b2e4b] hover:bg-primary-light rounded-md p-2 hover:text-primary"
-                    >
-                      <IconCamera />
-                    </button>
-                    <button
-                      type="button"
-                      className="bg-[#f4f4f4] dark:bg-[#1b2e4b] hover:bg-primary-light rounded-md p-2 hover:text-primary"
-                    >
-                      <IconHorizontalDots className="opacity-70" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {isShowChat && selectChatRoom ? (
+            <Suspense fallback={<div>Loading...</div>}>
+              <ChatScrollList
+                chatRoom={selectChatRoom}
+                onClose={() => setIsShowChat(false)}
+              />
+            </Suspense>
           ) : (
             ""
           )}

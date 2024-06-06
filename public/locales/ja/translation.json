@@ -447,5 +447,15 @@
     "Create Room": "ルーム作成",
     "This information will be made available to all users": "これらの情報はすべてのユーザーに公開されます",
     "Must match 'password' field value": "パスワードと一致しません",
-    "input-error": "入力情報に誤りがあります"
+    "input-error": "入力情報に誤りがあります",
+    "Name is required": "名前は必須項目です",
+    "Email is required": "メールアドレスは必須項目です",
+    "Invalid email": "メールの形式が正しくありません",
+    "Grade is required": "学年は必須項目です",
+    "Group is required": "グループは必須項目です",
+    "unknown-error": "不明なエラーが発生しました",
+    "Register failed": "登録に失敗しました",
+    "grade": "学年",
+    "group": "班",
+    "New Chat Room": "新規チャットルーム"
 }

@@ -6,9 +6,14 @@ import { useEffect, useState } from "react";
 type Props = {
   name: string;
   label?: string;
+  required?: boolean;
 };
 
-const GroupRadio = (props: Props) => {
+const GroupRadio = ({
+  name,
+  label,
+  required,
+}: Props) => {
   const [groups, setGroups] = useState<OrganizationWithDetail[]>([]);
   const { data } = useGetGroupsQuery({
     searchName: "",
@@ -31,9 +36,10 @@ const GroupRadio = (props: Props) => {
     <>
       {!!groups.length && (
         <RHFRadioGroup
-          name={props.name}
-          label={props.label || "Group"}
-          parentClassName="grid grid-cols-2 gap-2 md:grid-cols-3"
+          name={name}
+          label={label || "Group"}
+          required={required}
+          parentClassName="grid grid-cols-2 gap-5 md:grid-cols-3"
           options={groups.map((group) => ({
             label: group.name,
             value: group.group?.groupId || "",

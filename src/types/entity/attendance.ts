@@ -3,9 +3,9 @@ export interface Attendance {
     attendanceTypeId: string;
     memberId: string;
     description: string;
-    date: Date|null;
+    date: string|null;
     mailSendFlag: boolean;
     sendOrganizationId: string|null;
-    postedAt: Date;
-    lastEditedAt: Date;
+    postedAt: string;
+    lastEditedAt: string;
 }

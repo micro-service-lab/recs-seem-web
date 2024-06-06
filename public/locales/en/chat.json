@@ -1,0 +1,9 @@
+{
+    "chat-room-action-create": "Chat room have been created",
+    "chat-room-action-update_name": "Chat room name have been updated",
+    "chat-room-action-add_member": "Member have been added",
+    "chat-room-action-remove_member": "Member have been removed",
+    "chat-room-action-withdraw": "Member have been withdraw",
+    "chat-room-action-message": "Message have been sent",
+    "chat-room-action-delete_message": "Message have been deleted"
+}

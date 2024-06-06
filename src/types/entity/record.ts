@@ -6,6 +6,6 @@ export interface Record {
     organizationId: string|null;
     postedBy: string|null;
     lastEditedBy: string|null;
-    postedAt: Date|null;
-    lastEditedAt: Date|null;
+    postedAt: string|null;
+    lastEditedAt: string|null;
 }

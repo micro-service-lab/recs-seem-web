@@ -65,7 +65,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
 
                         {/* BEGIN CONTENT AREA */}
                         <Suspense>
-                            <div className="p-6">{children}</div>
+                            <div className="p-6 h-full">{children}</div>
                         </Suspense>
                         {/* END CONTENT AREA */}
 

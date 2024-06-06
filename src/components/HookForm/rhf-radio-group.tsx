@@ -6,9 +6,10 @@ import { useFormContext, Controller } from "react-hook-form";
 type Props = HTMLProps<HTMLInputElement> & {
   name: string;
   parentClassName?: string;
-  options: { label: string; value: any; key: string }[];
+  options: { label: string; value: string; key: string }[];
   label?: string;
   spacing?: number;
+  required?: boolean;
 };
 
 export default function RHFRadioGroup({
@@ -17,6 +18,8 @@ export default function RHFRadioGroup({
   parentClassName,
   options,
   spacing,
+  required = false,
+  className = "",
   ...other
 }: Props) {
   const { control } = useFormContext();
@@ -35,9 +38,15 @@ export default function RHFRadioGroup({
               id={labelledby}
             >
               {label}
+              {required && <span className="text-danger">*</span>}
             </div>
           )}
-          <div className={`${parentClassName === "" ? "flex flex-wrap" : parentClassName}`} style={{ gap: spacing }}>
+          <div
+            className={`${
+              parentClassName === "" ? "flex flex-wrap" : parentClassName
+            }`}
+            style={{ gap: spacing }}
+          >
             {options.map((option) => (
               <label
                 key={option.key}
@@ -48,7 +57,7 @@ export default function RHFRadioGroup({
                   {...other}
                   type="radio"
                   value={option.value}
-                  className="form-radio"
+                  className={`form-radio ${className}`}
                   checked={field.value === option.value}
                   onChange={() => field.onChange(option.value)}
                 />

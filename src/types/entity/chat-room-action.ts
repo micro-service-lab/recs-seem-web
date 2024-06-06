@@ -11,13 +11,13 @@ export interface ChatRoomAction {
     chatRoomActionId: string;
     chatRoomId: string;
     chatRoomActionTypeId: string;
-    actedAt: Date;
+    actedAt: string;
 }
 
 export interface ChatRoomActionWithActionType {
     chatRoomActionId: string;
     chatRoomId: string;
-    actedAt: Date;
+    actedAt: string;
     chatRoomActionType: ChatRoomActionType;
 }
 
@@ -25,7 +25,7 @@ export interface ChatRoomActionWithDetail {
     chatRoomActionId: string;
     chatRoomId: string;
     chatRoomActionTypeId: string;
-    actedAt: Date;
+    actedAt: string;
     chatRoomCreateAction: ChatRoomCreateActionWithCreatedBy;
     chatRoomUpdateNameAction: ChatRoomUpdateNameActionWithUpdatedBy;
     chatRoomAddMemberAction: ChatRoomAddMemberActionWithAddedBy;
@@ -39,7 +39,7 @@ export interface ChatRoomActionPractical {
     chatRoomActionId: string;
     chatRoomId: string;
     chatRoomActionTypeId: string;
-    actedAt: Date;
+    actedAt: string;
     chatRoomCreateAction: ChatRoomCreateActionWithCreatedBy|null;
     chatRoomUpdateNameAction: ChatRoomUpdateNameActionWithUpdatedBy|null;
     chatRoomAddMemberAction: ChatRoomAddMemberActionWithAddedByAndAddMembers|null;

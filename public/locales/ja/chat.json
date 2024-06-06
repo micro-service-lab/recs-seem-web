@@ -1,0 +1,9 @@
+{
+    "chat-room-action-create": "チャットルームの作成が行われました",
+    "chat-room-action-update_name": "チャットルーム名の変更が行われました",
+    "chat-room-action-add_member": "メンバーの追加が行われました",
+    "chat-room-action-remove_member": "メンバーの削除が行われました",
+    "chat-room-action-withdraw": "チャットルームからの退室がありました",
+    "chat-room-action-message": "メッセージが送信されました",
+    "chat-room-action-delete_message": "メッセージの削除が行われました"
+}

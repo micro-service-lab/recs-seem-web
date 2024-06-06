@@ -10,8 +10,8 @@ type MutateProps = {
     passwordConfirmation: string;
     email: string;
     name: string;
-    firstName: string|null;
-    lastName: string|null;
+    firstName?: string|null;
+    lastName?: string|null;
     gradeId: string;
     groupId: string;
 };

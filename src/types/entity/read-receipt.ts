@@ -4,7 +4,7 @@ import { Message } from "./message";
 export interface ReadReceipt {
     memberId: string;
     messageId: string;
-    readAt: Date|null;
+    readAt: string|null;
 }
 
 export interface ReadReceiptGroupByMessage {
@@ -19,10 +19,10 @@ export interface ReadReceiptGroupByChatRoom {
 
 export interface ReadableMemberOnMessage {
     member: MemberCard;
-    readAt: Date|null;
+    readAt: string|null;
 }
 
 export interface ReadableMessageOnMember {
     message: Message;
-    readAt: Date|null;
+    readAt: string|null;
 }
