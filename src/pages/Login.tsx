@@ -2,9 +2,8 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "@/store";
 import { useEffect, useState } from "react";
-import { setPageTitle } from "@/store/themeConfigSlice";
+import { setPageTitle, toggleLocale } from "@/store/themeConfigSlice";
 import Dropdown from "@/components/Dropdown";
-import i18next from "i18next";
 import IconCaretDown from "@/components/Icon/IconCaretDown";
 import IconLockDots from "@/components/Icon/IconLockDots";
 import IconLoginId from "@/components/Icon/IconLoginId";
@@ -35,10 +34,6 @@ const Login = () => {
 
   const navigate = useNavigate();
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
-  const setLocale = (flag: string) => {
-    setFlag(flag);
-  };
-  const [flag, setFlag] = useState(themeConfig.locale);
 
   const { login } = useAuthContext();
   const toast = useToast();
@@ -133,13 +128,13 @@ const Login = () => {
                     <>
                       <div>
                         <img
-                          src={`/assets/images/flags/${flag.toUpperCase()}.svg`}
+                          src={`/assets/images/flags/${themeConfig.locale.toUpperCase()}.svg`}
                           alt="image"
                           className="h-5 w-5 rounded-full object-cover"
                         />
                       </div>
                       <div className="text-base font-bold uppercase">
-                        {flag}
+                        {themeConfig.locale}
                       </div>
                       <span className="shrink-0">
                         <IconCaretDown />
@@ -156,14 +151,12 @@ const Login = () => {
                             <button
                               type="button"
                               className={`flex w-full hover:text-primary rounded-lg ${
-                                flag === item.code
+                                themeConfig.locale === item.code
                                   ? "bg-primary/10 text-primary"
                                   : ""
                               }`}
                               onClick={() => {
-                                i18next.changeLanguage(item.code);
-                                // setFlag(item.code);
-                                setLocale(item.code);
+                                dispatch(toggleLocale(item.code));
                               }}
                             >
                               <img

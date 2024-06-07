@@ -1,8 +1,11 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { IRootState } from "../../store";
-import { toggleTheme, toggleSidebar } from "../../store/themeConfigSlice";
+import {
+  toggleTheme,
+  toggleSidebar,
+  toggleLocale,
+} from "../../store/themeConfigSlice";
 import i18next from "i18next";
 import Dropdown from "../Dropdown";
 import IconMenu from "../Icon/IconMenu";
@@ -17,11 +20,6 @@ const Header = () => {
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
   const dispatch = useDispatch();
   const path = useLocation().pathname;
-
-  const setLocale = (flag: string) => {
-    setFlag(flag);
-  };
-  const [flag, setFlag] = useState(themeConfig.locale);
 
   return (
     <header className="z-40">
@@ -108,7 +106,7 @@ const Header = () => {
                 button={
                   <img
                     className="w-5 h-5 object-cover rounded-full"
-                    src={`/assets/images/flags/${flag.toUpperCase()}.svg`}
+                    src={`/assets/images/flags/${themeConfig.locale.toUpperCase()}.svg`}
                     alt="flag"
                   />
                 }
@@ -125,9 +123,7 @@ const Header = () => {
                               : ""
                           }`}
                           onClick={() => {
-                            i18next.changeLanguage(item.code);
-                            // setFlag(item.code);
-                            setLocale(item.code);
+                            dispatch(toggleLocale(item.code));
                           }}
                         >
                           <img

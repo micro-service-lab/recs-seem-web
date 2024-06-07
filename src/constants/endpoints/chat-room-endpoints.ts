@@ -5,10 +5,10 @@ export const CHAT_ROOM_ENDPOINTS = {
     create: "/chat_rooms",
     update: (id: string) => `/chat_rooms/${id}`,
     delete: (id: string) => `/chat_rooms/${id}`,
-    chat: {
-      get: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/chats`,
-      create: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/chats`,
-      delete: (chatRoomId: string, chatId: string) => `/chat_rooms/${chatRoomId}/chats/${chatId}`,
+    message: {
+      get: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/messages`,
+      create: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/messages`,
+      delete: (chatRoomId: string, chatId: string) => `/chat_rooms/${chatRoomId}/messages/${chatId}`,
     },
     member: {
       get: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/members`,

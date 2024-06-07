@@ -8,7 +8,7 @@ import IconMessage from "@/components/Icon/IconMessage";
 import { useTranslation } from "react-i18next";
 import ChatRoomScrollList from "@/sections/Chat/ChatRoomScrollList";
 import { PracticalChatRoomOnMember } from "@/types/entity/chat-room-belonging";
-import ChatScrollList from "@/sections/Chat/ChatScrollList";
+import ChatTalkList from "@/sections/Chat/ChatTalkList";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Chat = () => {
@@ -279,9 +279,11 @@ const Chat = () => {
           )}
           {isShowChat && selectChatRoom ? (
             <Suspense fallback={<div>Loading...</div>}>
-              <ChatScrollList
+              <ChatTalkList
                 chatRoom={selectChatRoom}
                 onClose={() => setIsShowChat(false)}
+                toggleChatMenu={() => setIsShowChatMenu(!isShowChatMenu)}
+                scrollToBottom={scrollToBottom}
               />
             </Suspense>
           ) : (
