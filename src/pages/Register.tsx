@@ -346,7 +346,6 @@ const RegisterBoxed = () => {
                           <div className="w-20 h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 me-3"></div>
                           <div className="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
                         </div>
-                        <span className="sr-only">Loading...</span>
                       </div>
                     </div>
                   }

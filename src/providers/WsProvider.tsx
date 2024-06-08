@@ -91,175 +91,160 @@ const InnerWsProvider = ({ children }: { children: React.ReactNode }) => {
   const addUpdatedNameAction = useRecoilCallback(
     ({ set }) =>
       (data: WsChatRoomUpdatedNameEventData) => {
-        set(
-          chatRoomAdditionalActionState,
-          (prev) => {
-            const action: ChatRoomActionPractical = {
-              chatRoomActionId: data.chatRoomActionId,
-              chatRoomId: data.chatRoomId,
-              chatRoomActionTypeId: data.chatRoomActionTypeId,
-              actedAt: data.actedAt,
-              chatRoomCreateAction: null,
-              chatRoomUpdateNameAction: data.action,
-              chatRoomAddMemberAction: null,
-              chatRoomRemoveMemberAction: null,
-              chatRoomWithdrawAction: null,
-              chatRoomDeleteMessageAction: null,
-              message: null,
+        set(chatRoomAdditionalActionState, (prev) => {
+          const action: ChatRoomActionPractical = {
+            chatRoomActionId: data.chatRoomActionId,
+            chatRoomId: data.chatRoomId,
+            chatRoomActionTypeId: data.chatRoomActionTypeId,
+            actedAt: data.actedAt,
+            chatRoomCreateAction: null,
+            chatRoomUpdateNameAction: data.action,
+            chatRoomAddMemberAction: null,
+            chatRoomRemoveMemberAction: null,
+            chatRoomWithdrawAction: null,
+            chatRoomDeleteMessageAction: null,
+            message: null,
+          };
+          if (prev[data.chatRoomId]) {
+            return {
+              ...prev,
+              [data.chatRoomId]: [action, ...prev[data.chatRoomId]],
             };
-            if (prev[data.chatRoomId]) {
-              return {
-                ...prev,
-                [data.chatRoomId]: [action, ...prev[data.chatRoomId]],
-              };
-            }else{
-              return {
-                ...prev,
-                [data.chatRoomId]: [action],
-              };
-            }
+          } else {
+            return {
+              ...prev,
+              [data.chatRoomId]: [action],
+            };
           }
-        );
+        });
       }
   );
 
   const addAddedMemberAction = useRecoilCallback(
     ({ set }) =>
       (data: WsChatRoomAddedMemberEventData) => {
-        set(
-          chatRoomAdditionalActionState,
-          (prev) => {
-            const action: ChatRoomActionPractical = {
-              chatRoomActionId: data.chatRoomActionId,
-              chatRoomId: data.chatRoomId,
-              chatRoomActionTypeId: data.chatRoomActionTypeId,
-              actedAt: data.actedAt,
-              chatRoomCreateAction: null,
-              chatRoomUpdateNameAction: null,
-              chatRoomAddMemberAction: data.action,
-              chatRoomRemoveMemberAction: null,
-              chatRoomWithdrawAction: null,
-              chatRoomDeleteMessageAction: null,
-              message: null,
+        set(chatRoomAdditionalActionState, (prev) => {
+          const action: ChatRoomActionPractical = {
+            chatRoomActionId: data.chatRoomActionId,
+            chatRoomId: data.chatRoomId,
+            chatRoomActionTypeId: data.chatRoomActionTypeId,
+            actedAt: data.actedAt,
+            chatRoomCreateAction: null,
+            chatRoomUpdateNameAction: null,
+            chatRoomAddMemberAction: data.action,
+            chatRoomRemoveMemberAction: null,
+            chatRoomWithdrawAction: null,
+            chatRoomDeleteMessageAction: null,
+            message: null,
+          };
+          if (prev[data.chatRoomId]) {
+            return {
+              ...prev,
+              [data.chatRoomId]: [action, ...prev[data.chatRoomId]],
             };
-            if (prev[data.chatRoomId]) {
-              return {
-                ...prev,
-                [data.chatRoomId]: [action, ...prev[data.chatRoomId]],
-              };
-            }else{
-              return {
-                ...prev,
-                [data.chatRoomId]: [action],
-              };
-            }
+          } else {
+            return {
+              ...prev,
+              [data.chatRoomId]: [action],
+            };
           }
-        );
+        });
       }
   );
 
   const addRemovedMemberAction = useRecoilCallback(
     ({ set }) =>
       (data: WsChatRoomRemovedMemberEventData) => {
-        set(
-          chatRoomAdditionalActionState,
-          (prev) => {
-            const action: ChatRoomActionPractical = {
-              chatRoomActionId: data.chatRoomActionId,
-              chatRoomId: data.chatRoomId,
-              chatRoomActionTypeId: data.chatRoomActionTypeId,
-              actedAt: data.actedAt,
-              chatRoomCreateAction: null,
-              chatRoomUpdateNameAction: null,
-              chatRoomAddMemberAction: null,
-              chatRoomRemoveMemberAction: data.action,
-              chatRoomWithdrawAction: null,
-              chatRoomDeleteMessageAction: null,
-              message: null,
+        set(chatRoomAdditionalActionState, (prev) => {
+          const action: ChatRoomActionPractical = {
+            chatRoomActionId: data.chatRoomActionId,
+            chatRoomId: data.chatRoomId,
+            chatRoomActionTypeId: data.chatRoomActionTypeId,
+            actedAt: data.actedAt,
+            chatRoomCreateAction: null,
+            chatRoomUpdateNameAction: null,
+            chatRoomAddMemberAction: null,
+            chatRoomRemoveMemberAction: data.action,
+            chatRoomWithdrawAction: null,
+            chatRoomDeleteMessageAction: null,
+            message: null,
+          };
+          if (prev[data.chatRoomId]) {
+            return {
+              ...prev,
+              [data.chatRoomId]: [action, ...prev[data.chatRoomId]],
             };
-            if (prev[data.chatRoomId]) {
-              return {
-                ...prev,
-                [data.chatRoomId]: [action, ...prev[data.chatRoomId]],
-              };
-            }else{
-              return {
-                ...prev,
-                [data.chatRoomId]: [action],
-              };
-            }
+          } else {
+            return {
+              ...prev,
+              [data.chatRoomId]: [action],
+            };
           }
-        );
+        });
       }
   );
 
   const addWithdrawnMemberAction = useRecoilCallback(
     ({ set }) =>
       (data: WsChatRoomWithdrawnMemberEventData) => {
-        set(
-          chatRoomAdditionalActionState,
-          (prev) => {
-            const action: ChatRoomActionPractical = {
-              chatRoomActionId: data.chatRoomActionId,
-              chatRoomId: data.chatRoomId,
-              chatRoomActionTypeId: data.chatRoomActionTypeId,
-              actedAt: data.actedAt,
-              chatRoomCreateAction: null,
-              chatRoomUpdateNameAction: null,
-              chatRoomAddMemberAction: null,
-              chatRoomRemoveMemberAction: null,
-              chatRoomWithdrawAction: data.action,
-              chatRoomDeleteMessageAction: null,
-              message: null,
+        set(chatRoomAdditionalActionState, (prev) => {
+          const action: ChatRoomActionPractical = {
+            chatRoomActionId: data.chatRoomActionId,
+            chatRoomId: data.chatRoomId,
+            chatRoomActionTypeId: data.chatRoomActionTypeId,
+            actedAt: data.actedAt,
+            chatRoomCreateAction: null,
+            chatRoomUpdateNameAction: null,
+            chatRoomAddMemberAction: null,
+            chatRoomRemoveMemberAction: null,
+            chatRoomWithdrawAction: data.action,
+            chatRoomDeleteMessageAction: null,
+            message: null,
+          };
+          if (prev[data.chatRoomId]) {
+            return {
+              ...prev,
+              [data.chatRoomId]: [action, ...prev[data.chatRoomId]],
             };
-            if (prev[data.chatRoomId]) {
-              return {
-                ...prev,
-                [data.chatRoomId]: [action, ...prev[data.chatRoomId]],
-              };
-            }else{
-              return {
-                ...prev,
-                [data.chatRoomId]: [action],
-              };
-            }
+          } else {
+            return {
+              ...prev,
+              [data.chatRoomId]: [action],
+            };
           }
-        );
+        });
       }
   );
 
   const addMessageAction = useRecoilCallback(
     ({ set }) =>
       (data: WsChatRoomSentMessageEventData) => {
-        set(
-          chatRoomAdditionalActionState,
-          (prev) => {
-            const action: ChatRoomActionPractical = {
-              chatRoomActionId: data.chatRoomActionId,
-              chatRoomId: data.chatRoomId,
-              chatRoomActionTypeId: data.chatRoomActionTypeId,
-              actedAt: data.actedAt,
-              chatRoomCreateAction: null,
-              chatRoomUpdateNameAction: null,
-              chatRoomAddMemberAction: null,
-              chatRoomRemoveMemberAction: null,
-              chatRoomWithdrawAction: null,
-              chatRoomDeleteMessageAction: null,
-              message: data.action,
+        set(chatRoomAdditionalActionState, (prev) => {
+          const action: ChatRoomActionPractical = {
+            chatRoomActionId: data.chatRoomActionId,
+            chatRoomId: data.chatRoomId,
+            chatRoomActionTypeId: data.chatRoomActionTypeId,
+            actedAt: data.actedAt,
+            chatRoomCreateAction: null,
+            chatRoomUpdateNameAction: null,
+            chatRoomAddMemberAction: null,
+            chatRoomRemoveMemberAction: null,
+            chatRoomWithdrawAction: null,
+            chatRoomDeleteMessageAction: null,
+            message: data.action,
+          };
+          if (prev[data.chatRoomId]) {
+            return {
+              ...prev,
+              [data.chatRoomId]: [action, ...prev[data.chatRoomId]],
             };
-            if (prev[data.chatRoomId]) {
-              return {
-                ...prev,
-                [data.chatRoomId]: [action, ...prev[data.chatRoomId]],
-              };
-            }else{
-              return {
-                ...prev,
-                [data.chatRoomId]: [action],
-              };
-            }
+          } else {
+            return {
+              ...prev,
+              [data.chatRoomId]: [action],
+            };
           }
-        );
+        });
       }
   );
 

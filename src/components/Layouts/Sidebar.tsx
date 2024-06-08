@@ -5,7 +5,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { toggleSidebar } from "../../store/themeConfigSlice";
 import AnimateHeight from "react-animate-height";
 import { IRootState } from "../../store";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import IconCaretsDown from "../Icon/IconCaretsDown";
 import IconCaretDown from "../Icon/IconCaretDown";
 import IconMinus from "../Icon/IconMinus";
@@ -19,6 +19,7 @@ import IconNavOrganization from "../Icon/Nav/IconNavOrganization";
 import IconNavSetting from "../Icon/Nav/IconNavSetting";
 import IconNavPermission from "../Icon/Nav/IconNavPermission";
 import IconNavMinutes from "../Icon/Nav/IconNavMinutes";
+import UnreadIcon from "./UnreadIcon";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Sidebar = () => {
@@ -212,13 +213,20 @@ const Sidebar = () => {
                 </AnimateHeight>
               </li>
               <li className="menu nav-item">
-                <NavLink to="/chat-room" className="nav-link group">
+                <NavLink to="/chat-room" className="nav-link group relative">
                   <div className="flex items-center">
                     <IconNavChat className="group-hover:!text-primary shrink-0" />
                     <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
                       {t("chat")}
                     </span>
                   </div>
+                  <Suspense
+                    fallback={
+                      <div className="animate-pulse h-6 w-6 bg-gray-300 dark:bg-gray-700 rounded-full absolute right-2"></div>
+                    }
+                  >
+                    <UnreadIcon />
+                  </Suspense>
                 </NavLink>
               </li>
               <li className="menu nav-item">

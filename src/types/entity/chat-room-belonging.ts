@@ -26,6 +26,7 @@ export interface MemberOnChatRoom {
 export interface PracticalChatRoomOnMember {
     chatRoom: PracticalChatRoom;
     addedAt: string;
+    unreadCount: number;
 }
 
 export interface ChatRoomOnMember {

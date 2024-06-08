@@ -16,7 +16,6 @@ import { ChatRoomDeleteMessageActionWithDeletedBy } from "@/types/entity/chat-ro
 import { MessageWithSenderAndReadReceiptCountAndAttachments } from "@/types/entity/message";
 import { useAuthContext } from "@/auth/hooks";
 import { AuthUserType } from "@/auth/types";
-import IconMoodSmile from "@/components/Icon/IconMoodSmile";
 import { TFunction } from "i18next";
 import { chatRoomAdditionalActionState } from "@/store/openChatRoom";
 import { useRecoilState } from "recoil";
@@ -261,20 +260,16 @@ const ChatRoomMessageAction = ({
           action.sender?.memberId === auth?.memberId ? "order-2" : ""
         }`}
       >
-        {action.sender?.memberId === auth?.memberId ? (
-          action.sender?.profileImage ? (
-            <img
-              src={action.sender.profileImage.attachableItem.url}
-              className="h-9 w-9 rounded-full object-cover"
-              alt=""
-            />
-          ) : (
-            <span className="flex justify-center items-center w-9 h-9 text-center rounded-full object-cover bg-success text-2xl">
-              {(action.sender?.name || "")[0]}
-            </span>
-          )
+        {action.sender?.profileImage ? (
+          <img
+            src={action.sender.profileImage.attachableItem.url}
+            className="h-9 w-9 rounded-full object-cover"
+            alt=""
+          />
         ) : (
-          ""
+          <span className="flex justify-center items-center w-9 h-9 text-center rounded-full object-cover bg-success text-2xl">
+            {(action.sender?.name || "")[0]}
+          </span>
         )}
       </div>
       <div className="space-y-2">
@@ -288,22 +283,24 @@ const ChatRoomMessageAction = ({
           >
             {readCount}
           </div>
-          <div
-            className={`dark:bg-gray-800 p-4 py-2 rounded-md bg-black/10 max-w-48 sm:max-w-72 md:max-w-96 overflow-wrap break-words
+          <div>
+            <>
+              {action.sender?.memberId !== auth?.memberId && (
+                <div className="text-xs text-gray-400 dark:text-dark-light/60">
+                  {action.sender?.name}
+                </div>
+              )}
+            </>
+            <div
+              className={`dark:bg-gray-800 p-4 py-2 rounded-md bg-black/10 max-w-48 sm:max-w-72 md:max-w-96 overflow-wrap break-words
               ${
                 action.sender?.memberId === auth?.memberId
                   ? "ltr:rounded-br-none rtl:rounded-bl-none !bg-cyan-500 text-white"
                   : "ltr:rounded-bl-none rtl:rounded-br-none"
               }`}
-          >
-            {action.body}
-          </div>
-          <div
-            className={`${
-              action.sender?.memberId === auth?.memberId ? "hidden" : ""
-            }`}
-          >
-            <IconMoodSmile className="hover:text-primary" />
+            >
+              {action.body}
+            </div>
           </div>
         </div>
         <div

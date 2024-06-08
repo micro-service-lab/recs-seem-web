@@ -6,22 +6,21 @@ import React, { useEffect } from "react";
 import { formatDate } from "@/utils/format-time";
 import { ChatRoomActionTypeKeys } from "@/types/chat-room-action";
 import { useTranslation } from "react-i18next";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { openChatRoomState } from "@/store/openChatRoom";
+import { unreadMessageCountOnChatRoomState } from "@/store/unreadMessage";
 
 const CHAT_ROOM_PER_PAGE = 10;
 
 type Props = {
   searchName: string;
-  onSelectChatRoom: (chatRoom: PracticalChatRoomOnMember) => void
+  onSelectChatRoom: (chatRoom: PracticalChatRoomOnMember) => void;
 };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const ChatRoomScrollList = ({
-  searchName,
-  onSelectChatRoom,
-}: Props) => {
+const ChatRoomScrollList = ({ searchName, onSelectChatRoom }: Props) => {
   const { t } = useTranslation("chat");
+  const [unreadCounts, setUnreadCounts] = useRecoilState(unreadMessageCountOnChatRoomState)
   const openChatRoom = useRecoilValue(openChatRoomState);
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useGetInfinityChatRoomsOnAuthQuery({
@@ -41,6 +40,18 @@ const ChatRoomScrollList = ({
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
+  useEffect(() => {
+    if (data) {
+      const newUnreadCounts: { [key: string]: number } = {};
+      data.pages.forEach((page) => {
+        page.data.data.forEach((room) => {
+          newUnreadCounts[room.chatRoom.chatRoomId] = room.unreadCount;
+        });
+      });
+      setUnreadCounts(prev => ({ ...prev, ...newUnreadCounts }));
+    }
+  }, [data, setUnreadCounts]);
+
   if (!data) {
     return <div>No Room</div>;
   }
@@ -54,7 +65,7 @@ const ChatRoomScrollList = ({
               <div key={room.chatRoom.chatRoomId}>
                 <button
                   type="button"
-                  className={`w-full flex justify-between items-center p-2 hover:bg-gray-100 dark:hover:bg-[#050b14] rounded-md dark:hover:text-primary hover:text-primary overflow-hidden h-20
+                  className={`w-full flex justify-between items-center p-2 hover:bg-gray-100 dark:hover:bg-[#050b14] rounded-md dark:hover:text-primary hover:text-primary overflow-hidden h-20 relative
                   ${
                     openChatRoom &&
                     openChatRoom.chatRoom.chatRoomId ===
@@ -65,7 +76,7 @@ const ChatRoomScrollList = ({
                   onClick={() => onSelectChatRoom(room)}
                 >
                   <div className="flex-1">
-                    <div className="flex items-center">
+                    <div className="flex items-center w-[calc(100%-3rem)]">
                       <div className="flex-shrink-0 relative">
                         {room.chatRoom.isPrivate ? (
                           room.chatRoom.companion?.member.profileImage ? (
@@ -74,6 +85,7 @@ const ChatRoomScrollList = ({
                                 room.chatRoom.companion?.member.profileImage
                                   .attachableItem.url
                               }
+                              // src="http://localhost:9090/default-bucket/bd27d88c-82b9-495b-89c5-8ce35144be67.jpg"
                               className="h-10 w-10 rounded-md object-cover"
                               alt=""
                             />
@@ -84,6 +96,7 @@ const ChatRoomScrollList = ({
                           )
                         ) : room.chatRoom.coverImage ? (
                           <img
+                          // src="http://localhost:9090/default-bucket/bd27d88c-82b9-495b-89c5-8ce35144be67.jpg"
                             src={room.chatRoom.coverImage.attachableItem.url}
                             className="h-10 w-10 rounded-md object-cover"
                             alt=""
@@ -95,24 +108,38 @@ const ChatRoomScrollList = ({
                         )}
                       </div>
                       <div className="mx-3 ltr:text-left rtl:text-right">
-                        <p className="mb-1 font-semibold">
+                        <p className="mb-1 font-semibold truncate max-w-[145px]">
                           {room.chatRoom.isPrivate
                             ? room.chatRoom.companion?.member.name || ""
                             : room.chatRoom.name || ""}
                         </p>
-                        <p className="text-xs text-white-dark truncate max-w-[185px]">
-                          {room.chatRoom.latestAction?.chatRoomActionType.key === ChatRoomActionTypeKeys.MESSAGE
+                        <p className="text-xs text-white-dark truncate max-w-[165px]">
+                          {room.chatRoom.latestAction?.chatRoomActionType
+                            .key === ChatRoomActionTypeKeys.MESSAGE
                             ? room.chatRoom.latestMessage?.body
-                            : t(`chat-room-action-${room.chatRoom.latestAction?.chatRoomActionType.key || ""}`)
-                            }
+                            : t(
+                                `chat-room-action-${
+                                  room.chatRoom.latestAction?.chatRoomActionType
+                                    .key || ""
+                                }`
+                              )}
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div className="font-semibold whitespace-nowrap text-xs">
+                  <div className="font-semibold whitespace-nowrap text-xs absolute right-1 space-y-2">
                     <p>
-                      {room.chatRoom.latestAction?.actedAt ? formatDate(room.chatRoom.latestAction.actedAt) : ""}
+                      {room.chatRoom.latestAction?.actedAt
+                        ? formatDate(room.chatRoom.latestAction.actedAt)
+                        : ""}
                     </p>
+                    <div className="w-full h-5 flex justify-center items-center">
+                      {(unreadCounts[room.chatRoom.chatRoomId] || 0) > 0 && (
+                        <span className="badge bg-danger rounded-full h-full w-5 flex justify-center items-center">
+                          {unreadCounts[room.chatRoom.chatRoomId]}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </button>
               </div>

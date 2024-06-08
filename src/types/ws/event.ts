@@ -132,6 +132,7 @@ export type WsChatRoomSentMessageEventPayload = WsEventPayload<WsChatRoomSentMes
 
 export type WsChatRoomReadMessageEventData = {
   chatRoomId: string;
+  memberId: string;
   messageIds: string[];
 };
 
