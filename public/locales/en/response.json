@@ -55,5 +55,10 @@
   "not-match-chat-room-message-error-response": "Not match chat room message",
   "cannot-read-own-message-error-response": "Cannot read own message",
   "not-create-message-to-self-error-response": "Not create message to self",
-  "cannot-attach-system-file-error-response": "Cannot attach system file"
+  "cannot-attach-system-file-error-response": "Cannot attach system file",
+  "private-chat-room-already-exists-error-response": "Private chat room already exists",
+  "not-chat-room-member-error-response": "Not chat room member",
+  "must-be-grade-professor-if-group-professor-error-response": "Must be grade professor if group professor",
+  "must-be-group-professor-if-grade-professor-error-response": "Must be group professor if grade professor",
+  "not-organization-member-error-response": "Not organization member"
 }

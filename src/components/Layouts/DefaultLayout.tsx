@@ -7,20 +7,12 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Portals from "../../components/Portals";
-import { websocketAtom } from "@/store/websocket";
-import { useRecoilValue } from "recoil";
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
   const dispatch = useDispatch();
-  const socket = useRecoilValue(websocketAtom);
 
   const [showTopButton, setShowTopButton] = useState(false);
-
-  socket.onmessage = (msg) => {
-    const content = JSON.parse(msg.data as string);
-    console.log(content, msg.data);
-  };
 
   const goToTop = () => {
     document.body.scrollTop = 0;
@@ -96,7 +88,9 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
 
             {/* BEGIN CONTENT AREA */}
             <Suspense>
-              <div className="p-6 h-full">{children}</div>
+              <div className="p-6 h-full">
+                {children}
+              </div>
             </Suspense>
             {/* END CONTENT AREA */}
 

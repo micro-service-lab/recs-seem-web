@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import PerfectScrollbar from "react-perfect-scrollbar";
 import { Link, useLocation } from "react-router-dom";
 import { IRootState } from "../../store";
 import {
@@ -12,14 +13,22 @@ import IconMenu from "../Icon/IconMenu";
 import IconSun from "../Icon/IconSun";
 import IconMoon from "../Icon/IconMoon";
 import IconLaptop from "../Icon/IconLaptop";
+import IconOnline from "../Icon/IconOnline";
 import { SearchBox } from "./SearchBox";
 import { UserAvatar } from "./UserAvatar";
+import { useRecoilValue } from "recoil";
+import {
+  onlineMembersCountState,
+  onlineMembersState,
+} from "@/store/onlineMembers";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Header = () => {
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
   const dispatch = useDispatch();
   const path = useLocation().pathname;
+  const onlineMembers = useRecoilValue(onlineMembersState);
+  const onlineMemberCounts = useRecoilValue(onlineMembersCountState);
 
   return (
     <header className="z-40">
@@ -55,6 +64,50 @@ const Header = () => {
 
           <div className="sm:flex-1 ltr:sm:ml-0 ltr:ml-auto sm:rtl:mr-0 rtl:mr-auto flex items-center space-x-1.5 lg:space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]">
             <SearchBox />
+            <div className="dropdown shrink-0 relative">
+              <Dropdown
+                offset={[0, 8]}
+                placement="bottom-end"
+                btnClassName="block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
+                button={
+                  <span className="w-5 h-5">
+                    <IconOnline className="w-5 h-5 object-cover rounded-full" />
+                    <span className="absolute right-0 bottom-0 w-4 h-4 rounded-full ring-2 ring-white dark:ring-white-dark bg-info flex justify-center items-center text-xs font-semibold text-white-light dark:text-black">
+                      {onlineMemberCounts}
+                    </span>
+                  </span>
+                }
+              >
+                <ul className="!px-2 text-dark dark:text-white-dark font-semibold dark:text-white-light/90 w-[280px] flex flex-col space-y-1 overflow-y-auto max-h-[400px]">
+                <PerfectScrollbar>
+                  {Object.entries(onlineMembers).map(([key, value]) => {
+                    return (
+                      <li key={key} className="flex flex-col border border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center space-x-1">
+                          <span className="ltr:ml-3 rtl:mr-3">
+                            <span className="text-[0.7rem] font-semibold">
+                              {key}
+                            </span>
+                          </span>
+                        </div>
+                        <ul className="flex flex-wrap space-x-1 px-2 justify-center">
+                          {value.map((connectId: string) => {
+                            return (
+                              <li key={connectId}>
+                                <span className="text-[0.65rem] font-semibold text-green-500">
+                                  {connectId}
+                                </span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </li>
+                    );
+                  })}
+                  </PerfectScrollbar>
+                </ul>
+              </Dropdown>
+            </div>
             <div>
               {themeConfig.theme === "light" ? (
                 <button

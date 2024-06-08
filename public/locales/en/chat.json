@@ -5,5 +5,19 @@
     "chat-room-action-remove_member": "Member have been removed",
     "chat-room-action-withdraw": "Member have been withdraw",
     "chat-room-action-message": "Message have been sent",
-    "chat-room-action-delete_message": "Message have been deleted"
+    "chat-room-action-delete_message": "Message have been deleted",
+    "chat-chat-room-create-action": "{{createdByName}} created a chat room",
+    "chat-chat-room-create-action-no-created-by": "Chat room created",
+    "chat-chat-room-update-name-action": "{{updatedByName}} updated the chat room name to {{name}}",
+    "chat-chat-room-update-name-action-no-updated-by": "Chat room name updated to {{name}}",
+    "members": "members",
+    "chat-chat-room-add-member-action": "{{addedByName}} added {{addedMembers}} to the chat room",
+    "chat-chat-room-add-member-action-no-added-by": "{{addedMembers}} added to the chat room",
+    "chat-chat-room-remove-member-action": "{{removedByName}} removed {{removedMembers}} from the chat room",
+    "chat-chat-room-remove-member-action-no-removed-by": "{{removedMembers}} removed from the chat room",
+    "chat-chat-room-withdraw-action": "{{memberName}} withdrew from the chat room",
+    "chat-chat-room-withdraw-action-no-member": "Member withdrew from the chat room",
+    "chat-chat-room-delete-message-action": "{{deletedByName}} deleted a message",
+    "chat-chat-room-delete-message-action-no-deleted-by": "Message deleted",
+    "read-count": "Read"
 }

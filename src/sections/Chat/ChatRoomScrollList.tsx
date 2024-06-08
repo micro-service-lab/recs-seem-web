@@ -6,22 +6,23 @@ import React, { useEffect } from "react";
 import { formatDate } from "@/utils/format-time";
 import { ChatRoomActionTypeKeys } from "@/types/chat-room-action";
 import { useTranslation } from "react-i18next";
+import { useRecoilValue } from "recoil";
+import { openChatRoomState } from "@/store/openChatRoom";
 
 const CHAT_ROOM_PER_PAGE = 10;
 
 type Props = {
   searchName: string;
-  selectChatRoom: PracticalChatRoomOnMember | null;
   onSelectChatRoom: (chatRoom: PracticalChatRoomOnMember) => void
 };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const ChatRoomScrollList = ({
   searchName,
-  selectChatRoom,
   onSelectChatRoom,
 }: Props) => {
   const { t } = useTranslation("chat");
+  const openChatRoom = useRecoilValue(openChatRoomState);
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useGetInfinityChatRoomsOnAuthQuery({
       searchName: searchName,
@@ -55,8 +56,8 @@ const ChatRoomScrollList = ({
                   type="button"
                   className={`w-full flex justify-between items-center p-2 hover:bg-gray-100 dark:hover:bg-[#050b14] rounded-md dark:hover:text-primary hover:text-primary overflow-hidden h-20
                   ${
-                    selectChatRoom &&
-                    selectChatRoom.chatRoom.chatRoomId ===
+                    openChatRoom &&
+                    openChatRoom.chatRoom.chatRoomId ===
                       room.chatRoom.chatRoomId
                       ? "bg-gray-100 dark:bg-[#050b14] dark:text-primary text-primary"
                       : ""

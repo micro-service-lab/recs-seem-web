@@ -55,5 +55,10 @@
   "not-match-chat-room-message-error-response": "チャットルームのメッセージが一致しません",
   "cannot-read-own-message-error-response": "自分のメッセージを読むことはできません",
   "not-create-message-to-self-error-response": "自分自身にメッセージを作成することはできません",
-  "cannot-attach-system-file-error-response": "システムファイルを添付できません"
+  "cannot-attach-system-file-error-response": "システムファイルを添付できません",
+  "private-chat-room-already-exists-error-response": "プライベートチャットルームは既に存在します",
+  "not-chat-room-member-error-response": "チャットルームのメンバーではありません",
+  "must-be-grade-professor-if-group-professor-error-response": "グループ教授であれば学年教授である必要があります",
+  "must-be-group-professor-if-grade-professor-error-response": "学年教授であればグループ教授である必要があります",
+  "not-organization-member-error-response": "組織のメンバーではありません"
 }

@@ -5,5 +5,19 @@
     "chat-room-action-remove_member": "メンバーの削除が行われました",
     "chat-room-action-withdraw": "チャットルームからの退室がありました",
     "chat-room-action-message": "メッセージが送信されました",
-    "chat-room-action-delete_message": "メッセージの削除が行われました"
+    "chat-room-action-delete_message": "メッセージの削除が行われました",
+    "chat-chat-room-create-action": "{{createdByName}}によりチャットルームが作成されました",
+    "chat-chat-room-create-action-no-created-by": "チャットルームが作成されました",
+    "chat-chat-room-update-name-action": "{{updatedByName}}によりチャットルーム名が{{name}}に変更されました",
+    "chat-chat-room-update-name-action-no-updated-by": "チャットルーム名が{{name}}に変更されました",
+    "members": "メンバー",
+    "chat-chat-room-add-member-action": "{{addedByName}}によりチャットルームに{{addedMembers}}が追加されました",
+    "chat-chat-room-add-member-action-no-added-by": "チャットルームに{{addedMembers}}が追加されました",
+    "chat-chat-room-remove-member-action": "{{removedByName}}によりチャットルームから{{removedMembers}}が退会させられました",
+    "chat-chat-room-remove-member-action-no-removed-by": "チャットルームから{{removedMembers}}が退会させられました",
+    "chat-chat-room-withdraw-action": "{{memberName}}がチャットルームから退室しました",
+    "chat-chat-room-withdraw-action-no-member": "メンバーがチャットルームから退室しました",
+    "chat-chat-room-delete-message-action": "{{deletedByName}}がメッセージを削除されました",
+    "chat-chat-room-delete-message-action-no-deleted-by": "メッセージが削除されました",
+    "read-count": "既読"
 }

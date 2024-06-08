@@ -9,6 +9,11 @@ import { useTranslation } from "react-i18next";
 import ChatRoomScrollList from "@/sections/Chat/ChatRoomScrollList";
 import { PracticalChatRoomOnMember } from "@/types/entity/chat-room-belonging";
 import ChatTalkList from "@/sections/Chat/ChatTalkList";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  openChatRoomAdditionalActionState,
+  openChatRoomState,
+} from "@/store/openChatRoom";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Chat = () => {
@@ -26,8 +31,10 @@ const Chat = () => {
 
   const [isShowChatMenu, setIsShowChatMenu] = useState(false);
   const [isShowChat, setIsShowChat] = useState(false);
-  const [selectChatRoom, setSelectChatRoom] =
-    useState<PracticalChatRoomOnMember | null>(null);
+  const [openChatRoom, setOpenChatRoom] = useRecoilState(openChatRoomState);
+  const setOpenChatRoomAdditionalAction = useSetRecoilState(
+    openChatRoomAdditionalActionState
+  );
 
   const scrollToBottom = () => {
     if (isShowChat) {
@@ -39,11 +46,18 @@ const Chat = () => {
     }
   };
   const handleSelectChatRoom = (chatRoom: PracticalChatRoomOnMember) => {
-    setSelectChatRoom(chatRoom);
+    setOpenChatRoom(chatRoom);
     setIsShowChat(true);
     scrollToBottom();
     setIsShowChatMenu(false);
   };
+
+  useEffect(() => {
+    return () => {
+      setOpenChatRoomAdditionalAction([]);
+    };
+  });
+
   return (
     <div>
       <div
@@ -87,7 +101,6 @@ const Chat = () => {
             >
               <ChatRoomScrollList
                 searchName=""
-                selectChatRoom={selectChatRoom}
                 onSelectChatRoom={handleSelectChatRoom}
               />
             </Suspense>
@@ -277,10 +290,10 @@ const Chat = () => {
               </div>
             </div>
           )}
-          {isShowChat && selectChatRoom ? (
+          {isShowChat && openChatRoom ? (
             <Suspense fallback={<div>Loading...</div>}>
               <ChatTalkList
-                chatRoom={selectChatRoom}
+                chatRoom={openChatRoom}
                 onClose={() => setIsShowChat(false)}
                 toggleChatMenu={() => setIsShowChatMenu(!isShowChatMenu)}
                 scrollToBottom={scrollToBottom}

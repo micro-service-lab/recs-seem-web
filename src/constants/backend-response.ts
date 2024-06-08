@@ -56,4 +56,9 @@ export const API_RESPONSE_TYPES = {
   CannotReadOwnMessage: "251",
   NotCreateMessageToSelf: "252",
   CannotAttachSystemFile: "253",
+  PrivateChatRoomAlreadyExists: "254",
+  NotChatRoomMember: "255",
+  MustBeGradeProfessorIfGroupProfessor: "256",
+  MustBeGroupProfessorIfGradeProfessor: "257",
+  NotOrganizationMember: "258",
 } as const;

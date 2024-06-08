@@ -23,6 +23,7 @@ import store from "./store/index";
 import { RouterProvider } from "react-router-dom";
 import router from "./router/index";
 import { RecoilRoot } from "recoil";
+import { WsProvider } from "./providers/WsProvider";
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +40,9 @@ root.render(
             <ErrorHandleProvider>
               <ErrorBoundary FallbackComponent={Error500}>
                 <AuthConsumer>
-                  <RouterProvider router={router} />
+                  <WsProvider>
+                    <RouterProvider router={router} />
+                  </WsProvider>
                 </AuthConsumer>
               </ErrorBoundary>
             </ErrorHandleProvider>

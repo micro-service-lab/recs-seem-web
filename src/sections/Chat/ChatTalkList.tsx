@@ -13,7 +13,7 @@ import IconTrashLines from "@/components/Icon/IconTrashLines";
 import IconShare from "@/components/Icon/IconShare";
 import IconSettings from "@/components/Icon/IconSettings";
 import { fDateTime } from "@/utils/format-time";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import { IRootState } from "@/store";
 import { useSelector } from "react-redux";
 import ChatMessageInput from "./ChatMessageInput";
@@ -55,7 +55,7 @@ const ChatTalkList = ({ chatRoom, toggleChatMenu, scrollToBottom }: Props) => {
   const { t } = useTranslation("chat");
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
 
-  const handleSendMessage = (_: string) => {
+  const handleSendMessage = () => {
     scrollToBottom();
   };
 
