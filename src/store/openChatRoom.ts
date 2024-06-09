@@ -7,18 +7,8 @@ export const openChatRoomState = atom<PracticalChatRoomOnMember|null>({
   default: null,
 });
 
-export type AdditionalAction = {
-  [chatRoomId: string]: ChatRoomActionPractical[];
-};
-
-export const chatRoomAdditionalActionState = atom<AdditionalAction>({
-  key: "chatRoomAdditionalAction",
-  default: {},
-});
-
 // except delete message
 export const openChatRoomAdditionalActionState = atom<ChatRoomActionPractical[]>({
   key: "openChatRoomAdditionalAction",
   default: [],
 });
-

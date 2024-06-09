@@ -46,6 +46,7 @@ const Chat = () => {
     }
   };
   const handleSelectChatRoom = (chatRoom: PracticalChatRoomOnMember) => {
+    setOpenChatRoomAdditionalAction([]);
     setOpenChatRoom(chatRoom);
     setIsShowChat(true);
     scrollToBottom();
@@ -53,10 +54,12 @@ const Chat = () => {
   };
 
   useEffect(() => {
+    console.log("Chat mount");
     return () => {
+      setOpenChatRoom(null);
       setOpenChatRoomAdditionalAction([]);
     };
-  });
+  }, []);
 
   return (
     <div>

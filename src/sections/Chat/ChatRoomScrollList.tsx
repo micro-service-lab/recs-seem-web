@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { openChatRoomState } from "@/store/openChatRoom";
 import { unreadMessageCountOnChatRoomState } from "@/store/unreadMessage";
+import { chatRoomRefetchDispatchState } from "@/store/chatRoomRefetch";
 
 const CHAT_ROOM_PER_PAGE = 10;
 
@@ -20,9 +21,14 @@ type Props = {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const ChatRoomScrollList = ({ searchName, onSelectChatRoom }: Props) => {
   const { t } = useTranslation("chat");
-  const [unreadCounts, setUnreadCounts] = useRecoilState(unreadMessageCountOnChatRoomState)
+  const [unreadCounts, setUnreadCounts] = useRecoilState(
+    unreadMessageCountOnChatRoomState
+  );
   const openChatRoom = useRecoilValue(openChatRoomState);
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
+  const [chatRoomRefetchDispatch, setChatRoomRefetchDispatch] = useRecoilState(
+    chatRoomRefetchDispatchState
+  );
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, refetch } =
     useGetInfinityChatRoomsOnAuthQuery({
       searchName: searchName,
       order: "late_act",
@@ -48,9 +54,22 @@ const ChatRoomScrollList = ({ searchName, onSelectChatRoom }: Props) => {
           newUnreadCounts[room.chatRoom.chatRoomId] = room.unreadCount;
         });
       });
-      setUnreadCounts(prev => ({ ...prev, ...newUnreadCounts }));
+      setUnreadCounts((prev) => ({ ...prev, ...newUnreadCounts }));
     }
   }, [data, setUnreadCounts]);
+
+  useEffect(() => {
+    if (!chatRoomRefetchDispatch.first) {
+      console.log("refetch");
+      refetch();
+    }
+  }, [chatRoomRefetchDispatch]);
+
+  useEffect(() => {
+    return () => {
+      setChatRoomRefetchDispatch({ dispatch: false, first: true });
+    };
+  }, []);
 
   if (!data) {
     return <div>No Room</div>;
@@ -85,7 +104,6 @@ const ChatRoomScrollList = ({ searchName, onSelectChatRoom }: Props) => {
                                 room.chatRoom.companion?.member.profileImage
                                   .attachableItem.url
                               }
-                              // src="http://localhost:9090/default-bucket/bd27d88c-82b9-495b-89c5-8ce35144be67.jpg"
                               className="h-10 w-10 rounded-md object-cover"
                               alt=""
                             />
@@ -96,7 +114,6 @@ const ChatRoomScrollList = ({ searchName, onSelectChatRoom }: Props) => {
                           )
                         ) : room.chatRoom.coverImage ? (
                           <img
-                          // src="http://localhost:9090/default-bucket/bd27d88c-82b9-495b-89c5-8ce35144be67.jpg"
                             src={room.chatRoom.coverImage.attachableItem.url}
                             className="h-10 w-10 rounded-md object-cover"
                             alt=""

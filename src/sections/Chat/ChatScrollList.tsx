@@ -17,8 +17,8 @@ import { MessageWithSenderAndReadReceiptCountAndAttachments } from "@/types/enti
 import { useAuthContext } from "@/auth/hooks";
 import { AuthUserType } from "@/auth/types";
 import { TFunction } from "i18next";
-import { chatRoomAdditionalActionState } from "@/store/openChatRoom";
-import { useRecoilState } from "recoil";
+import { openChatRoomAdditionalActionState } from "@/store/openChatRoom";
+import { useRecoilValue } from "recoil";
 
 const ACTION_PER_PAGE = 30;
 
@@ -338,9 +338,7 @@ const ChatScrollList = ({ chatRoom }: Props) => {
 
   const [prevTopElement, setPrevTopElement] = useState<any>(null);
   const [pageOffset, setPageOffset] = useState(true);
-  const [additionalActions, setAdditionalActions] = useRecoilState(
-    chatRoomAdditionalActionState
-  );
+  const openChatRoomAdditionalAction = useRecoilValue(openChatRoomAdditionalActionState)
 
   useEffect(() => {
     const element: any = document.querySelector(".chat-conversation-box");
@@ -361,17 +359,6 @@ const ChatScrollList = ({ chatRoom }: Props) => {
   }, [data]);
 
   useEffect(() => {
-    if (chatRoom.chatRoom.chatRoomId in additionalActions) {
-      setAdditionalActions((prev) => {
-        const newActions = { ...prev };
-        delete newActions[chatRoom.chatRoom.chatRoomId];
-        return newActions;
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatRoom]);
-
-  useEffect(() => {
     setPageOffset(true);
     setPrevTopElement(null);
   }, [chatRoom]);
@@ -380,7 +367,7 @@ const ChatScrollList = ({ chatRoom }: Props) => {
     const element: any = document.querySelector(".chat-conversation-box");
     element.behavior = "smooth";
     element.scrollTop = element.scrollHeight;
-  }, [additionalActions]);
+  }, [openChatRoomAdditionalAction]);
 
   useEffect(() => {
     if (hasNextPage && inView) {
@@ -398,9 +385,8 @@ const ChatScrollList = ({ chatRoom }: Props) => {
       <div className="p-4 sm:pb-0 pb-[68px] sm:min-h-[300px] min-h-[400px] flex flex-col-reverse justify-end">
         {data.pages.map((page, i) => (
           <React.Fragment key={i}>
-            {/* page.data.dataとadditionalActionsをマージして表示 */}
             {[
-              ...(additionalActions[chatRoom.chatRoom.chatRoomId] || []),
+              ...openChatRoomAdditionalAction,
               ...page.data.data,
             ].map((act) => (
               <div key={act.chatRoomActionId} className="chat-action">
