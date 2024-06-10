@@ -13,6 +13,7 @@ type Props = {
   chatRoom: PracticalChatRoomOnMember;
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const ChatMessageInput = ({ onSendMessage, chatRoom }: Props) => {
   const [textMessage, setTextMessage] = useState("");
   const { mutate } = useCreateMessageQuery(chatRoom.chatRoom.chatRoomId);

@@ -19,5 +19,7 @@
     "chat-chat-room-withdraw-action-no-member": "Member withdrew from the chat room",
     "chat-chat-room-delete-message-action": "{{deletedByName}} deleted a message",
     "chat-chat-room-delete-message-action-no-deleted-by": "Message deleted",
-    "read-count": "Read"
+    "read-count": "Read",
+    "edit": "Edit",
+    "delete": "Delete"
 }

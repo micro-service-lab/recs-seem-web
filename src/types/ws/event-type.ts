@@ -6,6 +6,7 @@ export const WsEventTypes = {
   CHAT_ROOM_ADDED_MEMBER: "chat_room:added:member",
   CHAT_ROOM_REMOVED_ME: "chat_room:removed:me",
   CHAT_ROOM_REMOVED_MEMBER: "chat_room:removed:member",
+  CHAT_ROOM_WITHDRAWN_ME: "chat_room:withdrawn:me",
   CHAT_ROOM_WITHDRAWN_MEMBER: "chat_room:withdrawn:member",
   CHAT_ROOM_UPDATED_NAME: "chat_room:updated:name",
   CHAT_ROOM_DELETED_MESSAGE: "chat_room:deleted:message",

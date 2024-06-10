@@ -9,6 +9,7 @@ export const CHAT_ROOM_ENDPOINTS = {
       get: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/messages`,
       create: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/messages`,
       delete: (chatRoomId: string, chatId: string) => `/chat_rooms/${chatRoomId}/messages/${chatId}`,
+      edit: (chatRoomId: string, messageId: string) => `/chat_rooms/${chatRoomId}/messages/${messageId}`,
       read: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/messages/read`,
       readReceipt: {
         read: (chatRoomId: string, messageId: string) => `/chat_rooms/${chatRoomId}/messages/${messageId}/read`,

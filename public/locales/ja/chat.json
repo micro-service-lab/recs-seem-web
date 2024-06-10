@@ -17,7 +17,9 @@
     "chat-chat-room-remove-member-action-no-removed-by": "チャットルームから{{removedMembers}}が退会させられました",
     "chat-chat-room-withdraw-action": "{{memberName}}がチャットルームから退室しました",
     "chat-chat-room-withdraw-action-no-member": "メンバーがチャットルームから退室しました",
-    "chat-chat-room-delete-message-action": "{{deletedByName}}がメッセージを削除されました",
+    "chat-chat-room-delete-message-action": "{{deletedByName}}がメッセージを削除しました",
     "chat-chat-room-delete-message-action-no-deleted-by": "メッセージが削除されました",
-    "read-count": "既読"
+    "read-count": "既読",
+    "edit": "編集",
+    "delete": "削除"
 }

@@ -1,4 +1,4 @@
-import { WsChatRoomAddedMeEventData, WsChatRoomAddedMemberEventData, WsChatRoomDeletedEventData, WsChatRoomDeletedMessageEventData, WsChatRoomEditedMessageEventData, WsChatRoomReadMessageEventData, WsChatRoomRemovedMeEventData, WsChatRoomRemovedMemberEventData, WsChatRoomSentMessageEventData, WsChatRoomUpdatedNameEventData, WsChatRoomWithdrawnMemberEventData, WsConnectedEventData, WsConnectingMembersEventData, WsDisconnectedEventData } from "@/types/ws/event";
+import { WsChatRoomAddedMeEventData, WsChatRoomAddedMemberEventData, WsChatRoomDeletedEventData, WsChatRoomDeletedMessageEventData, WsChatRoomEditedMessageEventData, WsChatRoomReadMessageEventData, WsChatRoomRemovedMeEventData, WsChatRoomRemovedMemberEventData, WsChatRoomSentMessageEventData, WsChatRoomUpdatedNameEventData, WsChatRoomWithdrawnMeEventData, WsChatRoomWithdrawnMemberEventData, WsConnectedEventData, WsConnectingMembersEventData, WsDisconnectedEventData } from "@/types/ws/event";
 import { atom } from "recoil";
 
 export const wsConnectingMembersEventDispatchState = atom<boolean>({
@@ -88,6 +88,16 @@ export const wsChatRoomWithdrawnMemberEventDispatchState = atom<boolean>({
 
 export const wsDispatchChatRoomWithdrawnMemberEventState = atom<WsChatRoomWithdrawnMemberEventData[]>({
   key: "wsDispatchChatRoomWithdrawnMemberEvent",
+  default: [],
+});
+
+export const wsChatRoomWithdrawnMeEventDispatchState = atom<boolean>({
+  key: "wsChatRoomWithdrawnMeEventDispatch",
+  default: false,
+});
+
+export const wsDispatchChatRoomWithdrawnMeEventState = atom<WsChatRoomWithdrawnMeEventData[]>({
+  key: "wsDispatchChatRoomWithdrawnMeEvent",
   default: [],
 });
 

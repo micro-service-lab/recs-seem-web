@@ -66,5 +66,7 @@ export const useGetInfinityChatRoomActionsOnChatRoomQuery = <TData = InfiniteDat
     getPreviousPageParam: (firstPage) =>
       firstPage.data.cursorPagination.prevCursor === "" ? undefined : firstPage.data.cursorPagination.prevCursor,
     ...options,
+    staleTime: Infinity,
+    gcTime: 0,
   });
 };

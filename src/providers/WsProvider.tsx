@@ -1,11 +1,19 @@
 import { useReadMessageQuery } from "@/api/readReceipt/useReadMessageQuery";
 import { useAuthContext } from "@/auth/hooks";
 import { useHandleWsPayload } from "@/hooks/use-handle-ws-payload";
+import {
+  DeleteMessageOnChatRoomState,
+  EditMessageOnChatRoomState,
+  latestActionOnChatRoomState,
+} from "@/store/chatRoomLatestAction";
 import { chatRoomRefetchDispatchState } from "@/store/chatRoomRefetch";
+import { ignoreChatRoomState } from "@/store/ignoreChatRoom";
 import { onlineMembersState } from "@/store/onlineMembers";
 import {
   mountChatRoomState,
   openChatRoomAdditionalActionState,
+  openChatRoomMessageDeleteState,
+  openChatRoomMessageOverrideState,
   openChatRoomReadReceiptState,
   openChatRoomState,
 } from "@/store/openChatRoom";
@@ -25,6 +33,7 @@ import {
   wsChatRoomRemovedMemberEventDispatchState,
   wsChatRoomSentMessageEventDispatchState,
   wsChatRoomUpdatedNameEventDispatchState,
+  wsChatRoomWithdrawnMeEventDispatchState,
   wsChatRoomWithdrawnMemberEventDispatchState,
   wsConnectedEventDispatchState,
   wsConnectingMembersEventDispatchState,
@@ -39,12 +48,19 @@ import {
   wsDispatchChatRoomRemovedMemberEventState,
   wsDispatchChatRoomSentMessageEventState,
   wsDispatchChatRoomUpdatedNameEventState,
+  wsDispatchChatRoomWithdrawnMeEventState,
   wsDispatchChatRoomWithdrawnMemberEventState,
   wsDispatchConnectedEventState,
   wsDispatchConnectingMembersEventState,
   wsDispatchDisconnectedEventState,
 } from "@/store/wsDispatchEvent";
-import { ChatRoomActionPractical } from "@/types/entity/chat-room-action";
+import { ChatRoomActionTypeKeys } from "@/types/chat-room-action";
+import {
+  ChatRoomActionPractical,
+  ChatRoomActionWithActionType,
+} from "@/types/entity/chat-room-action";
+import { ChatRoomActionType } from "@/types/entity/chat-room-action-type";
+import { MessageCard } from "@/types/entity/message";
 import {
   WsChatRoomAddedMeEventData,
   WsChatRoomAddedMemberEventData,
@@ -56,6 +72,7 @@ import {
   WsChatRoomRemovedMemberEventData,
   WsChatRoomSentMessageEventData,
   WsChatRoomUpdatedNameEventData,
+  WsChatRoomWithdrawnMeEventData,
   WsChatRoomWithdrawnMemberEventData,
   WsConnectedEventData,
   WsConnectingMembersEventData,
@@ -136,6 +153,12 @@ const InnerWsProvider = ({ children }: { children: React.ReactNode }) => {
   const setWsDispatchChatRoomWithdrawnMemberEvent = useSetRecoilState(
     wsDispatchChatRoomWithdrawnMemberEventState
   );
+  const setWsChatRoomWithdrawnMeEventDispatch = useSetRecoilState(
+    wsChatRoomWithdrawnMeEventDispatchState
+  );
+  const setWsDispatchChatRoomWithdrawnMeEvent = useSetRecoilState(
+    wsDispatchChatRoomWithdrawnMeEventState
+  );
   const setWsChatRoomSentMessageEventDispatch = useSetRecoilState(
     wsChatRoomSentMessageEventDispatchState
   );
@@ -178,6 +201,7 @@ const InnerWsProvider = ({ children }: { children: React.ReactNode }) => {
     let removedMemberActionData: WsChatRoomRemovedMemberEventData;
     let removedMeActionData: WsChatRoomRemovedMeEventData;
     let withdrawnMemberActionData: WsChatRoomWithdrawnMemberEventData;
+    let withdrawnMeActionData: WsChatRoomWithdrawnMeEventData;
     let sentMessageActionData: WsChatRoomSentMessageEventData;
     let deletedMessageActionData: WsChatRoomDeletedMessageEventData;
     let editedMessageActionData: WsChatRoomEditedMessageEventData;
@@ -251,6 +275,14 @@ const InnerWsProvider = ({ children }: { children: React.ReactNode }) => {
           withdrawnMemberActionData,
         ]);
         break;
+      case WsEventTypes.CHAT_ROOM_WITHDRAWN_ME:
+        withdrawnMeActionData = data.data as WsChatRoomWithdrawnMeEventData;
+        setWsChatRoomWithdrawnMeEventDispatch((p) => !p);
+        setWsDispatchChatRoomWithdrawnMeEvent((prev) => [
+          ...prev,
+          withdrawnMeActionData,
+        ]);
+        break;
       case WsEventTypes.CHAT_ROOM_SENT_MESSAGE:
         sentMessageActionData = data.data as WsChatRoomSentMessageEventData;
         setWsChatRoomSentMessageEventDispatch((p) => !p);
@@ -306,6 +338,7 @@ const InnerWsProvider = ({ children }: { children: React.ReactNode }) => {
       data: {},
     };
     socket.send(JSON.stringify(convertKeysToSnakeCase(sendMsg)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -347,6 +380,9 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
   );
   const wsChatRoomWithdrawnMemberEventDispatch = useRecoilValue(
     wsChatRoomWithdrawnMemberEventDispatchState
+  );
+  const wsChatRoomWithdrawnMeEventDispatch = useRecoilValue(
+    wsChatRoomWithdrawnMeEventDispatchState
   );
   const wsChatRoomSentMessageEventDispatch = useRecoilValue(
     wsChatRoomSentMessageEventDispatchState
@@ -395,6 +431,10 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
     setWsDispatchChatRoomWithdrawnMemberEvent,
   ] = useRecoilState(wsDispatchChatRoomWithdrawnMemberEventState);
   const [
+    wsDispatchChatRoomWithdrawnMeEvent,
+    setWsDispatchChatRoomWithdrawnMeEvent,
+  ] = useRecoilState(wsDispatchChatRoomWithdrawnMeEventState);
+  const [
     wsDispatchChatRoomSentMessageEvent,
     setWsDispatchChatRoomSentMessageEvent,
   ] = useRecoilState(wsDispatchChatRoomSentMessageEventState);
@@ -415,6 +455,16 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
 
   const setChatRoomRefetchDispatch = useSetRecoilState(
     chatRoomRefetchDispatchState
+  );
+
+  const setLatestActionOnChatRoom = useSetRecoilState(
+    latestActionOnChatRoomState
+  );
+  const setEditMessageOnChatRoom = useSetRecoilState(
+    EditMessageOnChatRoomState
+  );
+  const setDeleteMessageOnChatRoom = useSetRecoilState(
+    DeleteMessageOnChatRoomState
   );
 
   const setOnlineMembers = useRecoilCallback(
@@ -623,12 +673,19 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
   const setOpenChatRoomReadReceipt = useSetRecoilState(
     openChatRoomReadReceiptState
   );
+  const mountChatRoom = useRecoilValue(mountChatRoomState);
+  const setIgnoreChatRoom = useSetRecoilState(ignoreChatRoomState);
+  const setOverrideMessage = useSetRecoilState(
+    openChatRoomMessageOverrideState
+  );
+  const setDeleteMessage = useSetRecoilState(openChatRoomMessageDeleteState);
 
   useEffect(() => {
     wsDispatchConnectingMembersEvent.forEach((data) => {
       setOnlineMembers(data);
     });
     setWsDispatchConnectingMembersEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsConnectingMembersEventDispatch]);
 
   useEffect(() => {
@@ -636,6 +693,7 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
       addOnlineMemberList(data);
     });
     setWsDispatchConnectedEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsConnectedEventDispatch]);
 
   useEffect(() => {
@@ -643,20 +701,71 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
       removeOnlineMemberList(data);
     });
     setWsDispatchDisconnectedEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsDisconnectedEventDispatch]);
 
   useEffect(() => {
     wsDispatchChatRoomUpdatedNameEvent.forEach((data) => {
       addUpdatedNameAction(data);
+      if (mountChatRoom) {
+        const actionType: ChatRoomActionType = {
+          chatRoomActionTypeId: data.chatRoomActionTypeId,
+          name: "",
+          key: ChatRoomActionTypeKeys.UPDATE_NAME,
+        };
+        const action: ChatRoomActionWithActionType = {
+          chatRoomActionId: data.chatRoomActionId,
+          chatRoomId: data.chatRoomId,
+          actedAt: data.actedAt,
+          chatRoomActionType: actionType,
+        };
+        setLatestActionOnChatRoom((prev) => ({
+          data: [
+            ...prev.data,
+            {
+              chatRoomId: data.chatRoomId,
+              latestMessage: null,
+              latestAction: action,
+            },
+          ],
+          dispatch: !prev.dispatch,
+        }));
+      }
     });
     setWsDispatchChatRoomUpdatedNameEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsChatRoomUpdatedNameEventDispatch]);
 
   useEffect(() => {
     wsDispatchChatRoomAddedMemberEvent.forEach((data) => {
       addAddedMemberAction(data);
+      if (mountChatRoom) {
+        const actionType: ChatRoomActionType = {
+          chatRoomActionTypeId: data.chatRoomActionTypeId,
+          name: "",
+          key: ChatRoomActionTypeKeys.ADD_MEMBER,
+        };
+        const action: ChatRoomActionWithActionType = {
+          chatRoomActionId: data.chatRoomActionId,
+          chatRoomId: data.chatRoomId,
+          actedAt: data.actedAt,
+          chatRoomActionType: actionType,
+        };
+        setLatestActionOnChatRoom((prev) => ({
+          data: [
+            ...prev.data,
+            {
+              chatRoomId: data.chatRoomId,
+              latestMessage: null,
+              latestAction: action,
+            },
+          ],
+          dispatch: !prev.dispatch,
+        }));
+      }
     });
     setWsDispatchChatRoomAddedMemberEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsChatRoomAddedMemberEventDispatch]);
 
   useEffect(() => {
@@ -668,40 +777,127 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
       console.log("wsDispatchChatRoomAddedMeEvent", data);
     });
     setWsDispatchChatRoomAddedMeEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsChatRoomAddedMeEventDispatch]);
 
   useEffect(() => {
     wsDispatchChatRoomRemovedMemberEvent.forEach((data) => {
       addRemovedMemberAction(data);
+      if (mountChatRoom) {
+        const actionType: ChatRoomActionType = {
+          chatRoomActionTypeId: data.chatRoomActionTypeId,
+          name: "",
+          key: ChatRoomActionTypeKeys.REMOVE_MEMBER,
+        };
+        const action: ChatRoomActionWithActionType = {
+          chatRoomActionId: data.chatRoomActionId,
+          chatRoomId: data.chatRoomId,
+          actedAt: data.actedAt,
+          chatRoomActionType: actionType,
+        };
+        setLatestActionOnChatRoom((prev) => ({
+          data: [
+            ...prev.data,
+            {
+              chatRoomId: data.chatRoomId,
+              latestMessage: null,
+              latestAction: action,
+            },
+          ],
+          dispatch: !prev.dispatch,
+        }));
+      }
     });
     setWsDispatchChatRoomRemovedMemberEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatRoomRemovedMemberEventDispatch]);
 
   useEffect(() => {
     wsDispatchChatRoomRemovedMeEvent.forEach((data) => {
-      setChatRoomRefetchDispatch((p) => ({
-        dispatch: !p.dispatch,
-        first: false,
+      setIgnoreChatRoom((prev) => ({
+        ...prev,
+        [data.chatRoomId]: true,
       }));
-      console.log("wsDispatchChatRoomRemovedMeEvent", data);
     });
     setWsDispatchChatRoomRemovedMeEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatRoomRemovedMeEventDispatch]);
 
   useEffect(() => {
     wsDispatchChatRoomWithdrawnMemberEvent.forEach((data) => {
       addWithdrawnMemberAction(data);
+      if (mountChatRoom) {
+        const actionType: ChatRoomActionType = {
+          chatRoomActionTypeId: data.chatRoomActionTypeId,
+          name: "",
+          key: ChatRoomActionTypeKeys.WITHDRAW,
+        };
+        const action: ChatRoomActionWithActionType = {
+          chatRoomActionId: data.chatRoomActionId,
+          chatRoomId: data.chatRoomId,
+          actedAt: data.actedAt,
+          chatRoomActionType: actionType,
+        };
+        setLatestActionOnChatRoom((prev) => ({
+          data: [
+            ...prev.data,
+            {
+              chatRoomId: data.chatRoomId,
+              latestMessage: null,
+              latestAction: action,
+            },
+          ],
+          dispatch: !prev.dispatch,
+        }));
+      }
     });
     setWsDispatchChatRoomWithdrawnMemberEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsChatRoomWithdrawnMemberEventDispatch]);
+
+  useEffect(() => {
+    wsDispatchChatRoomWithdrawnMeEvent.forEach((data) => {
+      setIgnoreChatRoom((prev) => ({
+        ...prev,
+        [data.chatRoomId]: true,
+      }));
+    });
+    setWsDispatchChatRoomWithdrawnMeEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wsChatRoomWithdrawnMeEventDispatch]);
 
   useEffect(() => {
     wsDispatchChatRoomSentMessageEvent.forEach((data) => {
       addMessageAction(data);
-      setChatRoomRefetchDispatch((p) => ({
-        dispatch: !p.dispatch,
-        first: false,
-      }));
+      if (mountChatRoom) {
+        const actionType: ChatRoomActionType = {
+          chatRoomActionTypeId: data.chatRoomActionTypeId,
+          name: "",
+          key: ChatRoomActionTypeKeys.MESSAGE,
+        };
+        const action: ChatRoomActionWithActionType = {
+          chatRoomActionId: data.chatRoomActionId,
+          chatRoomId: data.chatRoomId,
+          actedAt: data.actedAt,
+          chatRoomActionType: actionType,
+        };
+        const msg: MessageCard = {
+          messageId: data.action.messageId,
+          body: data.action.body,
+          postedAt: data.action.postedAt,
+        };
+        setLatestActionOnChatRoom((prev) => ({
+          data: [
+            ...prev.data,
+            {
+              chatRoomId: data.chatRoomId,
+              latestMessage: msg,
+              latestAction: action,
+            },
+          ],
+          dispatch: !prev.dispatch,
+        }));
+      }
       if (
         !openChatRoom ||
         data.chatRoomId !== openChatRoom.chatRoom.chatRoomId
@@ -736,25 +932,87 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
       }
     });
     setWsDispatchChatRoomSentMessageEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsChatRoomSentMessageEventDispatch]);
 
   useEffect(() => {
     wsDispatchChatRoomDeletedMessageEvent.forEach((data) => {
-      console.log("wsDispatchChatRoomDeletedMessageEvent", data);
+      data.unreadMemberIds.forEach((memberId) => {
+        if (memberId === user?.memberId) {
+          setUnreadMessageCount((prev) => prev - 1);
+          setUnreadMessageCountOnChatRoom((prev) => {
+            const newUnreadCounts = { ...prev };
+            if (!newUnreadCounts[data.chatRoomId]) {
+              newUnreadCounts[data.chatRoomId] = 0;
+            }
+            newUnreadCounts[data.chatRoomId]--;
+            if (newUnreadCounts[data.chatRoomId] <= 0) {
+              delete newUnreadCounts[data.chatRoomId];
+            }
+            return newUnreadCounts;
+          });
+        }
+      });
+      if (
+        openChatRoom &&
+        data.chatRoomId === openChatRoom.chatRoom.chatRoomId
+      ) {
+        setDeleteMessage((prev) => ({
+          ...prev,
+          [data.chatRoomActionId]: data.action,
+        }));
+      }
+      if (mountChatRoom) {
+        setDeleteMessageOnChatRoom((prev) => ({
+          data: [
+            ...prev.data,
+            {
+              chatRoomId: data.chatRoomId,
+              action: data.action,
+              actionTypeId: data.chatRoomActionTypeId,
+            },
+          ],
+          dispatch: !prev.dispatch,
+        }));
+      }
     });
     setWsDispatchChatRoomDeletedMessageEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsChatRoomDeletedMessageEventDispatch]);
 
   useEffect(() => {
     wsDispatchChatRoomEditedMessageEvent.forEach((data) => {
-      console.log("wsDispatchChatRoomEditedMessageEvent", data);
+      if (
+        openChatRoom &&
+        data.chatRoomId === openChatRoom.chatRoom.chatRoomId
+      ) {
+        setOverrideMessage((prev) => ({
+          ...prev,
+          [data.message.messageId]: {
+            content: data.message.body,
+          },
+        }));
+      }
+      if (mountChatRoom) {
+        setEditMessageOnChatRoom((prev) => ({
+          data: [
+            ...prev.data,
+            {
+              chatRoomId: data.chatRoomId,
+              messageId: data.message.messageId,
+              content: data.message.body,
+            },
+          ],
+          dispatch: !prev.dispatch,
+        }));
+      }
     });
     setWsDispatchChatRoomEditedMessageEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsChatRoomEditedMessageEventDispatch]);
 
   useEffect(() => {
     wsDispatchChatRoomReadMessageEvent.forEach((data) => {
-      console.log("wsDispatchChatRoomReadMessageEvent", data);
       setOpenChatRoomReadReceipt((prev) => {
         const newReadReceipt = { ...prev };
         data.messageIds.forEach((messageId) => {
@@ -774,7 +1032,7 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
           if (!newUnreadCounts[data.chatRoomId]) {
             newUnreadCounts[data.chatRoomId] = 0;
           }
-          newUnreadCounts[data.chatRoomId] -= data.messageIds.length; 
+          newUnreadCounts[data.chatRoomId] -= data.messageIds.length;
           if (newUnreadCounts[data.chatRoomId] <= 0) {
             delete newUnreadCounts[data.chatRoomId];
           }
@@ -783,17 +1041,18 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
       }
     });
     setWsDispatchChatRoomReadMessageEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsChatRoomReadMessageEventDispatch]);
 
   useEffect(() => {
     wsDispatchChatRoomDeletedEvent.forEach((data) => {
-      setChatRoomRefetchDispatch((p) => ({
-        dispatch: !p.dispatch,
-        first: false,
+      setIgnoreChatRoom((prev) => ({
+        ...prev,
+        [data.chatRoom.chatRoomId]: true,
       }));
-      console.log("wsDispatchChatRoomDeletedEvent", data);
     });
     setWsDispatchChatRoomDeletedEvent([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsChatRoomDeletedEventDispatch]);
 
   return <>{children}</>;

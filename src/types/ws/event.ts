@@ -83,6 +83,16 @@ export type WsChatRoomRemovedMemberEventData = {
 
 export type WsChatRoomRemovedMemberEventPayload = WsEventPayload<WsChatRoomRemovedMemberEventData>;
 
+export type WsChatRoomWithdrawnMeEventData = {
+  chatRoomId: string;
+  action: ChatRoomWithdrawActionWithMember;
+  chatRoomActionId: string;
+  chatRoomActionTypeId: string;
+  actedAt: string;
+};
+
+export type WsChatRoomWithdrawnMeEventPayload = WsEventPayload<WsChatRoomWithdrawnMeEventData>;
+
 export type WsChatRoomWithdrawnMemberEventData = {
   chatRoomId: string;
   action: ChatRoomWithdrawActionWithMember;
@@ -109,6 +119,7 @@ export type WsChatRoomDeletedMessageEventData = {
   chatRoomActionId: string;
   chatRoomActionTypeId: string;
   actedAt: string;
+  unreadMemberIds: string[];
 };
 
 export type WsChatRoomDeletedMessageEventPayload = WsEventPayload<WsChatRoomDeletedMessageEventData>;

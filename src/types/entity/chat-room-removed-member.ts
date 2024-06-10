@@ -1,11 +1,11 @@
 import { SimpleMember } from "./member";
 
 export interface ChatRoomRemovedMember {
-  chatRoomRemoveMemberActionID: string;
+  chatRoomRemoveMemberActionId: string;
   memberID: string|null;
 }
 
 export interface MemberOnChatRoomRemoveMemberAction {
-    chatRoomRemoveMemberActionID: string;
+    chatRoomRemoveMemberActionId: string;
     member: SimpleMember|null;
 }

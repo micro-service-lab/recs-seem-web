@@ -13,10 +13,18 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   mountChatRoomState,
   openChatRoomAdditionalActionState,
+  openChatRoomMessageDeleteState,
+  openChatRoomMessageOverrideState,
   openChatRoomReadReceiptState,
   openChatRoomState,
 } from "@/store/openChatRoom";
 import { useReadMessagesOnChatRoomQuery } from "@/api/readReceipt/useReadMessagesOnChatRoomQuery";
+import {
+  DeleteMessageOnChatRoomState,
+  EditMessageOnChatRoomState,
+  latestActionOnChatRoomState,
+} from "@/store/chatRoomLatestAction";
+import { ignoreChatRoomState } from "@/store/ignoreChatRoom";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Chat = () => {
@@ -42,9 +50,21 @@ const Chat = () => {
   const setOpenChatRoomReadReceipt = useSetRecoilState(
     openChatRoomReadReceiptState
   );
-  const {
-    mutate: readMessagesOnChatRoom,
-  } = useReadMessagesOnChatRoomQuery();
+  const setMessagesOverride = useSetRecoilState(
+    openChatRoomMessageOverrideState
+  );
+  const setMessagesDelete = useSetRecoilState(openChatRoomMessageDeleteState);
+  const { mutate: readMessagesOnChatRoom } = useReadMessagesOnChatRoomQuery();
+  const setLatestActionOnChatRoom = useSetRecoilState(
+    latestActionOnChatRoomState
+  );
+  const setEditMessageOnChatRoom = useSetRecoilState(
+    EditMessageOnChatRoomState
+  );
+  const setDeleteMessageOnChatRoom = useSetRecoilState(
+    DeleteMessageOnChatRoomState
+  );
+  const setIgnoreChatRoom = useSetRecoilState(ignoreChatRoomState);
 
   const scrollToBottom = () => {
     if (isShowChat) {
@@ -59,6 +79,8 @@ const Chat = () => {
     readMessagesOnChatRoom({ chatRoomId: chatRoom.chatRoom.chatRoomId });
     setOpenChatRoomAdditionalAction([]);
     setOpenChatRoomReadReceipt({});
+    setMessagesOverride({});
+    setMessagesDelete({});
     setOpenChatRoom(chatRoom);
     setIsShowChat(true);
     setIsShowChatMenu(false);
@@ -69,21 +91,28 @@ const Chat = () => {
     setMountChatRoom(true);
     return () => {
       setOpenChatRoom(null);
+      setLatestActionOnChatRoom((p) => ({ data: [], dispatch: p.dispatch }));
       setOpenChatRoomAdditionalAction([]);
       setOpenChatRoomReadReceipt({});
+      setMessagesOverride({});
+      setMessagesDelete({});
+      setIgnoreChatRoom({});
+      setEditMessageOnChatRoom((p) => ({ data: [], dispatch: p.dispatch }));
+      setDeleteMessageOnChatRoom((p) => ({ data: [], dispatch: p.dispatch }));
       setMountChatRoom(false);
     };
+    /* eslint-disable react-hooks/exhaustive-deps */
   }, []);
 
   return (
     <div>
       <div
         className={`flex gap-5 relative sm:h-[calc(100vh_-_150px)] h-full sm:min-h-0 ${
-          isShowChatMenu ? "md:min-h-[999px]" : ""
+          isShowChatMenu ? "xl:min-h-[999px]" : ""
         }`}
       >
         <div
-          className={`panel p-4 flex-none max-w-xs w-full absolute xl:relative z-10 space-y-4 xl:h-full hidden xl:block overflow-hidden ${
+          className={`panel p-4 flex-none max-w-xs w-full absolute xl:relative z-10 space-y-4 h-full hidden xl:block overflow-hidden ${
             isShowChatMenu ? "!block" : ""
           }`}
         >
@@ -308,14 +337,12 @@ const Chat = () => {
             </div>
           )}
           {isShowChat && openChatRoom ? (
-            <Suspense fallback={<div>Loading...</div>}>
-              <ChatTalkList
-                chatRoom={openChatRoom}
-                onClose={() => setIsShowChat(false)}
-                toggleChatMenu={() => setIsShowChatMenu(!isShowChatMenu)}
-                scrollToBottom={scrollToBottom}
-              />
-            </Suspense>
+            <ChatTalkList
+              chatRoom={openChatRoom}
+              onClose={() => setIsShowChat(false)}
+              toggleChatMenu={() => setIsShowChatMenu(!isShowChatMenu)}
+              scrollToBottom={scrollToBottom}
+            />
           ) : (
             ""
           )}

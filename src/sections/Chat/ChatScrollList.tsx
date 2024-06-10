@@ -1,7 +1,7 @@
 import { useGetInfinityChatRoomActionsOnChatRoomQuery } from "@/api/chatRoomAction/useGetChatRoomActionsOnChatRoom";
 import { PracticalChatRoomOnMember } from "@/types/entity/chat-room-belonging";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useInView } from "react-intersection-observer";
 import { ChatRoomCreateActionWithCreatedBy } from "@/types/entity/chat-room-create-action";
@@ -19,9 +19,18 @@ import { AuthUserType } from "@/auth/types";
 import { TFunction } from "i18next";
 import {
   openChatRoomAdditionalActionState,
+  openChatRoomMessageDeleteState,
+  openChatRoomMessageOverrideState,
   openChatRoomReadReceiptState,
 } from "@/store/openChatRoom";
 import { useRecoilValue } from "recoil";
+import Dropdown from "@/components/Dropdown";
+import { useDeleteMessageQuery } from "@/api/message/useDeleteMessageQuery";
+import { Dialog, Transition } from "@headlessui/react";
+import IconClose from "@/components/Icon/IconClose";
+import IconMoodSmile from "@/components/Icon/IconMoodSmile";
+import IconSend from "@/components/Icon/IconSend";
+import { useEditMessageQuery } from "@/api/message/useEditMessageQuery";
 
 const ACTION_PER_PAGE = 30;
 
@@ -205,13 +214,9 @@ const ChatRoomWithdrawAction = ({
 
 const ChatRoomDeleteMessageAction = ({
   action,
-  actedAt,
-  locale,
   t,
 }: {
   action: ChatRoomDeleteMessageActionWithDeletedBy;
-  actedAt: string;
-  locale: string;
   t: TFunction<"chat", undefined>;
 }) => {
   const msg = action.deletedBy
@@ -220,17 +225,15 @@ const ChatRoomDeleteMessageAction = ({
       })
     : t("chat-chat-room-delete-message-action-no-deleted-by");
   return (
-    <div className="block mx-6 my-4">
-      <h4 className="text-sm text-center relative rounded-xl bg-[#f4f4f4] dark:bg-gray-800 p-2">
+    <div className="mx-6 my-4 flex justify-center">
+      <h4 className="text-sm text-center relative rounded-xl bg-[#f4f4f4] dark:bg-gray-800 p-2 w-1/2">
         <span className="block text-slate-500 dark:text-white px-3">{msg}</span>
-        <span className="block text-xs text-slate-400 dark:text-gray-400 mt-2">
-          {fDateTime(actedAt, "yyyy-MM-dd p", locale)}
-        </span>
       </h4>
     </div>
   );
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const ChatRoomMessageAction = ({
   auth,
   chatRoom,
@@ -245,6 +248,8 @@ const ChatRoomMessageAction = ({
   locale: string;
   t: TFunction<"chat", undefined>;
 }) => {
+  const overrideMessage = useRecoilValue(openChatRoomMessageOverrideState);
+  const [content, setContent] = useState(action.body);
   const openChatRoomReadReceipt = useRecoilValue(openChatRoomReadReceiptState);
   const readReceiptCount =
     (openChatRoomReadReceipt[action.messageId] || 0) + action.readReceiptCount;
@@ -255,6 +260,42 @@ const ChatRoomMessageAction = ({
         ? readCountStr
         : `${readCountStr} ${readReceiptCount}`
       : "";
+  const { mutate: deleteMessage } = useDeleteMessageQuery(
+    chatRoom.chatRoom.chatRoomId,
+    action.messageId
+  );
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [textMessage, setTextMessage] = useState("");
+  const { mutate } = useEditMessageQuery(
+    chatRoom.chatRoom.chatRoomId,
+    action.messageId
+  );
+  useEffect(() => {
+    if (overrideMessage[action.messageId]) {
+      setContent(overrideMessage[action.messageId].content);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [overrideMessage[action.messageId]]);
+
+  const handleEditModalOpen = () => {
+    setTextMessage(content);
+    setIsEditModalOpen(true);
+  }
+
+  const sendMessage = () => {
+    if (textMessage.trim()) {
+      mutate({
+        content: textMessage,
+      });
+      setTextMessage("");
+      setIsEditModalOpen(false);
+    }
+  };
+  const sendMessageHandle = (event: any) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  };
   return (
     <div
       className={`flex items-start gap-3 my-4 ${
@@ -297,16 +338,106 @@ const ChatRoomMessageAction = ({
                 </div>
               )}
             </>
-            <div
-              className={`dark:bg-gray-800 p-4 py-2 rounded-md bg-black/10 max-w-48 sm:max-w-72 md:max-w-96 overflow-wrap break-words
-              ${
-                action.sender?.memberId === auth?.memberId
-                  ? "ltr:rounded-br-none rtl:rounded-bl-none !bg-cyan-500 text-white"
-                  : "ltr:rounded-bl-none rtl:rounded-br-none"
-              }`}
-            >
-              {action.body}
-            </div>
+            {action.sender?.memberId === auth?.memberId ? (
+              <>
+                <Dropdown
+                  placement="left-start"
+                  btnClassName="dark:bg-gray-800 p-4 py-2 rounded-md bg-black/10 max-w-48 sm:max-w-72 md:max-w-96 overflow-wrap break-words ltr:rounded-br-none rtl:rounded-bl-none !bg-cyan-500 text-white"
+                  button={<div>{content}</div>}
+                >
+                  <div className="!min-w-[80px] bg-indigo-950/80 dark:bg-gray-800 p-2 rounded-md space-y-2 flex flex-col">
+                    <div className="flex justify-between w-full">
+                      <button
+                        type="button"
+                        className="w-full text-success-light"
+                        onClick={handleEditModalOpen}
+                      >
+                        {t("edit")}
+                      </button>
+                    </div>
+                    <div className="border-t border-gray-200 dark:border-gray-700" />
+                    <div className="flex justify-between w-full">
+                      <button
+                        type="button"
+                        className="w-full text-danger"
+                        onClick={() => deleteMessage()}
+                      >
+                        {t("delete")}
+                      </button>
+                    </div>
+                  </div>
+                </Dropdown>
+                <Transition appear show={isEditModalOpen} as={Fragment}>
+                  <Dialog
+                    as="div"
+                    open={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                  >
+                    <Transition.Child
+                      as={Fragment}
+                      enter="ease-out duration-300"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
+                      leave="ease-in duration-200"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <div className="fixed inset-0" />
+                    </Transition.Child>
+                    <div className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+                      <div className="flex items-center justify-center min-h-screen px-4">
+                        <Transition.Child
+                          as={Fragment}
+                          enter="ease-out duration-300"
+                          enterFrom="opacity-0 scale-95"
+                          enterTo="opacity-100 scale-100"
+                          leave="ease-in duration-200"
+                          leaveFrom="opacity-100 scale-100"
+                          leaveTo="opacity-0 scale-95"
+                        >
+                          <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-sm my-8 text-black dark:text-white-dark">
+                            <div className="flex items-center justify-between p-5 font-semibold text-lg dark:text-white">
+                              <h5>{t("edit")}</h5>
+                              <IconClose
+                                onClick={() => setIsEditModalOpen(false)}
+                                className="cursor-pointer"
+                              />
+                            </div>
+
+                            <div className="relative flex-1 mb-4">
+                              <input
+                                className="form-input rounded-full border-0 bg-[#f4f4f4] px-12 focus:outline-none py-2"
+                                placeholder="Type a message"
+                                value={textMessage}
+                                onChange={(e) => setTextMessage(e.target.value)}
+                                onKeyUp={sendMessageHandle}
+                              />
+                              <button
+                                type="button"
+                                className="absolute ltr:left-4 rtl:right-4 top-1/2 -translate-y-1/2 hover:text-primary"
+                              >
+                                <IconMoodSmile />
+                              </button>
+                              <button
+                                type="button"
+                                className="absolute ltr:right-4 rtl:left-4 top-1/2 -translate-y-1/2 hover:text-primary"
+                                onClick={() => sendMessage()}
+                              >
+                                <IconSend />
+                              </button>
+                            </div>
+                          </Dialog.Panel>
+                        </Transition.Child>
+                      </div>
+                    </div>
+                  </Dialog>
+                </Transition>
+              </>
+            ) : (
+              <div className="dark:bg-gray-800 p-4 py-2 rounded-md bg-black/10 max-w-48 sm:max-w-72 md:max-w-96 overflow-wrap break-words ltr:rounded-bl-none rtl:rounded-br-none">
+                {content}
+              </div>
+            )}
           </div>
         </div>
         <div
@@ -341,12 +472,13 @@ const ChatScrollList = ({ chatRoom }: Props) => {
       searchTypes: [],
     });
   const { ref, inView } = useInView();
+  const messageDelete = useRecoilValue(openChatRoomMessageDeleteState);
 
   const [topElement, setTopElement] = useState<{
     current: HTMLElement | null;
     prev: HTMLElement | null;
     dispatch: boolean;
-  }>({ current: null, prev: null, dispatch: false});
+  }>({ current: null, prev: null, dispatch: false });
   const openChatRoomAdditionalAction = useRecoilValue(
     openChatRoomAdditionalActionState
   );
@@ -361,23 +493,32 @@ const ChatScrollList = ({ chatRoom }: Props) => {
     const element: any = document.querySelector(".chat-conversation-box");
     const lastElement = element.querySelector(".chat-action:last-child");
     if (lastElement) {
-      setTopElement(p => ({ current: lastElement, prev: p.current, dispatch: !p.dispatch }));
+      setTopElement((p) => ({
+        current: lastElement,
+        prev: p.current,
+        dispatch: !p.dispatch,
+      }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
+    console.log(topElement);
     if (topElement.prev) {
       const element: any = document.querySelector(".chat-conversation-box");
-      topElement.prev.scrollIntoView();
       element.behavior = "smooth";
       element.scrollTop =
         topElement.prev.offsetTop - topElement.prev.clientHeight;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topElement.dispatch]);
 
   useEffect(() => {
-    setTopElement(p => ({ current: p.current, prev: null, dispatch: p.dispatch }));
+    setTopElement((p) => ({
+      current: p.current,
+      prev: null,
+      dispatch: p.dispatch,
+    }));
     const element: any = document.querySelector(".chat-conversation-box");
     element.behavior = "smooth";
     element.scrollTop = element.scrollHeight;
@@ -463,21 +604,25 @@ const ChatScrollList = ({ chatRoom }: Props) => {
                 {act.chatRoomDeleteMessageAction && (
                   <ChatRoomDeleteMessageAction
                     action={act.chatRoomDeleteMessageAction}
-                    actedAt={act.actedAt}
-                    locale={themeConfig.locale}
                     t={t}
                   />
                 )}
-                {act.message && (
-                  <ChatRoomMessageAction
-                    auth={user}
-                    chatRoom={chatRoom}
-                    action={act.message}
-                    actedAt={act.actedAt}
-                    locale={themeConfig.locale}
-                    t={t}
-                  />
-                )}
+                {act.message &&
+                  (messageDelete[act.chatRoomActionId] ? (
+                    <ChatRoomDeleteMessageAction
+                      action={messageDelete[act.chatRoomActionId]}
+                      t={t}
+                    />
+                  ) : (
+                    <ChatRoomMessageAction
+                      auth={user}
+                      chatRoom={chatRoom}
+                      action={act.message}
+                      actedAt={act.actedAt}
+                      locale={themeConfig.locale}
+                      t={t}
+                    />
+                  ))}
               </div>
             ))}
           </React.Fragment>
