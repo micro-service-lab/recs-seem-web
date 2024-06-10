@@ -17,7 +17,10 @@ import { MessageWithSenderAndReadReceiptCountAndAttachments } from "@/types/enti
 import { useAuthContext } from "@/auth/hooks";
 import { AuthUserType } from "@/auth/types";
 import { TFunction } from "i18next";
-import { openChatRoomAdditionalActionState } from "@/store/openChatRoom";
+import {
+  openChatRoomAdditionalActionState,
+  openChatRoomReadReceiptState,
+} from "@/store/openChatRoom";
 import { useRecoilValue } from "recoil";
 
 const ACTION_PER_PAGE = 30;
@@ -242,12 +245,15 @@ const ChatRoomMessageAction = ({
   locale: string;
   t: TFunction<"chat", undefined>;
 }) => {
+  const openChatRoomReadReceipt = useRecoilValue(openChatRoomReadReceiptState);
+  const readReceiptCount =
+    (openChatRoomReadReceipt[action.messageId] || 0) + action.readReceiptCount;
   const readCountStr = t("read-count");
   const readCount =
-    action.readReceiptCount > 0
+    readReceiptCount > 0
       ? chatRoom.chatRoom.isPrivate
         ? readCountStr
-        : `${readCountStr} ${action.readReceiptCount}`
+        : `${readCountStr} ${readReceiptCount}`
       : "";
   return (
     <div
@@ -336,38 +342,46 @@ const ChatScrollList = ({ chatRoom }: Props) => {
     });
   const { ref, inView } = useInView();
 
-  const [prevTopElement, setPrevTopElement] = useState<any>(null);
-  const [pageOffset, setPageOffset] = useState(true);
-  const openChatRoomAdditionalAction = useRecoilValue(openChatRoomAdditionalActionState)
-
-  useEffect(() => {
-    const element: any = document.querySelector(".chat-conversation-box");
-    const lastElement = element.querySelector(".chat-action:last-child");
-    if (lastElement) {
-      setPrevTopElement(lastElement);
-    }
-    element.behavior = "smooth";
-    if (!prevTopElement) {
-      element.scrollTop = element.scrollHeight;
-    } else {
-      const offset = pageOffset ? prevTopElement.clientHeight : 0;
-      element.scrollTop =
-        prevTopElement.scrollHeight + prevTopElement.clientHeight + offset;
-      setPageOffset(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
-
-  useEffect(() => {
-    setPageOffset(true);
-    setPrevTopElement(null);
-  }, [chatRoom]);
+  const [topElement, setTopElement] = useState<{
+    current: HTMLElement | null;
+    prev: HTMLElement | null;
+    dispatch: boolean;
+  }>({ current: null, prev: null, dispatch: false});
+  const openChatRoomAdditionalAction = useRecoilValue(
+    openChatRoomAdditionalActionState
+  );
 
   useEffect(() => {
     const element: any = document.querySelector(".chat-conversation-box");
     element.behavior = "smooth";
     element.scrollTop = element.scrollHeight;
   }, [openChatRoomAdditionalAction]);
+
+  useEffect(() => {
+    const element: any = document.querySelector(".chat-conversation-box");
+    const lastElement = element.querySelector(".chat-action:last-child");
+    if (lastElement) {
+      setTopElement(p => ({ current: lastElement, prev: p.current, dispatch: !p.dispatch }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    if (topElement.prev) {
+      const element: any = document.querySelector(".chat-conversation-box");
+      topElement.prev.scrollIntoView();
+      element.behavior = "smooth";
+      element.scrollTop =
+        topElement.prev.offsetTop - topElement.prev.clientHeight;
+    }
+  }, [topElement.dispatch]);
+
+  useEffect(() => {
+    setTopElement(p => ({ current: p.current, prev: null, dispatch: p.dispatch }));
+    const element: any = document.querySelector(".chat-conversation-box");
+    element.behavior = "smooth";
+    element.scrollTop = element.scrollHeight;
+  }, [chatRoom]);
 
   useEffect(() => {
     if (hasNextPage && inView) {
@@ -377,18 +391,34 @@ const ChatScrollList = ({ chatRoom }: Props) => {
   }, [inView, hasNextPage, fetchNextPage]);
 
   return (
-    <PerfectScrollbar className="relative h-full sm:h-[calc(100vh_-_300px)] chat-conversation-box">
+    <PerfectScrollbar className="relative sm:h-[calc(100vh_-_300px)] chat-conversation-box">
       <div style={{ visibility: "hidden", height: 0 }} ref={ref}>
         <div />
       </div>
-      {isFetchingNextPage && <div>Loading...</div>}
-      <div className="p-4 sm:pb-0 pb-[68px] sm:min-h-[300px] min-h-[400px] flex flex-col-reverse justify-end">
+      {isFetchingNextPage && (
+        <div className="flex justify-center p-4">
+          <svg
+            aria-hidden="true"
+            className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+            viewBox="0 0 100 101"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+              fill="currentColor"
+            />
+            <path
+              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+              fill="currentFill"
+            />
+          </svg>
+        </div>
+      )}
+      <div className="p-4 pb-0 sm:min-h-[300px] flex flex-col-reverse justify-end sm:max-h-[calc(100vh-_300px)]">
         {data.pages.map((page, i) => (
           <React.Fragment key={i}>
-            {[
-              ...openChatRoomAdditionalAction,
-              ...page.data.data,
-            ].map((act) => (
+            {[...openChatRoomAdditionalAction, ...page.data.data].map((act) => (
               <div key={act.chatRoomActionId} className="chat-action">
                 {act.chatRoomCreateAction && (
                   <ChatRoomCreateAction

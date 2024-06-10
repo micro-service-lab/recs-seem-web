@@ -12,3 +12,17 @@ export const openChatRoomAdditionalActionState = atom<ChatRoomActionPractical[]>
   key: "openChatRoomAdditionalAction",
   default: [],
 });
+
+export type MessageReadReceipt = {
+  [messageId: string]: number;
+};
+
+export const openChatRoomReadReceiptState = atom<MessageReadReceipt>({
+  key: "openChatRoomReadReceipt",
+  default: {},
+});
+
+export const mountChatRoomState = atom<boolean>({
+  key: "mountChatRoom",
+  default: false,
+});

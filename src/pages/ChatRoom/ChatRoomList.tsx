@@ -11,9 +11,12 @@ import { PracticalChatRoomOnMember } from "@/types/entity/chat-room-belonging";
 import ChatTalkList from "@/sections/Chat/ChatTalkList";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
+  mountChatRoomState,
   openChatRoomAdditionalActionState,
+  openChatRoomReadReceiptState,
   openChatRoomState,
 } from "@/store/openChatRoom";
+import { useReadMessagesOnChatRoomQuery } from "@/api/readReceipt/useReadMessagesOnChatRoomQuery";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Chat = () => {
@@ -35,6 +38,13 @@ const Chat = () => {
   const setOpenChatRoomAdditionalAction = useSetRecoilState(
     openChatRoomAdditionalActionState
   );
+  const setMountChatRoom = useSetRecoilState(mountChatRoomState);
+  const setOpenChatRoomReadReceipt = useSetRecoilState(
+    openChatRoomReadReceiptState
+  );
+  const {
+    mutate: readMessagesOnChatRoom,
+  } = useReadMessagesOnChatRoomQuery();
 
   const scrollToBottom = () => {
     if (isShowChat) {
@@ -46,18 +56,22 @@ const Chat = () => {
     }
   };
   const handleSelectChatRoom = (chatRoom: PracticalChatRoomOnMember) => {
+    readMessagesOnChatRoom({ chatRoomId: chatRoom.chatRoom.chatRoomId });
     setOpenChatRoomAdditionalAction([]);
+    setOpenChatRoomReadReceipt({});
     setOpenChatRoom(chatRoom);
     setIsShowChat(true);
-    scrollToBottom();
     setIsShowChatMenu(false);
+    scrollToBottom();
   };
 
   useEffect(() => {
-    console.log("Chat mount");
+    setMountChatRoom(true);
     return () => {
       setOpenChatRoom(null);
       setOpenChatRoomAdditionalAction([]);
+      setOpenChatRoomReadReceipt({});
+      setMountChatRoom(false);
     };
   }, []);
 
@@ -65,7 +79,7 @@ const Chat = () => {
     <div>
       <div
         className={`flex gap-5 relative sm:h-[calc(100vh_-_150px)] h-full sm:min-h-0 ${
-          isShowChatMenu ? "min-h-[999px]" : ""
+          isShowChatMenu ? "md:min-h-[999px]" : ""
         }`}
       >
         <div

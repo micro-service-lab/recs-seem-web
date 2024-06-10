@@ -24,6 +24,7 @@ import { RouterProvider } from "react-router-dom";
 import router from "./router/index";
 import { RecoilRoot } from "recoil";
 import { WsProvider } from "./providers/WsProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // ----------------------------------------------------------------------
 
@@ -31,22 +32,26 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
+const queryClient = new QueryClient();
+
 root.render(
   <HelmetProvider>
     <RecoilRoot>
       <Suspense>
         <Provider store={store}>
-          <AuthProvider>
-            <ErrorHandleProvider>
-              <ErrorBoundary FallbackComponent={Error500}>
-                <AuthConsumer>
-                  <WsProvider>
-                    <RouterProvider router={router} />
-                  </WsProvider>
-                </AuthConsumer>
-              </ErrorBoundary>
-            </ErrorHandleProvider>
-          </AuthProvider>
+          <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+              <ErrorHandleProvider>
+                <ErrorBoundary FallbackComponent={Error500}>
+                  <AuthConsumer>
+                    <WsProvider>
+                      <RouterProvider router={router} />
+                    </WsProvider>
+                  </AuthConsumer>
+                </ErrorBoundary>
+              </ErrorHandleProvider>
+            </AuthProvider>
+          </QueryClientProvider>
         </Provider>
       </Suspense>
     </RecoilRoot>

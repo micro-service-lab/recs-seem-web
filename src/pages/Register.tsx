@@ -21,7 +21,7 @@ import { LoadingButton } from "@/components/Button/LoadingButton";
 import RHFTextField from "@/components/HookForm/rhf-text-field";
 import IconInfoHexagon from "@/components/Icon/IconInfoHexagon";
 import IconX from "@/components/Icon/IconX";
-import { useRegisterQuery } from "@/api/auth/RegisterQuery";
+import { useRegisterQuery } from "@/api/auth/useRegisterQuery";
 import GradeRadio from "@/sections/Form/GradeRadio";
 import GroupRadio from "@/sections/Form/GroupRadio";
 import { formErrorHandle } from "@/utils/errorHandle/formErrorHandle";

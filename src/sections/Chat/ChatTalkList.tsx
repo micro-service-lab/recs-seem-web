@@ -61,7 +61,7 @@ const ChatTalkList = ({ chatRoom, toggleChatMenu, scrollToBottom }: Props) => {
 
   return (
     <>
-      <PerfectScrollbar className="chat-users relative h-full min-h-[100px] sm:h-[calc(100vh_-_357px)] space-y-0.5 ltr:pr-3.5 rtl:pl-3.5 ltr:-mr-3.5 rtl:-ml-3.5">
+      <PerfectScrollbar className="chat-users relative min-h-[100px] h-[calc(100vh_-_357px)] space-y-0.5 ltr:pr-3.5 rtl:pl-3.5 ltr:-mr-3.5 rtl:-ml-3.5">
         <div className="relative h-full">
           <div className="flex justify-between items-center p-4">
             <div className="flex items-center space-x-2 rtl:space-x-reverse">
@@ -173,11 +173,11 @@ const ChatTalkList = ({ chatRoom, toggleChatMenu, scrollToBottom }: Props) => {
           </div>
           <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
 
-          <div className="h-full min-h-[100px] sm:h-[calc(100vh_-_300px)]">
+          <div className="min-h-[100px] h-[calc(100vh_-_300px)]">
             <Suspense
               fallback={
-                <PerfectScrollbar className="relative h-full sm:h-[calc(100vh_-_300px)] chat-conversation-box">
-                  <div className="space-y-5 p-4 sm:pb-0 pb-[68px] sm:min-h-[300px] min-h-[400px]">
+                <PerfectScrollbar className="relative h-[calc(100vh_-_300px)] chat-conversation-box">
+                  <div className="space-y-5 p-4 pb-0 min-h-[400px]">
                     {...Array(10)
                       .fill(0)
                       .map((_, i) => (

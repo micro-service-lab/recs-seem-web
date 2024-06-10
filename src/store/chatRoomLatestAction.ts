@@ -3,13 +3,13 @@ import { MessageCard } from "@/types/entity/message";
 import { atom } from "recoil";
 
 export type ChatRoomLatestAction = {
-    [chatRoomId: string]: {
-        latestMessage: MessageCard | null;
-        latestAction: ChatRoomActionWithActionType;
-    }
+  [chatRoomId: string]: {
+    latestMessage: MessageCard | null;
+    latestAction: ChatRoomActionWithActionType;
   };
-  
-  export const latestActionOnChatRoomState = atom<ChatRoomLatestAction>({
-    key: "latestActionOnChatRoom",
-    default: {},
-  });
+};
+
+export const latestActionOnChatRoomState = atom<ChatRoomLatestAction>({
+  key: "latestActionOnChatRoom",
+  default: {},
+});

@@ -1,4 +1,4 @@
-import { useCreateMessageQuery } from "@/api/message/CreateMessageQuery";
+import { useCreateMessageQuery } from "@/api/message/useCreateMessageQuery";
 import IconCamera from "@/components/Icon/IconCamera";
 import IconDownload from "@/components/Icon/IconDownload";
 import IconHorizontalDots from "@/components/Icon/IconHorizontalDots";
@@ -32,8 +32,8 @@ const ChatMessageInput = ({ onSendMessage, chatRoom }: Props) => {
     }
   };
   return (
-    <div className="p-4 absolute bottom-0 left-0 w-full">
-      <div className="sm:flex w-full space-x-3 rtl:space-x-reverse items-center">
+    <div className="p-4 w-full bg-[#dfd7d7dc] dark:bg-[#344452]">
+      <div className="flex w-full space-x-3 rtl:space-x-reverse items-center">
         <div className="relative flex-1">
           <input
             className="form-input rounded-full border-0 bg-[#f4f4f4] px-12 focus:outline-none py-2"

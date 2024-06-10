@@ -1,12 +1,18 @@
+import { useReadMessageQuery } from "@/api/readReceipt/useReadMessageQuery";
 import { useAuthContext } from "@/auth/hooks";
 import { useHandleWsPayload } from "@/hooks/use-handle-ws-payload";
 import { chatRoomRefetchDispatchState } from "@/store/chatRoomRefetch";
 import { onlineMembersState } from "@/store/onlineMembers";
 import {
+  mountChatRoomState,
   openChatRoomAdditionalActionState,
+  openChatRoomReadReceiptState,
   openChatRoomState,
 } from "@/store/openChatRoom";
-import { unreadMessageCountOnChatRoomState, unreadMessageCountState } from "@/store/unreadMessage";
+import {
+  unreadMessageCountOnChatRoomState,
+  unreadMessageCountState,
+} from "@/store/unreadMessage";
 import { websocketAtom } from "@/store/websocket";
 import {
   wsChatRoomAddedMeEventDispatchState,
@@ -162,6 +168,7 @@ const InnerWsProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const handleWsPayload = useHandleWsPayload((eventType, data) => {
+    console.log("handleWsPayload", eventType, data);
     let connectingMembersData: WsConnectingMembersEventData;
     let connectedData: WsConnectedEventData;
     let disconnectedData: WsDisconnectedEventData;
@@ -312,6 +319,7 @@ const InnerWsProvider = ({ children }: { children: React.ReactNode }) => {
 
 const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
   const openChatRoom = useRecoilValue(openChatRoomState);
+  const { user } = useAuthContext();
 
   const wsConnectingMembersEventDispatch = useRecoilValue(
     wsConnectingMembersEventDispatchState
@@ -611,6 +619,10 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
   const setUnreadMessageCountOnChatRoom = useSetRecoilState(
     unreadMessageCountOnChatRoomState
   );
+  const { mutate: readMessage } = useReadMessageQuery();
+  const setOpenChatRoomReadReceipt = useSetRecoilState(
+    openChatRoomReadReceiptState
+  );
 
   useEffect(() => {
     wsDispatchConnectingMembersEvent.forEach((data) => {
@@ -686,11 +698,39 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     wsDispatchChatRoomSentMessageEvent.forEach((data) => {
       addMessageAction(data);
-      if (!openChatRoom || data.chatRoomId !== openChatRoom.chatRoom.chatRoomId) {
+      setChatRoomRefetchDispatch((p) => ({
+        dispatch: !p.dispatch,
+        first: false,
+      }));
+      if (
+        !openChatRoom ||
+        data.chatRoomId !== openChatRoom.chatRoom.chatRoomId
+      ) {
         setUnreadMessageCount((prev) => prev + 1);
         setUnreadMessageCountOnChatRoom((prev) => {
           const newUnreadCounts = { ...prev };
           newUnreadCounts[data.chatRoomId] = (prev[data.chatRoomId] || 0) + 1;
+          return newUnreadCounts;
+        });
+      }
+      if (
+        openChatRoom &&
+        openChatRoom.chatRoom.chatRoomId === data.chatRoomId &&
+        user &&
+        data.action.sender &&
+        data.action.sender.memberId !== user.memberId
+      ) {
+        readMessage({
+          chatRoomId: data.chatRoomId,
+          messageId: data.action.messageId,
+        });
+        setUnreadMessageCount((prev) => prev + 1);
+        setUnreadMessageCountOnChatRoom((prev) => {
+          const newUnreadCounts = { ...prev };
+          if (!newUnreadCounts[data.chatRoomId]) {
+            newUnreadCounts[data.chatRoomId] = 0;
+          }
+          newUnreadCounts[data.chatRoomId] += 1;
           return newUnreadCounts;
         });
       }
@@ -715,6 +755,32 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     wsDispatchChatRoomReadMessageEvent.forEach((data) => {
       console.log("wsDispatchChatRoomReadMessageEvent", data);
+      setOpenChatRoomReadReceipt((prev) => {
+        const newReadReceipt = { ...prev };
+        data.messageIds.forEach((messageId) => {
+          if (!newReadReceipt[messageId]) {
+            newReadReceipt[messageId] = 1;
+          } else {
+            newReadReceipt[messageId]++;
+          }
+        });
+        return newReadReceipt;
+      });
+      if (user && data.memberId === user.memberId) {
+        // 時間差による-1以下があるかもしれないが、許容する
+        setUnreadMessageCount((prev) => prev - data.messageIds.length);
+        setUnreadMessageCountOnChatRoom((prev) => {
+          const newUnreadCounts = { ...prev };
+          if (!newUnreadCounts[data.chatRoomId]) {
+            newUnreadCounts[data.chatRoomId] = 0;
+          }
+          newUnreadCounts[data.chatRoomId] -= data.messageIds.length; 
+          if (newUnreadCounts[data.chatRoomId] <= 0) {
+            delete newUnreadCounts[data.chatRoomId];
+          }
+          return newUnreadCounts;
+        });
+      }
     });
     setWsDispatchChatRoomReadMessageEvent([]);
   }, [wsChatRoomReadMessageEventDispatch]);
