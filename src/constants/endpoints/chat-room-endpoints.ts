@@ -17,8 +17,9 @@ export const CHAT_ROOM_ENDPOINTS = {
     },
     member: {
       get: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/members`,
-      create: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/members`,
-      delete: (chatRoomId: string, memberId: string) => `/chat_rooms/${chatRoomId}/members/${memberId}`,
+      add: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/members`,
+      remove: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/members`,
+      withdraw: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/members/withdraw`,
     },
     action: {
       get: (chatRoomId: string) => `/chat_rooms/${chatRoomId}/chat_room_actions`,

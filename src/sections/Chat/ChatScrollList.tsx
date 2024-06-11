@@ -314,7 +314,7 @@ const ChatRoomMessageAction = ({
             alt=""
           />
         ) : (
-          <span className="flex justify-center items-center w-9 h-9 text-center rounded-full object-cover bg-success text-2xl">
+          <span className="flex justify-center items-center w-9 h-9 text-center rounded-full object-cover bg-gray-300 dark:bg-gray-100 text-2xl">
             {(action.sender?.name || "")[0]}
           </span>
         )}

@@ -47,7 +47,7 @@ export const UserAvatar = () => {
               alt=""
             />
           ) : (
-            <span className="flex justify-center items-center w-9 h-9 text-center rounded-full object-cover bg-success text-2xl">
+            <span className="flex justify-center items-center w-9 h-9 text-center rounded-full object-cover bg-gray-300 dark:bg-gray-100 text-2xl">
               {(user.name)[0]}
             </span>
           )
@@ -63,7 +63,7 @@ export const UserAvatar = () => {
                   alt=""
                 />
               ) : (
-                <span className="flex justify-center items-center w-10 h-10 text-center rounded-md object-cover bg-success text-2xl">
+                <span className="flex justify-center items-center w-10 h-10 text-center rounded-md object-cover bg-gray-300 dark:bg-gray-100 text-2xl">
                   {(user.name)[0]}
                 </span>
               )}

@@ -457,5 +457,9 @@
     "Register failed": "登録に失敗しました",
     "grade": "学年",
     "group": "班",
-    "New Chat Room": "新規チャットルーム"
+    "New Chat Room": "新規チャットルーム",
+    "name": "名前",
+    "email": "メールアドレス",
+    "attend-status": "出席状況",
+    "action": "アクション"
 }

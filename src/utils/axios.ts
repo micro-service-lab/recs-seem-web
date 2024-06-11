@@ -37,6 +37,9 @@ export default axiosInstance;
 
 axiosInstance.interceptors.request.use(request => {
   request.data = convertKeysToSnakeCase(request.data)
+  if (request.params) {
+    request.params = convertKeysToSnakeCase(request.params)
+  }
   return request
 })
 

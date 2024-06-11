@@ -261,4 +261,12 @@ export const API_RESPONSE_HANDLING: MessageType = {
     message: 'not-organization-member-error-response',
     level: RESPONSE_LEVEL.Toast,
   },
+  [API_RESPONSE_TYPES.CannotDeleteSelfFromOrganization]: {
+    message: 'cannot-delete-self-from-organization-error-response',
+    level: RESPONSE_LEVEL.Toast,
+  },
+  [API_RESPONSE_TYPES.CannotDeleteSelfFromChatRoom]: {
+    message: 'cannot-delete-self-from-chat-room-error-response',
+    level: RESPONSE_LEVEL.Toast,
+  },
 } as const;

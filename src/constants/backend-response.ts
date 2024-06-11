@@ -61,4 +61,6 @@ export const API_RESPONSE_TYPES = {
   MustBeGradeProfessorIfGroupProfessor: "256",
   MustBeGroupProfessorIfGradeProfessor: "257",
   NotOrganizationMember: "258",
+  CannotDeleteSelfFromOrganization: "259",
+  CannotDeleteSelfFromChatRoom: "260",
 } as const;

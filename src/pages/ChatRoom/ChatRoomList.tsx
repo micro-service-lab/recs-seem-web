@@ -1,10 +1,11 @@
 import { IRootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, Fragment } from "react";
 import { setPageTitle } from "@/store/themeConfigSlice";
 import IconChatPlus from "@/components/Icon/IconChatPlus";
 import IconMenu from "@/components/Icon/IconMenu";
 import IconMessage from "@/components/Icon/IconMessage";
+import IconClose from "@/components/Icon/IconClose";
 import { useTranslation } from "react-i18next";
 import ChatRoomScrollList from "@/sections/Chat/ChatRoomScrollList";
 import { PracticalChatRoomOnMember } from "@/types/entity/chat-room-belonging";
@@ -25,6 +26,8 @@ import {
   latestActionOnChatRoomState,
 } from "@/store/chatRoomLatestAction";
 import { ignoreChatRoomState } from "@/store/ignoreChatRoom";
+import { Dialog, Transition } from "@headlessui/react";
+import { CreateChatRoomForm } from "@/sections/Chat/CreateChatRoomForm";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Chat = () => {
@@ -37,8 +40,12 @@ const Chat = () => {
       state.themeConfig.theme === "dark" || state.themeConfig.isDarkMode
   );
 
+  const [newChatRoomModal, setNewChatRoomModal] = useState(false);
   const { t } = useTranslation();
   const { t: tT } = useTranslation("page");
+  const [openLatestActedAt, setOpenLatestActedAt] = useState<string | null>(
+    null
+  );
 
   const [isShowChatMenu, setIsShowChatMenu] = useState(false);
   const [isShowChat, setIsShowChat] = useState(false);
@@ -121,11 +128,62 @@ const Chat = () => {
               className="bg-primary hover:bg-primary-dark hover:text-white-dark
                              text-white dark:hover:bg-primary-dark cursor-pointer
                              rounded-md py-2 px-4 w-full dark:hover:bg-[#1b2e4b] flex items-center justify-center"
+              onClick={() => setNewChatRoomModal(true)}
             >
               <span className="mr-2">{t("New Chat Room")}</span>
               <IconChatPlus width={24} height={24} />
             </div>
           </div>
+          <Transition appear show={newChatRoomModal} as={Fragment}>
+            <Dialog
+              as="div"
+              open={newChatRoomModal}
+              onClose={() => setNewChatRoomModal(false)}
+            >
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <div className="fixed inset-0" />
+              </Transition.Child>
+              <div
+                id="login_modal"
+                className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto"
+              >
+                <div className="flex items-start justify-center min-h-screen px-4">
+                  <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0 scale-95"
+                    enterTo="opacity-100 scale-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100 scale-100"
+                    leaveTo="opacity-0 scale-95"
+                  >
+                    <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-4xl my-8 text-black dark:text-white-dark">
+                      <div className="flex items-center justify-between p-5 font-semibold text-lg dark:text-white">
+                        <h5>{t("New Chat Room")}</h5>
+                        <button
+                          type="button"
+                          onClick={() => setNewChatRoomModal(false)}
+                          className="text-white-dark hover:text-dark"
+                        >
+                          <IconClose className="w-6 h-6" />
+                        </button>
+                      </div>
+
+                      <CreateChatRoomForm />
+                    </Dialog.Panel>
+                  </Transition.Child>
+                </div>
+              </div>
+            </Dialog>
+          </Transition>
           <div className="mt-6 h-full min-h-[100px] sm:h-[calc(100vh_-_292px)]">
             <Suspense
               fallback={
@@ -148,6 +206,7 @@ const Chat = () => {
               <ChatRoomScrollList
                 searchName=""
                 onSelectChatRoom={handleSelectChatRoom}
+                setOpenLatestActedAt={setOpenLatestActedAt}
               />
             </Suspense>
           </div>
@@ -342,6 +401,7 @@ const Chat = () => {
               onClose={() => setIsShowChat(false)}
               toggleChatMenu={() => setIsShowChatMenu(!isShowChatMenu)}
               scrollToBottom={scrollToBottom}
+              latestActedAt={openLatestActedAt}
             />
           ) : (
             ""

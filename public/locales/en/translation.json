@@ -457,5 +457,9 @@
     "Register failed": "Register failed",
     "grade": "Grade",
     "group": "Group",
-    "New Chat Room": "New Chat Room"
+    "New Chat Room": "New Chat Room",
+    "name": "Name",
+    "email": "Email",
+    "attend-status": "Attend Status",
+    "action": "Action"
 }

@@ -1,0 +1,11 @@
+{
+  "table-page-show-off": "{{totalData}}件中{{startData}}から{{endData}}を表示",
+  "search-placeholder": "検索",
+  "delete-selected": "選択項目を削除",
+  "invite-selected": "選択項目を招待",
+  "select-cancel": "選択キャンセル",
+  "table-page-previous": "前へ",
+  "table-page-next": "次へ",
+  "table-page-no-data": "データがありません",
+  "no-data": "データがありません"
+}

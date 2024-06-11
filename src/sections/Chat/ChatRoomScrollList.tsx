@@ -2,7 +2,7 @@ import { useGetInfinityChatRoomsOnAuthQuery } from "@/api/chatRoom/useGetChatRoo
 import { useInView } from "react-intersection-observer";
 import { PracticalChatRoomOnMember } from "@/types/entity/chat-room-belonging";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { formatDate } from "@/utils/format-time";
 import { ChatRoomActionTypeKeys } from "@/types/chat-room-action";
 import { useTranslation } from "react-i18next";
@@ -16,21 +16,28 @@ import {
   latestActionOnChatRoomState,
 } from "@/store/chatRoomLatestAction";
 import { ignoreChatRoomState } from "@/store/ignoreChatRoom";
+import { onlineMembersState } from "@/store/onlineMembers";
 
 const CHAT_ROOM_PER_PAGE = 10;
 
 type Props = {
   searchName: string;
   onSelectChatRoom: (chatRoom: PracticalChatRoomOnMember) => void;
+  setOpenLatestActedAt: Dispatch<SetStateAction<string | null>>;
 };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const ChatRoomScrollList = ({ searchName, onSelectChatRoom }: Props) => {
+const ChatRoomScrollList = ({
+  searchName,
+  onSelectChatRoom,
+  setOpenLatestActedAt,
+}: Props) => {
   const { t } = useTranslation("chat");
   const [unreadCounts, setUnreadCounts] = useRecoilState(
     unreadMessageCountOnChatRoomState
   );
-  const openChatRoom = useRecoilValue(openChatRoomState);
+  const onlineMembers = useRecoilValue(onlineMembersState);
+  const [openChatRoom, setOpenChatRoom] = useRecoilState(openChatRoomState);
   const [chatRoomRefetchDispatch, setChatRoomRefetchDispatch] = useRecoilState(
     chatRoomRefetchDispatchState
   );
@@ -58,13 +65,18 @@ const ChatRoomScrollList = ({ searchName, onSelectChatRoom }: Props) => {
   const { ref, inView } = useInView();
 
   useEffect(() => {
-    console.log("chatRoom", chatRoom);
-    console.log("ignoreChatRoom", ignoreChatRoom);
     if (ignoreChatRoom) {
       const newChatRoom = chatRoom.filter(
         (room) => !ignoreChatRoom[room.chatRoom.chatRoomId]
       );
       setChatRoom(newChatRoom);
+    }
+    if (
+      openChatRoom &&
+      ignoreChatRoom &&
+      ignoreChatRoom[openChatRoom.chatRoom.chatRoomId]
+    ) {
+      setOpenChatRoom(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ignoreChatRoom]);
@@ -101,6 +113,12 @@ const ChatRoomScrollList = ({ searchName, onSelectChatRoom }: Props) => {
         if (index === -1) {
           needRefetch = true;
           return;
+        }
+        if (
+          openChatRoom &&
+          openChatRoom.chatRoom.chatRoomId === action.chatRoomId
+        ) {
+          setOpenLatestActedAt(action.latestAction.actedAt);
         }
         newChatRoom = [
           {
@@ -268,7 +286,7 @@ const ChatRoomScrollList = ({ searchName, onSelectChatRoom }: Props) => {
             <div className="flex-1">
               <div className="flex items-center w-[calc(100%-3rem)]">
                 <div className="flex-shrink-0 relative">
-                  <span className="block w-10 h-10 text-center rounded-md object-cover bg-success/20 text-2xl animate-pulse" />
+                  <span className="block w-10 h-10 text-center rounded-md object-cover bg-gray-300 dark:bg-gray-100/20 text-2xl animate-pulse" />
                 </div>
                 <div className="mx-3 ltr:text-left rtl:text-right">
                   <p className="mb-1 font-semibold truncate w-[145px] animate-pulse bg-black-light dark:bg-white-light h-7" />
@@ -306,20 +324,30 @@ const ChatRoomScrollList = ({ searchName, onSelectChatRoom }: Props) => {
                 <div className="flex items-center w-[calc(100%-3rem)]">
                   <div className="flex-shrink-0 relative">
                     {room.chatRoom.isPrivate ? (
-                      room.chatRoom.companion?.member.profileImage ? (
-                        <img
-                          src={
-                            room.chatRoom.companion?.member.profileImage
-                              .attachableItem.url
-                          }
-                          className="h-10 w-10 rounded-md object-cover"
-                          alt=""
-                        />
-                      ) : (
-                        <span className="block w-10 h-10 text-center rounded-md object-cover bg-success text-2xl">
-                          {(room.chatRoom.companion?.member.name || "")[0]}
-                        </span>
-                      )
+                      <>
+                        {room.chatRoom.companion?.member.profileImage ? (
+                          <img
+                            src={
+                              room.chatRoom.companion?.member.profileImage
+                                .attachableItem.url
+                            }
+                            className="h-10 w-10 rounded-md object-cover"
+                            alt=""
+                          />
+                        ) : (
+                          <span className="w-10 h-10 text-center rounded-md object-cover bg-gray-300 dark:bg-gray-100 text-2xl flex justify-center items-center">
+                            {(room.chatRoom.companion?.member.name || "")[0]}
+                          </span>
+                        )}
+                        {room.chatRoom.companion &&
+                          onlineMembers[
+                            room.chatRoom.companion.member.memberId
+                          ] && (
+                            <div className="absolute -bottom-0.5 -right-0.5">
+                              <div className="w-3 h-3 bg-success rounded-full animate-pulse" />
+                            </div>
+                          )}
+                      </>
                     ) : room.chatRoom.coverImage ? (
                       <img
                         src={room.chatRoom.coverImage.attachableItem.url}
@@ -327,7 +355,7 @@ const ChatRoomScrollList = ({ searchName, onSelectChatRoom }: Props) => {
                         alt=""
                       />
                     ) : (
-                      <span className="block w-10 h-10 text-center rounded-md object-cover bg-success text-2xl">
+                      <span className="w-10 h-10 text-center rounded-md object-cover bg-gray-300 dark:bg-gray-100 text-2xl flex justify-center items-center">
                         {(room.chatRoom.name || "")[0]}
                       </span>
                     )}

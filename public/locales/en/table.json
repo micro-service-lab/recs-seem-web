@@ -1,0 +1,11 @@
+{
+  "table-page-show-off": "Showing {{startData}} to {{endData}} of {{totalData}} entries",
+  "search-placeholder": "Search...",
+  "delete-selected": "Delete Selected",
+  "invite-selected": "Invite Selected",
+  "select-cancel": "Select Cancel",
+  "table-page-previous": "Previous",
+  "table-page-next": "Next",
+  "table-page-no-data": "No data available in table",
+  "no-data": "No data"
+}

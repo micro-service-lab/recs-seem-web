@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.layer.css";
 import "mantine-datatable/styles.layer.css";
+import 'tippy.js/dist/tippy.css';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { IRootState } from "./store";
 import { toggleTheme, toggleLocale } from "./store/themeConfigSlice";
 import store from "./store";
