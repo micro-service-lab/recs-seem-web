@@ -34,7 +34,7 @@ aqua i -l
 ``` sh
 npm run build
 docker build --target prod -t recs_seem_web . -f Dockerfile 
-
+docker run -d --rm -p 80:80 recs_seem_web
 ```
 
 ## あくまでたたき台
