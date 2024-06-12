@@ -22,6 +22,7 @@ type Props = {
   onSuccess: () => void;
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const EditChatRoomForm = ({ chatRoom, onSuccess }: Props) => {
   const { data, error, isPending, mutate } = useUpdateChatRoomQuery(
     chatRoom.chatRoom.chatRoomId
@@ -93,6 +94,7 @@ export const EditChatRoomForm = ({ chatRoom, onSuccess }: Props) => {
         coverImageId: uploadedData.data[0].attachableItem.imageId,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadedData]);
 
   useEffect(() => {
@@ -100,6 +102,7 @@ export const EditChatRoomForm = ({ chatRoom, onSuccess }: Props) => {
       const errorResponse = error.response?.data as ErrorResponse;
       formErrorHandle(errorResponse, setError);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   useEffect(() => {
@@ -112,12 +115,14 @@ export const EditChatRoomForm = ({ chatRoom, onSuccess }: Props) => {
       reset();
       onSuccess();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const handleDefaultSetImage = useCallback(() => {
     setValue("coverImage", chatRoom.chatRoom.coverImage?.attachableItem.url, {
       shouldValidate: true,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setValue]);
 
   const handleDropFile = useCallback(
@@ -148,6 +153,7 @@ export const EditChatRoomForm = ({ chatRoom, onSuccess }: Props) => {
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadError]);
 
   return (

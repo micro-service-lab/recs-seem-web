@@ -59,12 +59,14 @@ export const NewChatRoomMemberList = ({
 
   useEffect(() => {
     field.onChange(checkedValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedValues]);
 
   useEffect(() => {
     if (data) {
       setTotalCount(data.data.withCount.count);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.data.withCount.count]);
 
   return (

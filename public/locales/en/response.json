@@ -64,6 +64,6 @@
   "cannot-delete-self-from-organization-error-response": "Cannot delete self from organization",
   "cannot-delete-self-from-chat-room-error-response": "Cannot delete self from chat room",
   "cannot-add-self-to-organization-error-response": "Cannot add self to organization",
-  "cannot-add-self-to-chat-room-error-response": "Cannot add self to chat room"
+  "cannot-add-self-to-chat-room-error-response": "Cannot add self to chat room",
+  "cannot-download-outer-attachable-item-error-response": "Cannot download outer attachable item"
 }
-

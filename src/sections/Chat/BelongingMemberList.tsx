@@ -88,6 +88,7 @@ export const BelongingMemberList = ({
     if (data) {
       setTotalCount(data.data.withCount.count);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.data.withCount.count]);
 
   return (

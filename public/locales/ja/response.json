@@ -64,5 +64,6 @@
   "cannot-delete-self-from-organization-error-response": "組織から自分自身を削除できません",
   "cannot-delete-self-from-chat-room-error-response": "チャットルームから自分自身を削除できません",
   "cannot-add-self-to-organization-error-response": "自分自身を組織に追加できません",
-  "cannot-add-self-to-chat-room-error-response": "自分自身をチャットルームに追加できません"
+  "cannot-add-self-to-chat-room-error-response": "自分自身をチャットルームに追加できません",
+  "cannot-download-outer-attachable-item-error-response": "外部添付可能アイテムをダウンロードできません"
 }

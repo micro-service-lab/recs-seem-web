@@ -65,4 +65,5 @@ export const API_RESPONSE_TYPES = {
   CannotDeleteSelfFromChatRoom: "260",
   CannotAddSelfToOrganization: "261",
   CannotAddSelfToChatRoom: "262",
+  CannotDownloadOuterAttachableItem: "263",
 } as const;

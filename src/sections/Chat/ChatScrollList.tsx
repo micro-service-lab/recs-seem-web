@@ -31,6 +31,8 @@ import IconClose from "@/components/Icon/IconClose";
 import IconMoodSmile from "@/components/Icon/IconMoodSmile";
 import IconSend from "@/components/Icon/IconSend";
 import { useEditMessageQuery } from "@/api/message/useEditMessageQuery";
+import { ChatAttachmentFile } from "./ChatAttachmentFile";
+import { ChatAttachmentImages } from "./ChatAttachmentImages";
 
 const ACTION_PER_PAGE = 30;
 
@@ -280,7 +282,19 @@ const ChatRoomMessageAction = ({
   const handleEditModalOpen = () => {
     setTextMessage(content);
     setIsEditModalOpen(true);
-  }
+  };
+
+  const attachmentFiles = action.attachments.filter(
+    (e) => !!e.attachableItem.file
+  );
+
+  const attachmentFilesCount = attachmentFiles.length;
+
+  const attachmentImages = action.attachments.filter(
+    (e) => !!e.attachableItem.image
+  );
+
+  const attachmentImagesCount = attachmentImages.length;
 
   const sendMessage = () => {
     if (textMessage.trim()) {
@@ -340,33 +354,68 @@ const ChatRoomMessageAction = ({
             </>
             {action.sender?.memberId === auth?.memberId ? (
               <>
-                <Dropdown
-                  placement="left-start"
-                  btnClassName="dark:bg-gray-800 p-4 py-2 rounded-md bg-black/10 max-w-48 sm:max-w-72 md:max-w-96 overflow-wrap break-words ltr:rounded-br-none rtl:rounded-bl-none !bg-cyan-500 text-white"
-                  button={<div>{content}</div>}
+                <div
+                  className={`flex flex-col justify-center items-end
+                ${
+                  action.attachments.length > 0
+                    ? "dark:bg-gray-50 bg-gray-200 rounded-md p-4 py-2 max-w-96 sm:max-w-[28rem]"
+                    : ""
+                }`}
                 >
-                  <div className="!min-w-[80px] bg-indigo-950/80 dark:bg-gray-800 p-2 rounded-md space-y-2 flex flex-col">
-                    <div className="flex justify-between w-full">
-                      <button
-                        type="button"
-                        className="w-full text-success-light"
-                        onClick={handleEditModalOpen}
-                      >
-                        {t("edit")}
-                      </button>
+                  <Dropdown
+                    placement="left-start"
+                    btnClassName="dark:bg-gray-800 p-4 py-2 rounded-md bg-black/10 max-w-48 sm:max-w-72 md:max-w-96 overflow-wrap break-words ltr:rounded-br-none rtl:rounded-bl-none !bg-cyan-500 text-white mr-0"
+                    button={<div>{content}</div>}
+                  >
+                    <div className="!min-w-[80px] bg-indigo-950/80 dark:bg-gray-800 p-2 rounded-md space-y-2 flex flex-col">
+                      <div className="flex justify-between w-full">
+                        <button
+                          type="button"
+                          className="w-full text-success-light"
+                          onClick={handleEditModalOpen}
+                        >
+                          {t("edit")}
+                        </button>
+                      </div>
+                      <div className="border-t border-gray-200 dark:border-gray-700" />
+                      <div className="flex justify-between w-full">
+                        <button
+                          type="button"
+                          className="w-full text-danger"
+                          onClick={() => deleteMessage()}
+                        >
+                          {t("delete")}
+                        </button>
+                      </div>
                     </div>
-                    <div className="border-t border-gray-200 dark:border-gray-700" />
-                    <div className="flex justify-between w-full">
-                      <button
-                        type="button"
-                        className="w-full text-danger"
-                        onClick={() => deleteMessage()}
+                  </Dropdown>
+                  <div className="flex flex-col justify-center items-end">
+                    {attachmentFilesCount > 0 && (
+                      <div
+                        className={`grid gap-4 grid-cols-1 mb-2 ${
+                          attachmentFilesCount === 1
+                            ? "sm:grid-cols-1"
+                            : "sm:grid-cols-2"
+                        }`}
                       >
-                        {t("delete")}
-                      </button>
-                    </div>
+                        {attachmentFiles.map((attachment) => (
+                          <ChatAttachmentFile
+                            fileName={attachment.attachableItem.alias}
+                            id={attachment.attachableItem.attachableItemId}
+                            fileSize={attachment.attachableItem.size || 0}
+                            key={attachment.attachedMessageId}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    {attachmentImagesCount > 0 && (
+                      <ChatAttachmentImages
+                        attachmentImages={attachmentImages}
+                        attachmentImagesCount={attachmentImagesCount}
+                      />
+                    )}
                   </div>
-                </Dropdown>
+                </div>
                 <Transition appear show={isEditModalOpen} as={Fragment}>
                   <Dialog
                     as="div"
@@ -434,8 +483,43 @@ const ChatRoomMessageAction = ({
                 </Transition>
               </>
             ) : (
-              <div className="dark:bg-gray-800 p-4 py-2 rounded-md bg-black/10 max-w-48 sm:max-w-72 md:max-w-96 overflow-wrap break-words ltr:rounded-bl-none rtl:rounded-br-none">
-                {content}
+              <div
+                className={`flex flex-col justify-center items-start
+          ${
+            action.attachments.length > 0
+              ? "dark:bg-gray-50 bg-gray-200 rounded-md p-4 py-2 max-w-96 sm:max-w-[28rem]"
+              : ""
+          }`}
+              >
+                <div className="dark:bg-gray-800 p-4 py-2 rounded-md bg-black/10 max-w-48 sm:max-w-72 md:max-w-96 overflow-wrap break-words ltr:rounded-bl-none rtl:rounded-br-none">
+                  {content}
+                </div>
+                <div className="flex flex-col justify-center items-start">
+                  {attachmentFilesCount > 0 && (
+                    <div
+                      className={`grid gap-4 grid-cols-1 ${
+                        attachmentFilesCount === 1
+                          ? "sm:grid-cols-1"
+                          : "sm:grid-cols-2"
+                      }`}
+                    >
+                      {attachmentFiles.map((attachment) => (
+                        <ChatAttachmentFile
+                          fileName={attachment.attachableItem.alias}
+                          id={attachment.attachableItem.attachableItemId}
+                          fileSize={attachment.attachableItem.size || 0}
+                          key={attachment.attachedMessageId}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  {attachmentImagesCount > 0 && (
+                    <ChatAttachmentImages
+                      attachmentImages={attachmentImages}
+                      attachmentImagesCount={attachmentImagesCount}
+                    />
+                  )}
+                </div>
               </div>
             )}
           </div>

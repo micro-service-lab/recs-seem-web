@@ -277,4 +277,8 @@ export const API_RESPONSE_HANDLING: MessageType = {
     message: 'cannot-add-self-to-chat-room-error-response',
     level: RESPONSE_LEVEL.Toast,
   },
+  [API_RESPONSE_TYPES.CannotDownloadOuterAttachableItem]: {
+    message: 'cannot-download-outer-attachable-item-error-response',
+    level: RESPONSE_LEVEL.Toast,
+  },
 } as const;

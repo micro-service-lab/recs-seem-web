@@ -1,4 +1,4 @@
-import { AttachableItem, AttachableItemWithMimeType } from "./attachable-item";
+import { AttachableItemWithContent, AttachableItemWithMimeType } from "./attachable-item";
 import { Message } from "./message";
 
 export interface AttachedMessage {
@@ -10,7 +10,7 @@ export interface AttachedMessage {
 export interface AttachedItemOnMessage {
     attachedMessageId: string;
     messageId: string;
-    attachableItem: AttachableItem;
+    attachableItem: AttachableItemWithContent;
 }
 
 export interface AttachedItemOnMessageWithContent {
@@ -21,6 +21,6 @@ export interface AttachedItemOnMessageWithContent {
 
 export interface AttachedItemOnChatRoom {
     attachedMessageId: string;
-    attachableItem: AttachableItem;
+    attachableItem: AttachableItemWithContent;
     message: Message;
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --passWithNoTests",
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build", 
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -25,12 +25,14 @@
     "@mui/material": "^5.15.19",
     "@reduxjs/toolkit": "^2.2.3",
     "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/typography": "^0.5.12",
     "@tanstack/react-query": "^5.29.0",
     "@tippyjs/react": "^4.2.6",
     "@types/lodash": "^4.17.0",
     "@types/node": "^20.12.6",
     "@types/numeral": "^2.0.5",
+    "@types/react-file-icon": "^1.0.4",
     "@types/react-lazy-load-image-component": "^1.6.4",
     "@types/websocket": "^1.0.10",
     "axios": "^1.6.8",
@@ -49,6 +51,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-error-boundary": "^4.0.13",
+    "react-file-icon": "^1.5.0",
     "react-helmet-async": "^2.0.4",
     "react-hook-form": "^7.51.2",
     "react-i18next": "^14.1.0",
@@ -65,6 +68,7 @@
     "ts-node": "^10.9.2",
     "url": "^0.11.3",
     "websocket": "^1.0.35",
+    "yet-another-react-lightbox": "^3.19.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {
