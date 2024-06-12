@@ -1,6 +1,7 @@
 import { useReadMessageQuery } from "@/api/readReceipt/useReadMessageQuery";
 import { useAuthContext } from "@/auth/hooks";
 import { useHandleWsPayload } from "@/hooks/use-handle-ws-payload";
+import { chatRoomQueryKey } from "@/query-keys/chat-room-query-key";
 import {
   DeleteMessageOnChatRoomState,
   EditMessageOnChatRoomState,
@@ -8,6 +9,7 @@ import {
 } from "@/store/chatRoomLatestAction";
 import { chatRoomRefetchDispatchState } from "@/store/chatRoomRefetch";
 import { ignoreChatRoomState } from "@/store/ignoreChatRoom";
+import { newNameChatRoomState } from "@/store/newNameChatRoom";
 import { onlineMembersState } from "@/store/onlineMembers";
 import {
   mountChatRoomState,
@@ -82,6 +84,7 @@ import { WsEventTypes } from "@/types/ws/event-type";
 import { OnlineMembers } from "@/types/ws/online";
 import { WsEmptyDataRequest, WsRequestTypes } from "@/types/ws/request";
 import { convertKeysToSnakeCase } from "@/utils/change-case";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import {
   useRecoilCallback,
@@ -191,7 +194,6 @@ const InnerWsProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const handleWsPayload = useHandleWsPayload((eventType, data) => {
-    console.log("handleWsPayload", eventType, data);
     let connectingMembersData: WsConnectingMembersEventData;
     let connectedData: WsConnectedEventData;
     let disconnectedData: WsDisconnectedEventData;
@@ -352,6 +354,7 @@ const InnerWsProvider = ({ children }: { children: React.ReactNode }) => {
 
 const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
   const openChatRoom = useRecoilValue(openChatRoomState);
+  const queryClient = useQueryClient();
   const { user } = useAuthContext();
 
   const wsConnectingMembersEventDispatch = useRecoilValue(
@@ -466,6 +469,7 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
   const setDeleteMessageOnChatRoom = useSetRecoilState(
     DeleteMessageOnChatRoomState
   );
+  const setNewNameOnChatRoom = useSetRecoilState(newNameChatRoomState);
 
   const setOnlineMembers = useRecoilCallback(
     ({ set }) =>
@@ -708,6 +712,10 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
     wsDispatchChatRoomUpdatedNameEvent.forEach((data) => {
       addUpdatedNameAction(data);
       if (mountChatRoom) {
+        setNewNameOnChatRoom((prev) => ({
+          ...prev,
+          [data.chatRoomId]: data.action.name,
+        }));
         const actionType: ChatRoomActionType = {
           chatRoomActionTypeId: data.chatRoomActionTypeId,
           name: "",
@@ -738,6 +746,12 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     wsDispatchChatRoomAddedMemberEvent.forEach((data) => {
+      queryClient.invalidateQueries({
+        queryKey: [chatRoomQueryKey.members.belongingList(data.chatRoomId)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [chatRoomQueryKey.members.unBelongingList(data.chatRoomId)],
+      });
       addAddedMemberAction(data);
       if (mountChatRoom) {
         const actionType: ChatRoomActionType = {
@@ -769,12 +783,11 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
   }, [wsChatRoomAddedMemberEventDispatch]);
 
   useEffect(() => {
-    wsDispatchChatRoomAddedMeEvent.forEach((data) => {
+    wsDispatchChatRoomAddedMeEvent.forEach(() => {
       setChatRoomRefetchDispatch((p) => ({
         dispatch: !p.dispatch,
         first: false,
       }));
-      console.log("wsDispatchChatRoomAddedMeEvent", data);
     });
     setWsDispatchChatRoomAddedMeEvent([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -782,6 +795,12 @@ const WsDispatcher = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     wsDispatchChatRoomRemovedMemberEvent.forEach((data) => {
+      queryClient.invalidateQueries({
+        queryKey: [chatRoomQueryKey.members.belongingList(data.chatRoomId)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [chatRoomQueryKey.members.unBelongingList(data.chatRoomId)],
+      });
       addRemovedMemberAction(data);
       if (mountChatRoom) {
         const actionType: ChatRoomActionType = {

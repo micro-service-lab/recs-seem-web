@@ -8,4 +8,8 @@ export const chatRoomQueryKey = createQueryKeyStore({
   onAuth: {
     list: null,
   },
+  members: {
+    belongingList: (chatRoomId: string) => [chatRoomId, 'members'],
+    unBelongingList: (chatRoomId: string) => [chatRoomId, 'unBelongingMembers'],
+  }
 });

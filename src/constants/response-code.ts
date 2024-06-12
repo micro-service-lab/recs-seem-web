@@ -269,4 +269,12 @@ export const API_RESPONSE_HANDLING: MessageType = {
     message: 'cannot-delete-self-from-chat-room-error-response',
     level: RESPONSE_LEVEL.Toast,
   },
+  [API_RESPONSE_TYPES.CannotAddSelfToOrganization]: {
+    message: 'cannot-add-self-to-organization-error-response',
+    level: RESPONSE_LEVEL.Toast,
+  },
+  [API_RESPONSE_TYPES.CannotAddSelfToChatRoom]: {
+    message: 'cannot-add-self-to-chat-room-error-response',
+    level: RESPONSE_LEVEL.Toast,
+  },
 } as const;

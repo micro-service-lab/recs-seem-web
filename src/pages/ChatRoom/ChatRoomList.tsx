@@ -28,6 +28,7 @@ import {
 import { ignoreChatRoomState } from "@/store/ignoreChatRoom";
 import { Dialog, Transition } from "@headlessui/react";
 import { CreateChatRoomForm } from "@/sections/Chat/CreateChatRoomForm";
+import { newNameChatRoomState } from "@/store/newNameChatRoom";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Chat = () => {
@@ -72,6 +73,7 @@ const Chat = () => {
     DeleteMessageOnChatRoomState
   );
   const setIgnoreChatRoom = useSetRecoilState(ignoreChatRoomState);
+  const setNewNameChatRoom = useSetRecoilState(newNameChatRoomState);
 
   const scrollToBottom = () => {
     if (isShowChat) {
@@ -104,6 +106,7 @@ const Chat = () => {
       setMessagesOverride({});
       setMessagesDelete({});
       setIgnoreChatRoom({});
+      setNewNameChatRoom({});
       setEditMessageOnChatRoom((p) => ({ data: [], dispatch: p.dispatch }));
       setDeleteMessageOnChatRoom((p) => ({ data: [], dispatch: p.dispatch }));
       setMountChatRoom(false);
@@ -165,7 +168,7 @@ const Chat = () => {
                     leaveFrom="opacity-100 scale-100"
                     leaveTo="opacity-0 scale-95"
                   >
-                    <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-4xl my-8 text-black dark:text-white-dark">
+                    <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-2xl my-8 text-black dark:text-white-dark">
                       <div className="flex items-center justify-between p-5 font-semibold text-lg dark:text-white">
                         <h5>{t("New Chat Room")}</h5>
                         <button
@@ -177,7 +180,7 @@ const Chat = () => {
                         </button>
                       </div>
 
-                      <CreateChatRoomForm />
+                      <CreateChatRoomForm onSuccess={() => setNewChatRoomModal(false)} />
                     </Dialog.Panel>
                   </Transition.Child>
                 </div>
@@ -207,6 +210,7 @@ const Chat = () => {
                 searchName=""
                 onSelectChatRoom={handleSelectChatRoom}
                 setOpenLatestActedAt={setOpenLatestActedAt}
+                setIsShowChat={setIsShowChat}
               />
             </Suspense>
           </div>

@@ -461,5 +461,14 @@
     "name": "Name",
     "email": "Email",
     "attend-status": "Attend Status",
-    "action": "Action"
+    "action": "Action",
+    "members": "Members",
+    "create-chat-room": "Create Chat Room",
+    "creating": "Creating",
+    "chat-room-created": "Chat Room Created",
+    "update-chat-room": "Update Chat Room",
+    "updating": "Updating",
+    "chat-room-updated": "Chat Room Updated",
+    "remove-image": "Remove Image",
+    "restore-image": "Restore Original Image"
 }

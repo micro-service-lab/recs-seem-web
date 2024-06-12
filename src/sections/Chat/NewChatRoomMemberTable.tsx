@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useState } from "react";
-import { BelongingMemberList } from "./BelongingMemberList";
+import { NewChatRoomMemberList } from "./NewChatRoomMemberList";
 import { useTranslation } from "react-i18next";
+import { ControllerRenderProps, FieldValues } from "react-hook-form";
 
 const TableSkeleton = () => {
   return (
@@ -12,20 +13,12 @@ const TableSkeleton = () => {
             <th></th>
             <th></th>
             <th></th>
-            <th></th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
-          {[...Array(6)].map((_, index) => (
+          {[...Array(4)].map((_, index) => (
             <tr key={index}>
               <td className="w-1/4">
-                <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-[2rem] rounded-md" />
-              </td>
-              <td>
-                <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-[2rem] rounded-md" />
-              </td>
-              <td>
                 <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-[2rem] rounded-md" />
               </td>
               <td>
@@ -46,10 +39,10 @@ const TableSkeleton = () => {
 };
 
 type Props = {
-  chatRoomId: string;
+  field: ControllerRenderProps<FieldValues, string>;
 };
 
-export const BelongingMemberTable = ({ chatRoomId }: Props) => {
+export const NewChatRoomMemberTable = ({ field }: Props) => {
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [5, 10, 20, 30];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[1]);
@@ -78,10 +71,10 @@ export const BelongingMemberTable = ({ chatRoomId }: Props) => {
   return (
     <div className="panel">
       <div className="flex md:items-center md:flex-row flex-col mb-2 gap-5">
-        <div className="ltr:ml-auto rtl:mr-auto">
+        <div className="rtl:ml-auto ltr:mr-auto">
           <input
             type="text"
-            className="form-input w-auto"
+            className="form-input w-auto h-8"
             placeholder={t("search-placeholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -90,29 +83,16 @@ export const BelongingMemberTable = ({ chatRoomId }: Props) => {
       </div>
       <div className="datatables">
         <Suspense fallback={<TableSkeleton />}>
-          <BelongingMemberList
-            chatRoomId={chatRoomId}
+          <NewChatRoomMemberList
+            field={field}
             perPage={pageSize}
             page={page}
             searchName={searchName}
             setTotalCount={setTotalCount}
           />
         </Suspense>
-        <div className="flex justify-between mt-5 flex-col-reverse md:flex-row">
+        <div className="flex justify-between mt-5">
           <div className="flex gap-2">
-            {totalCount > 0 ? (
-              <span className="flex items-center text-sm">
-                {t("table-page-show-off", {
-                  startData: (page - 1) * pageSize + 1,
-                  endData: Math.min(page * pageSize, totalCount),
-                  totalData: totalCount,
-                })}
-              </span>
-            ) : (
-              <span className="flex items-center text-sm">
-                {t("table-page-no-data")}
-              </span>
-            )}
             <select
               className="form-select w-20"
               value={pageSize}
@@ -125,7 +105,7 @@ export const BelongingMemberTable = ({ chatRoomId }: Props) => {
               ))}
             </select>
           </div>
-          <div className="flex gap-2 w-full md:w-auto justify-center md:justify-end mb-4 md:mb-0">
+          <div className="flex gap-2">
             <button
               className="btn"
               onClick={() => setPage((prev) => prev - 1)}

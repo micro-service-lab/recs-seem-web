@@ -461,5 +461,14 @@
     "name": "名前",
     "email": "メールアドレス",
     "attend-status": "出席状況",
-    "action": "アクション"
+    "action": "アクション",
+    "members": "メンバー",
+    "create-chat-room": "チャットルーム作成",
+    "creating": "作成中",
+    "chat-room-created": "チャットルームを作成しました",
+    "update-chat-room": "チャットルーム更新",
+    "updating": "更新中",
+    "chat-room-updated": "チャットルーム情報を更新しました",
+    "remove-image": "画像削除",
+    "restore-image": "元画像に戻す"
 }

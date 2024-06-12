@@ -108,7 +108,7 @@ const ChatRoomAddMemberAction = ({
   locale: string;
   t: TFunction<"chat", undefined>;
 }) => {
-  const filteredMembers = action.addMembers.filter((member) => member.member);
+  const filteredMembers = action.addMembers.filter((member) => !!member.member);
   const addedMembers = filteredMembers
     .map((member) => member.member?.name)
     .slice(0, 3)
@@ -503,7 +503,6 @@ const ChatScrollList = ({ chatRoom }: Props) => {
   }, [data]);
 
   useEffect(() => {
-    console.log(topElement);
     if (topElement.prev) {
       const element: any = document.querySelector(".chat-conversation-box");
       element.behavior = "smooth";

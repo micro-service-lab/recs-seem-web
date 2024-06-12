@@ -22,6 +22,8 @@ import { useRecoilValue } from "recoil";
 import { onlineMembersState } from "@/store/onlineMembers";
 import { BelongingMemberTable } from "./BelongingMemberTable";
 import { InviteMemberTable } from "./InviteMemberTable";
+import { EditChatRoomForm } from "./EditChatRoomForm";
+import { newNameChatRoomState } from "@/store/newNameChatRoom";
 
 type Props = {
   chatRoom: PracticalChatRoomOnMember;
@@ -78,7 +80,9 @@ const ChatTalkList = ({
   };
   const [memberModal, setMemberModal] = useState(false);
   const [exitModal, setExitModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const newNameChatRoom = useRecoilValue(newNameChatRoomState);
 
   return (
     <>
@@ -127,7 +131,7 @@ const ChatTalkList = ({
                   />
                 ) : (
                   <span className="flex items-center justify-center rounded-full w-10 h-10 sm:h-12 sm:w-12 object-cover bg-gray-300 dark:bg-gray-100 text-2xl">
-                    {(chatRoom.chatRoom.name || "")[0]}
+                    {(newNameChatRoom[chatRoom.chatRoom.chatRoomId] || chatRoom.chatRoom.name || "")[0]}
                   </span>
                 )}
               </div>
@@ -135,7 +139,7 @@ const ChatTalkList = ({
                 <p className="font-semibold">
                   {chatRoom.chatRoom.isPrivate
                     ? chatRoom.chatRoom.companion?.member.name || ""
-                    : chatRoom.chatRoom.name || ""}
+                    : newNameChatRoom[chatRoom.chatRoom.chatRoomId] || chatRoom.chatRoom.name || ""}
                 </p>
                 <p className="text-white-dark text-xs">
                   {"Last acted at " +
@@ -344,7 +348,7 @@ const ChatTalkList = ({
                 >
                   <ul className="text-black dark:text-white-dark">
                     <li>
-                      <button type="button">
+                      <button type="button" onClick={() => setEditModal(true)}>
                         <IconEdit className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
                         {t("edit")}
                       </button>
@@ -361,6 +365,59 @@ const ChatTalkList = ({
                   </ul>
                 </Dropdown>
               </div>
+              <Transition appear show={editModal} as={Fragment}>
+                <Dialog
+                  as="div"
+                  open={editModal}
+                  onClose={() => setEditModal(false)}
+                >
+                  <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <div className="fixed inset-0" />
+                  </Transition.Child>
+                  <div
+                    id="login_modal"
+                    className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto"
+                  >
+                    <div className="flex items-start justify-center min-h-screen px-4">
+                      <Transition.Child
+                        as={Fragment}
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0 scale-95"
+                        enterTo="opacity-100 scale-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100 scale-100"
+                        leaveTo="opacity-0 scale-95"
+                      >
+                        <Dialog.Panel className="panel border-0 py-1 px-4 rounded-lg overflow-hidden w-full max-w-2xl my-8 text-black dark:text-white-dark">
+                          <div className="flex items-center justify-between p-5 font-semibold text-lg dark:text-white">
+                            <h5>{t("New Chat Room")}</h5>
+                            <button
+                              type="button"
+                              onClick={() => setEditModal(false)}
+                              className="text-white-dark hover:text-dark"
+                            >
+                              <IconClose className="w-6 h-6" />
+                            </button>
+                          </div>
+
+                          <EditChatRoomForm
+                            onSuccess={() => setEditModal(false)}
+                            chatRoom={chatRoom}
+                          />
+                        </Dialog.Panel>
+                      </Transition.Child>
+                    </div>
+                  </div>
+                </Dialog>
+              </Transition>
               <Transition appear show={deleteModal} as={Fragment}>
                 <Dialog
                   as="div"

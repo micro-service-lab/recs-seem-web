@@ -8,19 +8,25 @@ import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
-import { NewChatRoomMemberCheckbox } from "./NewChatRoomMemberCheckbox";
-import { useCreateChatRoomQuery } from "@/api/chatRoom/useCreateChatRoom";
+import { useUpdateChatRoomQuery } from "@/api/chatRoom/useUpdateChatRoom";
 import { useUploadImageQuery } from "@/api/image/useUploadImageQuery";
 import { AxiosError } from "axios";
 import { formErrorHandle } from "@/utils/errorHandle/formErrorHandle";
 import { ErrorResponse } from "@/types/response/error-response";
+import { PracticalChatRoomOnMember } from "@/types/entity/chat-room-belonging";
+import { useRecoilValue } from "recoil";
+import { newNameChatRoomState } from "@/store/newNameChatRoom";
 
 type Props = {
+  chatRoom: PracticalChatRoomOnMember;
   onSuccess: () => void;
 };
 
-export const CreateChatRoomForm = ({ onSuccess }: Props) => {
-  const { data, error, isPending, mutate } = useCreateChatRoomQuery();
+export const EditChatRoomForm = ({ chatRoom, onSuccess }: Props) => {
+  const { data, error, isPending, mutate } = useUpdateChatRoomQuery(
+    chatRoom.chatRoom.chatRoomId
+  );
+  const newNameChatRoom = useRecoilValue(newNameChatRoomState);
   const {
     error: uploadError,
     data: uploadedData,
@@ -29,28 +35,28 @@ export const CreateChatRoomForm = ({ onSuccess }: Props) => {
   } = useUploadImageQuery();
   const { t } = useTranslation();
   const toast = useToast();
-  const CreateChatRoomSchema = Yup.object().shape({
+  const UpdateChatRoomSchema = Yup.object().shape({
     name: Yup.string().required(t("Name is required")),
     coverImage: Yup.mixed<any>().nullable(),
-    memberIds: Yup.array(),
+    coverImageId: Yup.string().nullable(),
   });
 
   const defaultValues = {
-    name: "",
-    coverImage: null,
-    memberIds: [],
+    name: newNameChatRoom[chatRoom.chatRoom.chatRoomId] || chatRoom.chatRoom.name || "",
+    coverImage: chatRoom.chatRoom.coverImage?.attachableItem.url || null,
+    coverImageId: chatRoom.chatRoom.coverImage?.imageId || null,
   };
 
   const methods = useForm({
-    resolver: yupResolver(CreateChatRoomSchema),
+    resolver: yupResolver(UpdateChatRoomSchema),
     defaultValues,
   });
 
   const {
     reset,
-    watch,
     setValue,
     setError,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -66,10 +72,17 @@ export const CreateChatRoomForm = ({ onSuccess }: Props) => {
       const formData = await createFormData();
       uploadMutate(formData);
     } else {
-      mutate({
-        name: data.name,
-        memberIds: data.memberIds || [],
-      });
+      if (typeof data.coverImage === "string" && data.coverImageId) {
+        mutate({
+          name: data.name,
+          coverImageId: data.coverImageId,
+        });
+      } else {
+        mutate({
+          name: data.name,
+          coverImageId: null,
+        });
+      }
     }
   });
 
@@ -78,7 +91,6 @@ export const CreateChatRoomForm = ({ onSuccess }: Props) => {
       mutate({
         name: methods.getValues("name"),
         coverImageId: uploadedData.data[0].attachableItem.imageId,
-        memberIds: methods.getValues("memberIds") || [],
       });
     }
   }, [uploadedData]);
@@ -94,13 +106,19 @@ export const CreateChatRoomForm = ({ onSuccess }: Props) => {
     if (data) {
       toast.fire({
         icon: "success",
-        title: t("chat-room-created"),
+        title: t("chat-room-updated"),
         padding: "10px 20px",
       });
       reset();
       onSuccess();
     }
   }, [data]);
+
+  const handleDefaultSetImage = useCallback(() => {
+    setValue("coverImage", chatRoom.chatRoom.coverImage?.attachableItem.url, {
+      shouldValidate: true,
+    });
+  }, [setValue]);
 
   const handleDropFile = useCallback(
     (acceptedFiles: File[]) => {
@@ -148,16 +166,26 @@ export const CreateChatRoomForm = ({ onSuccess }: Props) => {
               setValue("coverImage", null, { shouldValidate: true })
             }
           />
-          <button
-            className="btn !mt-2 border border-dashed border-red-500 text-xs"
-            type="button"
-            onClick={() =>
-              setValue("coverImage", null, { shouldValidate: true })
-            }
-            disabled={watch("coverImage") === null}
-          >
-            {t("remove-image")}
-          </button>
+          <div className="flex space-x-2">
+            <button
+              className="btn !mt-2 border border-dashed border-red-500 text-xs"
+              type="button"
+              onClick={() =>
+                setValue("coverImage", null, { shouldValidate: true })
+              }
+              disabled={watch("coverImage") === null}
+            >
+              {t("remove-image")}
+            </button>
+            <button
+              className="btn !mt-2 border-0 btn-primary text-xs"
+              type="button"
+              onClick={handleDefaultSetImage}
+              disabled={!chatRoom.chatRoom.coverImage || watch("coverImage") === chatRoom.chatRoom.coverImage.attachableItem.url}
+            >
+              {t("restore-image")}
+            </button>
+          </div>
         </div>
         <div className="flex flex-col w-1/2 mb-2">
           <label
@@ -175,21 +203,14 @@ export const CreateChatRoomForm = ({ onSuccess }: Props) => {
             errorClassName="text-xs"
           />
         </div>
-
-        <div className="flex flex-col">
-          <div className="text-lg font-semibold text-white-dark">
-            {t("members")}
-          </div>
-          <NewChatRoomMemberCheckbox name="memberIds" />
-        </div>
       </div>
       <LoadingButton
         loading={isSubmitting || isPending || uploadIsPending}
         type="submit"
-        className="btn btn-success !mt-6 border-0"
-        loadingChildren={<>{t("creating")}</>}
+        className="btn btn-gradient !mt-6 border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]"
+        loadingChildren={<>{t("updating")}</>}
       >
-        {t("create-chat-room")}
+        {t("update-chat-room")}
       </LoadingButton>
     </FormProvider>
   );

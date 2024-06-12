@@ -6,9 +6,10 @@ import { useFormContext, Controller } from 'react-hook-form';
 type Props = HTMLProps<HTMLInputElement> & {
   name: string;
   startProps?: ReactNode;
+  errorClassName?: string;
 };
 
-export default function RHFTextField({ startProps, name, type, ...other }: Props) {
+export default function RHFTextField({ startProps, name, type, errorClassName, ...other }: Props) {
   const { control } = useFormContext();
 
   return (
@@ -33,7 +34,7 @@ export default function RHFTextField({ startProps, name, type, ...other }: Props
               {...other}
             />
           </div>
-          {!!error && <div className="text-danger mt-1 mx-2">{error.message}</div>}
+          {!!error && <div className={`text-danger mt-1 mx-2 ${errorClassName}`}>{error.message}</div>}
         </>
       )}
     />

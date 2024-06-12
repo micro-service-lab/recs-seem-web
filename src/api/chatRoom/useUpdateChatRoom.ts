@@ -6,15 +6,16 @@ import { EmptySuccessResponse } from "@/types/response/empty-success-response";
 type Response = EmptySuccessResponse;
 
 type MutateProps = {
-  memberIds: string[];
+  name: string;
+  coverImageId?: string | null;
 };
 
-export const useAddMemberOnChatRoomQuery = (chatRoomId: string) => {
+export const useUpdateChatRoomQuery = (chatRoomId: string) => {
   const { data, error, mutate, isPending } = useMutation({
-    mutationFn: ({ memberIds }: MutateProps) => {
-      return axios.post<Response>(
-        CHAT_ROOM_ENDPOINTS.chatRoom.member.add(chatRoomId),
-        { memberIds }
+    mutationFn: (mutateProps: MutateProps) => {
+      return axios.put<Response>(
+        CHAT_ROOM_ENDPOINTS.chatRoom.update(chatRoomId),
+        mutateProps
       );
     },
   });

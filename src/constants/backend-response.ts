@@ -63,4 +63,6 @@ export const API_RESPONSE_TYPES = {
   NotOrganizationMember: "258",
   CannotDeleteSelfFromOrganization: "259",
   CannotDeleteSelfFromChatRoom: "260",
+  CannotAddSelfToOrganization: "261",
+  CannotAddSelfToChatRoom: "262",
 } as const;

@@ -14,6 +14,7 @@ import {
 } from "@/types/entity/member";
 import { memberQueryKey } from "@/query-keys/member-query-key";
 import { MEMBER_ENDPOINTS } from "@/constants/endpoints/member-endpoint";
+import { chatRoomQueryKey } from "@/query-keys/chat-room-query-key";
 
 type WithType =
   | "detail"
@@ -79,8 +80,14 @@ export const useGetMembersQuery = <
 >(
   params: MemberQueryParam
 ) => {
+  let queryKey: any = memberQueryKey.list;
+  if(params.searchBelongingChatRoomId !== '') {
+    queryKey = chatRoomQueryKey.members.belongingList(params.searchBelongingChatRoomId);
+  }else if(params.searchNotBelongingChatRoomId !== '') {
+    queryKey = chatRoomQueryKey.members.unBelongingList(params.searchNotBelongingChatRoomId);
+  }
   const { data, status, isPending } = useSuspenseQuery({
-    queryKey: [memberQueryKey.list, params],
+    queryKey: [queryKey, params],
     queryFn: async () => {
       return axios
         .get<T>(MEMBER_ENDPOINTS.member.get, {

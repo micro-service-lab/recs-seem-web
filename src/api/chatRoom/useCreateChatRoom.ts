@@ -11,12 +11,12 @@ type MutateProps = {
   memberIds: string[];
 };
 
-export const useCreateChatRoomQuery = (chatRoomId: string) => {
+export const useCreateChatRoomQuery = () => {
   const { data, error, mutate, isPending } = useMutation({
-    mutationFn: ({ memberIds }: MutateProps) => {
+    mutationFn: (mutateProps: MutateProps) => {
       return axios.post<Response>(
-        CHAT_ROOM_ENDPOINTS.chatRoom.member.add(chatRoomId),
-        { memberIds }
+        CHAT_ROOM_ENDPOINTS.chatRoom.create,
+        mutateProps,
       );
     },
   });

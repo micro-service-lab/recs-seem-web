@@ -62,5 +62,8 @@
   "must-be-group-professor-if-grade-professor-error-response": "Must be group professor if grade professor",
   "not-organization-member-error-response": "Not organization member",
   "cannot-delete-self-from-organization-error-response": "Cannot delete self from organization",
-  "cannot-delete-self-from-chat-room-error-response": "Cannot delete self from chat room"
+  "cannot-delete-self-from-chat-room-error-response": "Cannot delete self from chat room",
+  "cannot-add-self-to-organization-error-response": "Cannot add self to organization",
+  "cannot-add-self-to-chat-room-error-response": "Cannot add self to chat room"
 }
+

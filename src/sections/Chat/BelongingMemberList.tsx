@@ -95,7 +95,7 @@ export const BelongingMemberList = ({
       <table>
         <thead>
           <tr>
-            <th className="flex justify-around items-center">
+            <th className="flex justify-around items-center w-[6rem]">
               <Tippy content={tableT("delete-selected")}>
                 <button
                   className="text-red-500 hover:text-red-700"
@@ -117,16 +117,16 @@ export const BelongingMemberList = ({
                 </button>
               </Tippy>
             </th>
-            <th className="w-1/4 text-center">{t("name")}</th>
-            <th>{t("email")}</th>
-            <th>{t("grade")}</th>
-            <th>{t("group")}</th>
-            <th>{t("attend-status")}</th>
-            <th className="text-center">{t("action")}</th>
+            <th className="text-center text-sm w-[18rem] truncate">{t("name")}</th>
+            <th className="text-sm truncate">{t("email")}</th>
+            <th className="text-sm w-[8rem] truncate">{t("grade")}</th>
+            <th className="text-sm w-[8rem] truncate">{t("group")}</th>
+            <th className="text-sm w-[8rem] truncate">{t("attend-status")}</th>
+            <th className="text-center text-sm w-[6rem] truncate">{t("action")}</th>
           </tr>
         </thead>
         <tbody>
-          {data.data.withCount.count > 0 && (
+          {data.data.withCount.count > 0 &&
             data.data.data.map((member) => {
               return (
                 <tr
@@ -134,7 +134,7 @@ export const BelongingMemberList = ({
                   className="h-10 dark:bg-gray-800 hover:bg-gray-100 cursor-pointer"
                   onClick={() => handleCheck(member)}
                 >
-                  <td className="text-center">
+                  <td className="text-center w-[6rem]">
                     <input
                       type="checkbox"
                       className="form-checkbox text-red-500 outline-primary"
@@ -163,7 +163,7 @@ export const BelongingMemberList = ({
                     </div>
                   </td>
                   <td>
-                    <div className="whitespace-nowrap">{member.email}</div>
+                    <div className="whitespace-nowrap truncate max-w-24 md:max-w-96">{member.email}</div>
                   </td>
                   <td className={`text-[${member.grade.organization.color}]`}>
                     {member.grade.organization.name}
@@ -200,7 +200,7 @@ export const BelongingMemberList = ({
                       {member.attendStatus.name}
                     </div>
                   </td>
-                  <td className="text-center">
+                  <td className="text-center w-[6rem]">
                     <Tippy content="Remove">
                       <button
                         type="button"
@@ -221,13 +221,14 @@ export const BelongingMemberList = ({
                   </td>
                 </tr>
               );
-            })
-          )}
+            })}
         </tbody>
       </table>
       {data.data.withCount.count === 0 && (
         <div className="flex items-center justify-center h-40 rounded-b-lg bg-gray-200 dark:bg-gray-800">
-          <span className="text-gray-400 font-semibold">{tableT("no-data")}</span>
+          <span className="text-gray-400 font-semibold">
+            {tableT("no-data")}
+          </span>
         </div>
       )}
       <Transition appear show={removeModal} as={Fragment}>

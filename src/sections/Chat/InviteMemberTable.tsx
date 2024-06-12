@@ -98,7 +98,7 @@ export const InviteMemberTable = ({ chatRoomId }: Props) => {
             setTotalCount={setTotalCount}
           />
         </Suspense>
-        <div className="flex justify-between mt-5">
+        <div className="flex justify-between mt-5 flex-col-reverse md:flex-row">
           <div className="flex gap-2">
             {totalCount > 0 ? (
               <span className="flex items-center text-sm">
@@ -125,7 +125,7 @@ export const InviteMemberTable = ({ chatRoomId }: Props) => {
               ))}
             </select>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full md:w-auto justify-center md:justify-end mb-4 md:mb-0">
             <button
               className="btn"
               onClick={() => setPage((prev) => prev - 1)}
