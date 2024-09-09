@@ -2,6 +2,67 @@
 
 ## ローカルでのセットアップ
 
+graph TD;
+    A[Frontend (React)] --> B[BFF (Node.js)];
+    B --> C[Authentication Service (Go)];
+    C --> D[Postgres];
+    
+    B --> E[Organization Management (Java)];
+    E --> F[Cassandra];
+    
+    B --> G[File Management (Node.js)];
+    G --> H[MongoDB];
+    
+    B --> I[Real-Time Chat (Python)];
+    I --> J[Redis];
+    
+    B --> K[Absence Management (C#)];
+    K --> L[DynamoDB];
+    
+    B --> M[Event Management (Rust)];
+    M --> N[Cassandra];
+    
+    B --> O[Minutes Management (PHP)];
+    O --> P[Elasticsearch];
+    
+    subgraph Saga Orchestrator
+        Q[Orchestration Service (Java)]
+    end
+    
+    Q --> C;
+    Q --> E;
+    Q --> G;
+    Q --> I;
+    Q --> K;
+    Q --> M;
+    Q --> O;
+    
+    subgraph Kubernetes EKS
+        B;
+        C;
+        E;
+        G;
+        I;
+        K;
+        M;
+        O;
+    end
+
+    %% Messaging and Communication
+    C -.->|gRPC| E;
+    E -.->|gRPC| G;
+    G -.->|gRPC| I;
+    I -.->|gRPC| K;
+    K -.->|gRPC| M;
+    M -.->|gRPC| O;
+
+    C -->|Kafka| E;
+    E -->|Kafka| G;
+    G -->|Kafka| I;
+    I -->|Kafka| K;
+    K -->|Kafka| M;
+    M -->|Kafka| O;
+
 - npm環境構築
 
 以下のコマンドで`npm`をインストール
