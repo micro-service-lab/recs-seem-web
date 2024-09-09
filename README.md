@@ -2,6 +2,7 @@
 
 ## ローカルでのセットアップ
 
+```mermaid
 graph TD;
     A[Frontend (React)] --> B[BFF (Node.js)];
     B --> C[Authentication Service (Go)];
@@ -62,6 +63,7 @@ graph TD;
     I -->|Kafka| K;
     K -->|Kafka| M;
     M -->|Kafka| O;
+```
 
 - npm環境構築
 
