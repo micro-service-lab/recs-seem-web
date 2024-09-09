@@ -4,14 +4,6 @@
 
 ```mermaid
 graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
-```
-
-```mermaid
-graph TD;
     A[Frontend (React)] --> B[BFF (Node.js)];
     B --> C[Authentication Service (Go)];
     C --> D[Postgres];
