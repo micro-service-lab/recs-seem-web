@@ -92,6 +92,14 @@ aqua i -l
 + 127.0.0.1       www.al.kansai-u.ac.jp.test
 ```
 
+## build + デプロイ
+
+``` sh
+npm run build
+docker build --target prod -t recs_seem_web . -f Dockerfile 
+docker run -d --rm -p 80:80 recs_seem_web
+```
+
 ## あくまでたたき台
 
 - テストコードは書かない

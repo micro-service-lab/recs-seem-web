@@ -1,4 +1,15 @@
-import { adminPath, companyHistoryPath, contactPath, informationPath, mainClientPath, rolePath, settingPath } from './search-paths';
+import {
+  memberPath,
+  chatRoomPath,
+  attendancePath,
+  rolePath,
+  calenderPath,
+  locationInformationPath,
+  organizationPath,
+  permissionPath,
+  minutesPath,
+  settingPath,
+} from "./search-paths";
 
 export type Path = {
   title: string;
@@ -7,4 +18,15 @@ export type Path = {
   keyword: string[];
 };
 
-export const paths: Path[] = [...adminPath, ...rolePath, ...informationPath, ...contactPath, ...mainClientPath, ...companyHistoryPath, ...settingPath];
+export const paths: Path[] = [
+  ...memberPath,
+  ...rolePath,
+  ...attendancePath,
+  ...chatRoomPath,
+  ...calenderPath,
+  ...locationInformationPath,
+  ...organizationPath,
+  ...permissionPath,
+  ...minutesPath,
+  ...settingPath,
+];

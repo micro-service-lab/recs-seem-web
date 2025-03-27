@@ -2,7 +2,8 @@ import { Path } from '../paths';
 import { COMMON_KEYWORDS } from './_common';
 
 const ROLE_KEYWORDS = [
-  'roles',
+  'role',
+  'ro-ru',
   'ロール',
   'ろーる',
   '権限',
@@ -20,13 +21,22 @@ const ROLE_KEYWORDS = [
   'かんりしゃケンゲン',
   'かんりしゃ権限',
   'かんりしゃけんげん',
+  'policy',
+  'ポリシー',
+  'ぽりしー',
 ];
 
 export const rolePath: Path[] = [
   {
     title: 'role-list',
-    href: '/roles',
-    link: '/roles',
+    href: '/role',
+    link: '/role',
     keyword: [...ROLE_KEYWORDS, ...COMMON_KEYWORDS.list],
+  },
+  {
+    title: 'role-create',
+    href: '/role/create',
+    link: '/role/create',
+    keyword: [...ROLE_KEYWORDS, ...COMMON_KEYWORDS.create],
   },
 ];

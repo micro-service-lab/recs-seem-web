@@ -1,18 +1,11 @@
-import { SimpleAdmin } from ".";
+import { PolicyOnRole } from "./role-association";
 
 export interface Role {
-  roleId: number;
-  name: string;
-  description: string;
+    roleId: string;
+    name: string;
+    description: string;
 }
 
-export interface GrantedRole extends Role {
-  grantedBy: SimpleAdmin | null;
-  grantedAt: string;
-}
-
-export interface SimpleRole {
-  roleId: number;
-  name: string;
-  description: string;
+export interface RoleWithPolicies extends Role{
+    policies: PolicyOnRole[];
 }

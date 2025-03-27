@@ -1,10 +1,7 @@
 // ----------------------------------------------------------------------
-
-import {
-  AuthUserData,
-  AuthUserResponse,
-} from '@/types/response/auth/auth-user-response';
-import { EmptySuccessResponse } from '@/types/response/empty-success-reponse';
+import { AuthMember } from '@/types/entity/member';
+import { ApplicationResponse } from '@/types/response/application-response';
+import { EmptySuccessResponse } from '@/types/response/empty-success-response';
 import { AxiosResponse } from 'axios';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -19,7 +16,9 @@ export type ActionMapType<M extends { [index: string]: any }> = {
       };
 };
 
-export type AuthUserType = AuthUserData | null;
+type AuthUserResponse = ApplicationResponse<AuthMember>;
+
+export type AuthUserType = AuthMember | null;
 
 export type AuthStateType = {
   status?: string;

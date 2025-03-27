@@ -1,28 +1,19 @@
 import { Path } from '../paths';
 
 const SETTING_KEYWORDS = [
-  'settings',
+  'setting',
   '設定',
   'せってい',
   'セッテイ',
   'settei',
   'セッティング',
-  '編集',
-  'ヘンシュウ',
-  'へんしゅう',
-  'hennsyuu',
-  'hensyuu',
-  'プロフィール',
-  'profile',
-  'edit',
-  'ぷろふぃーる',
 ];
 
 export const settingPath: Path[] = [
   {
     title: 'setting',
-    href: '/settings',
-    link: '/settings',
+    href: '/setting',
+    link: '/setting',
     keyword: [...SETTING_KEYWORDS],
   },
 ];

@@ -1,10 +1,9 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "@/store";
 import { useEffect, useState } from "react";
-import { setPageTitle, toggleRTL } from "@/store/themeConfigSlice";
+import { setPageTitle, toggleLocale } from "@/store/themeConfigSlice";
 import Dropdown from "@/components/Dropdown";
-import i18next from "i18next";
 import IconCaretDown from "@/components/Icon/IconCaretDown";
 import IconLockDots from "@/components/Icon/IconLockDots";
 import IconLoginId from "@/components/Icon/IconLoginId";
@@ -34,20 +33,7 @@ const Login = () => {
   const showAlert = useBoolean();
 
   const navigate = useNavigate();
-  const isRtl =
-    useSelector((state: IRootState) => state.themeConfig.rtlClass) === "rtl"
-      ? true
-      : false;
   const themeConfig = useSelector((state: IRootState) => state.themeConfig);
-  const setLocale = (flag: string) => {
-    setFlag(flag);
-    if (flag.toLowerCase() === "ae") {
-      dispatch(toggleRTL("rtl"));
-    } else {
-      dispatch(toggleRTL("ltr"));
-    }
-  };
-  const [flag, setFlag] = useState(themeConfig.locale);
 
   const { login } = useAuthContext();
   const toast = useToast();
@@ -92,8 +78,10 @@ const Login = () => {
         const msg = rT(
           error.response?.errorMessage || "",
           error.response?.errorMessageParam
-        )
-        typeof msg === "string" ? setErrorMsg(msg) : setErrorMsg(rT("Unknown error"));
+        );
+        typeof msg === "string"
+          ? setErrorMsg(msg)
+          : setErrorMsg(rT("Unknown error"));
       });
   });
 
@@ -134,19 +122,19 @@ const Login = () => {
               <div className="dropdown">
                 <Dropdown
                   offset={[0, 8]}
-                  placement={`${isRtl ? "bottom-start" : "bottom-end"}`}
+                  placement="bottom-end"
                   btnClassName="flex items-center gap-2.5 rounded-lg border border-white-dark/30 bg-white px-2 py-1.5 text-white-dark hover:border-primary hover:text-primary dark:bg-black"
                   button={
                     <>
                       <div>
                         <img
-                          src={`/assets/images/flags/${flag.toUpperCase()}.svg`}
+                          src={`/assets/images/flags/${themeConfig.locale.toUpperCase()}.svg`}
                           alt="image"
                           className="h-5 w-5 rounded-full object-cover"
                         />
                       </div>
                       <div className="text-base font-bold uppercase">
-                        {flag}
+                        {themeConfig.locale}
                       </div>
                       <span className="shrink-0">
                         <IconCaretDown />
@@ -163,14 +151,12 @@ const Login = () => {
                             <button
                               type="button"
                               className={`flex w-full hover:text-primary rounded-lg ${
-                                flag === item.code
+                                themeConfig.locale === item.code
                                   ? "bg-primary/10 text-primary"
                                   : ""
                               }`}
                               onClick={() => {
-                                i18next.changeLanguage(item.code);
-                                // setFlag(item.code);
-                                setLocale(item.code);
+                                dispatch(toggleLocale(item.code));
                               }}
                             >
                               <img
@@ -261,6 +247,15 @@ const Login = () => {
                   {t("sign-in")}
                 </LoadingButton>
               </FormProvider>
+              <div className="text-center dark:text-white my-7 md:mb-9">
+                {t("dont-have-an-account")}&nbsp;
+                <Link
+                  to="/register"
+                  className="uppercase text-primary underline transition hover:text-black dark:hover:text-white"
+                >
+                  {t("sign-up")}
+                </Link>
+              </div>
             </div>
           </div>
         </div>

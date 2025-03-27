@@ -1,3 +1,3 @@
 export * from './auth-endpoint';
-export * from './admins-endpoint';
-export * from './roles-endpoints';
+export * from './organization-endpoint';
+export * from './chat-room-endpoints';
